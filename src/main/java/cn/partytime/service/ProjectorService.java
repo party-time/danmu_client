@@ -5,8 +5,10 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.util.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +31,9 @@ public class ProjectorService {
     @Autowired
     private LogLogicService logLogicService;
 
+    @Resource(name = "threadPoolTaskExecutor")
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
     /**
      * 投影仪开启和关闭
      * @param openFlg(true:开启;false:关闭)
@@ -46,8 +51,18 @@ public class ProjectorService {
                 logLogicService.logUploadHandler("关闭投影仪的url:"+url);
             }
 
-            HttpUtils.httpRequestStr(url,"GET",null);
+            executeProjector(url);
         }
+    }
+
+
+    private void executeProjector(final String url){
+        threadPoolTaskExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                HttpUtils.httpRequestStr(url,"GET",null);
+            }
+        });
     }
 
     private List<DeviceInfo> findDeviceInfo(ConcurrentHashMap concurrentHashMap){
