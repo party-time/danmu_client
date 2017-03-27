@@ -62,11 +62,11 @@ public class FileUtils {
      * @param fileName
      * @param content
      */
-    public static void appendContentToFile(String fileName, String content) {
+    public static void writeContentToFile(String fileName, String content) {
         FileWriter writer = null;
         try {
             // 打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件
-            writer = new FileWriter(fileName, true);
+            writer = new FileWriter(fileName, false);
             writer.write(content);
         } catch (IOException e) {
             e.printStackTrace();
