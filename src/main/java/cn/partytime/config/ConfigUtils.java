@@ -51,6 +51,8 @@ public class ConfigUtils {
     private String projectorOpenPath="/tgi/console.tgi?powerOn131658";
     private String projectorClosePath="/tgi/console.tgi?powerOff131047";
 
+    private String paramUrl="/v1/api/javaClient/findFlashConfig";
+
     private String filePath(){
         return properties.getBasePath()+"/enterX";
     }
@@ -241,6 +243,14 @@ public class ConfigUtils {
     }
     public String getAddressId(){
         return  properties.getAddressId();
+    }
+
+    public String getParamUrl(){
+        if(0==properties.getEnv()){
+            return baseTestUrl+paramUrl;
+        }else{
+            return baseUrl+paramUrl;
+        }
     }
 
 
