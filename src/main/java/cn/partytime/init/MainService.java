@@ -2,6 +2,8 @@ package cn.partytime.init;
 
 import cn.partytime.netty.client.ServerWebSocketClient;
 import cn.partytime.model.Properties;
+import cn.partytime.service.DeviceService;
+import cn.partytime.service.LogLogicService;
 import cn.partytime.service.RsyncFileService;
 import cn.partytime.netty.server.ClientServer;
 import cn.partytime.netty.server.TmsServer;
@@ -50,6 +52,13 @@ public class MainService {
     @Autowired
     private WindowShellService windowShellService;
 
+    @Autowired
+    private LogLogicService logLogicService;
+
+
+    @Autowired
+    private DeviceService deviceService;
+
     /**
      * 启动系统加载项目
      */
@@ -68,6 +77,7 @@ public class MainService {
 
 
     private void initResource(){
+
         threadPoolTaskExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -79,6 +89,8 @@ public class MainService {
                 }
                 rsyncFileService.createFlashConfig();
                 windowShellService.restartTask();
+
+                deviceService.findDeviceInfo();
             }
         });
     }
@@ -125,6 +137,7 @@ public class MainService {
     private void startNettyServer(){
         try {
             logger.info("启动TmsServer");
+            logLogicService.logUploadHandler("启动javaClientNettyServer");
             threadPoolTaskExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
