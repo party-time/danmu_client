@@ -163,10 +163,24 @@ public class RsyncFileService {
                 resourceFileMap.put("adVideoUrlList", specialVideoList);
 
                 Map paramMap = null;
+
                 if(!StringUtils.isEmpty(paramJsonStr)){
                     JSONObject jsonObject = JSON.parseObject(paramJsonStr);
-                    paramMap = (Map) JSON.parse((String)jsonObject.get("data"));
+                    String dataStr = (String)jsonObject.get("data");
+                    Map<String,Object> temp = (Map) JSON.parse(dataStr);
+                    paramMap = new LinkedHashMap<>();
+                    if(!StringUtils.isEmpty(dataStr)){
+                        String[] dataStrs = dataStr.substring(1,dataStr.length()-1).split(",");
+                        for(int i=0;i<dataStrs.length;i++){
+                            String[] jsons = dataStrs[i].replaceAll("\"","").split(":");
+                            String key = jsons[0];
+                            Object obj = temp.get(key);
+                            paramMap.put(jsons[0],obj);
+                        }
+                    }
+
                 }
+
 
                 createConfigFile(resourceFileMap,paramMap);
             }

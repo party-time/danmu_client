@@ -24,7 +24,7 @@ public class ConfigUtils {
     private String executeScript="executeScript";
     private String testExecuteScript="testExecuteScript";
     public String saveFilePath = "resource";
-    private String baseTestUrl = "http://test.party-time.cn";
+    private String baseTestUrl = "http://127.0.0.1";
     private String baseUrl = "http://www.party-time.cn";
     private String logTestUrl="http://testlog.party-time.cn";
     private String logUrl="http://log.party-time.cn";
