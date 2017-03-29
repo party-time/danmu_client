@@ -19,6 +19,9 @@ public class Properties {
     @Value("${addressId}")
     private String addressId;
 
+    @Value("${registCode}")
+    private String registCode;
+
     @Value("${if_boot_download_resource}")
     private Integer ifDownload;
 
@@ -64,5 +67,13 @@ public class Properties {
 
     public void setMachineNum(String machineNum) {
         this.machineNum = machineNum;
+    }
+
+    public String getRegistCode() {
+        return registCode;
+    }
+
+    public void setRegistCode(String registCode) {
+        this.registCode = registCode;
     }
 }

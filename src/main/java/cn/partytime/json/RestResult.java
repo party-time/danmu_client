@@ -1,13 +1,9 @@
 package cn.partytime.json;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Created by administrator on 2016/12/9.
  */
-@JsonSerialize
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestResult {
 
     private int result;

@@ -1,26 +1,24 @@
 package cn.partytime.service;
 
 import cn.partytime.config.ConfigUtils;
-import cn.partytime.json.*;
+import cn.partytime.json.PartyJson;
+import cn.partytime.json.PartyResourceResult;
+import cn.partytime.json.Resource;
+import cn.partytime.json.VideoResourceJson;
 import cn.partytime.model.*;
+import cn.partytime.model.Properties;
 import cn.partytime.util.Const;
 import cn.partytime.util.HttpUtils;
 import cn.partytime.util.ListUtils;
 import com.alibaba.fastjson.JSON;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -35,11 +33,6 @@ public class RsyncFileService {
 
     @Autowired
     private ConfigUtils configUtils;
-
-    @Autowired
-    private Configuration configuration;
-
-
 
     public void rsyncFile(){
         String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.rsyncName()+" "+configUtils.cmdRsyncFilePath;
@@ -70,6 +63,9 @@ public class RsyncFileService {
 
 
     public void createFlashConfig() {
+
+        String paramJsonStr = HttpUtils.httpRequestStr(configUtils.getParamUrl()+"?code="+properties.getRegistCode(),"GET",null);
+
         String jsonStr = HttpUtils.httpRequestStr(configUtils.getInitUrl()+"?addressId="+properties.getAddressId(), "GET", null);
         //GsonBuilder gsonBuilder = new GsonBuilder();
         //gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
@@ -81,7 +77,6 @@ public class RsyncFileService {
 
             //获取定时弹幕
             List<TimerDanmuPathModel>  timerDanmuPathModels  = findTimerDanmuFile();
-
             //获取广告弹幕
             AdTimerFileResource adTimerFileResource = findAdTimerDanmu();
             List<TimerDanmuFileModel> timerDanmuFileModelList =adTimerFileResource.getTimerDanmuFileLogicModels();
@@ -167,230 +162,191 @@ public class RsyncFileService {
 
                 resourceFileMap.put("adVideoUrlList", specialVideoList);
 
-                createConfigFile(resourceFileMap);
+                Map paramMap = null;
+                if(!StringUtils.isEmpty(paramJsonStr)){
+                    JSONObject jsonObject = JSON.parseObject(paramJsonStr);
+                    paramMap = (Map) JSON.parse((String)jsonObject.get("data"));
+                }
+
+                createConfigFile(resourceFileMap,paramMap);
             }
 
         }
 
     }
 
-    /**
-     * 根据模板创建配置文件
-     *
-     * @param model
-     * @throws IOException
-     */
-    private void createConfigFile(Map<String, Object> model) {
-        Template template = null; // freeMarker template
-        String content = null;
 
-        try {
-            template = configuration.getTemplate("resourceConfig.ftl");
-            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TemplateException e) {
-            e.printStackTrace();
+    private void createConfigFile(Map<String, Object> model,Map<String,Object> paramMap) {
+        File saveDir = new File(configUtils.programFlashPath());
+        if (!saveDir.exists()) {
+            saveDir.mkdirs();
         }
-        if (!StringUtils.isEmpty(content)) {
-            //文件保存位置
-            File saveDir = new File(configUtils.programFlashPath());
-            if (!saveDir.exists()) {
-                saveDir.mkdirs();
+        File file = new File(configUtils.programFlashPath() + File.separator + "config");
+        JSONObject jsonObject = jsonObject = new JSONObject(true);
+
+        //放入服务器端自定义配置表
+        if( null != paramMap){
+            Iterator<String> iter = paramMap.keySet().iterator();
+            while(iter.hasNext()){
+                String key = iter.next();
+                jsonObject.put(key,paramMap.get(key));
             }
-            File file = new File(configUtils.programFlashPath() + File.separator + "config");
-            //如果配置文件已经存在
-            if(file.exists()){
-                //GsonBuilder gsonbuilder = new GsonBuilder().serializeNulls();
-                //Gson gson = gsonbuilder.create();
-                BufferedReader in = null;
-                StringBuffer buffer = new StringBuffer();
-                String line = "";
-                try {
-                    in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-                    while ((line = in.readLine()) != null){
-                        buffer.append(line);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        }
 
-                //ConfigJson configJson = gson.fromJson(buffer.toString(),ConfigJson.class);
-                ConfigJson configJson =  JSON.parseObject(buffer.toString(),ConfigJson.class);
-                Object object = model.get("partyResourceModelList");
-                Object objectAdExpression = model.get("adExpressionList");
-                Object objectAdSpecialEffects = model.get("adSpecialEffectList");
-                Object objectAdVideoUrl = model.get("adVideoUrlList");
+        Object object = model.get("partyResourceModelList");
 
-                if(objectAdExpression!=null){
-                    List<ResourceFile> expressionList = (List<ResourceFile>)objectAdExpression;
-                    if(ListUtils.checkListIsNotNull(expressionList)){
-                        List<Resource> resourceList = new ArrayList<>();
-                        for(ResourceFile resourceFile : expressionList){
-                            Resource resource = new Resource();
-                            resource.setId(resourceFile.getId());
-                            resource.setUrl(resourceFile.getLocalFilePath());
-                            resourceList.add(resource);
-                        }
-                        configJson.setAdExpressions(resourceList);
-                    }else{
-                        configJson.setAdExpressions(new ArrayList<>());
+        if( null != object){
+            List<PartyResourceModel> partyResourceModelList = (List<PartyResourceModel>)object;
+            List<PartyJson> partyJsonList = new ArrayList<>();
+            for(PartyResourceModel partyResourceModel : partyResourceModelList){
+                PartyJson partyJson = new PartyJson();
+                partyJson.setName(partyResourceModel.getParty().getName());
+                partyJson.setPartyId(partyResourceModel.getParty().getId());
+                partyJson.setMovieAlias(partyResourceModel.getParty().getMovieAlias());
+                List<ResourceFile> expressionList = partyResourceModel.getBigExpressionList();
+
+                if( null != expressionList && expressionList.size() > 0){
+                    List<Resource> resourceList = new ArrayList<>();
+                    for(ResourceFile resourceFile : expressionList){
+                        Resource resource = new Resource();
+                        resource.setId(resourceFile.getId());
+                        resource.setUrl(resourceFile.getLocalFilePath());
+                        resourceList.add(resource);
                     }
+                    partyJson.setExpressions(resourceList);
                 }else{
-                    configJson.setAdExpressions(new ArrayList<>());
+                    partyJson.setExpressions(new ArrayList<>());
                 }
 
-                if(objectAdSpecialEffects!=null){
-                    List<ResourceFile> specialEffectsList = (List<ResourceFile>)objectAdSpecialEffects;
-                    if(ListUtils.checkListIsNotNull(specialEffectsList)){
-                        List<Resource> resourceList = new ArrayList<>();
-                        for(ResourceFile resourceFile : specialEffectsList){
-                            Resource resource = new Resource();
-                            resource.setId(resourceFile.getId());
-                            resource.setUrl(resourceFile.getLocalFilePath());
-                            resourceList.add(resource);
-                        }
-                        configJson.setAdSpecialEffects(resourceList);
-                    }else{
-                        configJson.setAdSpecialEffects(new ArrayList<>());
+                List<ResourceFile> specialImageList= partyResourceModel.getSpecialImageList();
+                if( null != specialImageList && specialImageList.size() > 0){
+                    List<Resource> resourceList = new ArrayList<>();
+                    for(ResourceFile resourceFile : specialImageList){
+                        Resource resource = new Resource();
+                        resource.setId(resourceFile.getId());
+                        resource.setUrl(resourceFile.getLocalFilePath());
+                        resourceList.add(resource);
                     }
+                    partyJson.setSpecialEffects(resourceList);
                 }else{
-                    configJson.setAdSpecialEffects(new ArrayList<>());
+                    partyJson.setSpecialEffects(new ArrayList<>());
                 }
-                if(objectAdVideoUrl!=null){
-                    List<ResourceFile> specialEffectsList = (List<ResourceFile>)objectAdVideoUrl;
+
+                List<ResourceFile> specialVideoList = partyResourceModel.getSpecialVideoList();
+
+                if(partyResourceModel.getAdTimerDanmuPath()!=null){
+                    partyJson.setAdTimerDanmuUrl(partyResourceModel.getAdTimerDanmuPath());
+                }
+
+
+                if( null != specialVideoList && specialVideoList.size() > 0){
                     List<VideoResourceJson> resourceList = new ArrayList<>();
-                    if(ListUtils.checkListIsNotNull(specialEffectsList)){
-                        for(ResourceFile resourceFile : specialEffectsList){
-                            VideoResourceJson videoResourceJson = new VideoResourceJson();
-                            videoResourceJson.setId(resourceFile.getId());
-                            videoResourceJson.setUrl(resourceFile.getLocalFilePath());
-                            videoResourceJson.setType("click");
-                            resourceList.add(videoResourceJson);
-                        }
-                        configJson.setAdVideoUrl(resourceList);
-                    }else{
-                        configJson.setAdVideoUrl(new ArrayList<>());
+                    for(ResourceFile resourceFile : specialVideoList){
+                        VideoResourceJson videoResourceJson = new VideoResourceJson();
+                        videoResourceJson.setId(resourceFile.getId());
+                        videoResourceJson.setUrl(resourceFile.getLocalFilePath());
+                        videoResourceJson.setType("click");
+                        resourceList.add(videoResourceJson);
                     }
+                    partyJson.setLocalVideoUrl(resourceList);
+
                 }else{
-                    configJson.setAdVideoUrl(new ArrayList<>());
+                    partyJson.setLocalVideoUrl(new ArrayList<>());
                 }
 
+                List<String> pathList = partyResourceModel.getPathList();
 
-                if( null != object){
-                    List<PartyResourceModel> partyResourceModelList = (List<PartyResourceModel>)object;
-                    List<PartyJson> partyJsonList = new ArrayList<>();
-                    for(PartyResourceModel partyResourceModel : partyResourceModelList){
-                        PartyJson partyJson = new PartyJson();
-                        partyJson.setName(partyResourceModel.getParty().getName());
-                        partyJson.setPartyId(partyResourceModel.getParty().getId());
-                        partyJson.setMovieAlias(partyResourceModel.getParty().getMovieAlias());
-                        List<ResourceFile> expressionList = partyResourceModel.getBigExpressionList();
-
-                        if( null != expressionList && expressionList.size() > 0){
-                            List<Resource> resourceList = new ArrayList<>();
-                            for(ResourceFile resourceFile : expressionList){
-                                Resource resource = new Resource();
-                                resource.setId(resourceFile.getId());
-                                resource.setUrl(resourceFile.getLocalFilePath());
-                                resourceList.add(resource);
-                            }
-                            partyJson.setExpressions(resourceList);
-                        }else{
-                            partyJson.setExpressions(new ArrayList<>());
-                        }
-
-                        List<ResourceFile> specialImageList= partyResourceModel.getSpecialImageList();
-                        if( null != specialImageList && specialImageList.size() > 0){
-                            List<Resource> resourceList = new ArrayList<>();
-                            for(ResourceFile resourceFile : specialImageList){
-                                Resource resource = new Resource();
-                                resource.setId(resourceFile.getId());
-                                resource.setUrl(resourceFile.getLocalFilePath());
-                                resourceList.add(resource);
-                            }
-                            partyJson.setSpecialEffects(resourceList);
-                        }else{
-                            partyJson.setSpecialEffects(new ArrayList<>());
-                        }
-
-                        List<ResourceFile> specialVideoList = partyResourceModel.getSpecialVideoList();
-
-                        if(partyResourceModel.getAdTimerDanmuPath()!=null){
-                            partyJson.setAdTimerDanmuUrl(partyResourceModel.getAdTimerDanmuPath());
-                        }
-
-
-                        if( null != specialVideoList && specialVideoList.size() > 0){
-                            List<VideoResourceJson> resourceList = new ArrayList<>();
-                            for(ResourceFile resourceFile : specialVideoList){
-                                VideoResourceJson videoResourceJson = new VideoResourceJson();
-                                videoResourceJson.setId(resourceFile.getId());
-                                videoResourceJson.setUrl(resourceFile.getLocalFilePath());
-                                videoResourceJson.setType("click");
-                                resourceList.add(videoResourceJson);
-                            }
-                            partyJson.setLocalVideoUrl(resourceList);
-
-                        }else{
-                            partyJson.setLocalVideoUrl(new ArrayList<>());
-                        }
-
-                        List<String> pathList = partyResourceModel.getPathList();
-
-                        if( null != pathList && pathList.size() > 0){
-                            List<Resource> resourceList = new ArrayList<>();
-                            for(String url : pathList){
-                                Resource resource = new Resource();
-                                resource.setUrl(url);
-                                resourceList.add(resource);
-                            }
-                            partyJson.setTimerDanmuUrl(resourceList);
-
-                        }else{
-                            partyJson.setTimerDanmuUrl(new ArrayList<>());
-                        }
-                        partyJsonList.add(partyJson);
-
+                if( null != pathList && pathList.size() > 0){
+                    List<Resource> resourceList = new ArrayList<>();
+                    for(String url : pathList){
+                        Resource resource = new Resource();
+                        resource.setUrl(url);
+                        resourceList.add(resource);
                     }
-                    configJson.setPartys(partyJsonList);
-                }
+                    partyJson.setTimerDanmuUrl(resourceList);
 
-
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(file);
-                    //fos.write(gson.toJson(configJson).getBytes());
-                    fos.write(JSON.toJSONString(configJson).getBytes());
-                }catch (FileNotFoundException e) {
-                    log.error("", e);
-                } catch (IOException e) {
-                    log.error("", e);
+                }else{
+                    partyJson.setTimerDanmuUrl(new ArrayList<>());
                 }
-            }else{
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(file);
-                    fos.write(content.getBytes());
-                } catch (FileNotFoundException e) {
-                    log.error("", e);
-                } catch (IOException e) {
-                    log.error("", e);
-                }
+                partyJsonList.add(partyJson);
 
-                if (fos != null) {
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        log.error("", e);
-                    }
+            }
+            jsonObject.put("partys",partyJsonList);
+        }
+
+        Object objectAdExpression = model.get("adExpressionList");
+        Object objectAdSpecialEffects = model.get("adSpecialEffectList");
+        Object objectAdVideoUrl = model.get("adVideoUrlList");
+        List<Resource> adExpressionList = new ArrayList<>();
+        if(objectAdExpression!=null){
+            List<ResourceFile> expressionList = (List<ResourceFile>)objectAdExpression;
+            if(ListUtils.checkListIsNotNull(expressionList)){
+                for(ResourceFile resourceFile : expressionList){
+                    Resource resource = new Resource();
+                    resource.setId(resourceFile.getId());
+                    resource.setUrl(resourceFile.getLocalFilePath());
+                    adExpressionList.add(resource);
                 }
             }
-
         }
+        jsonObject.put("adExpressions",adExpressionList);
+
+        List<Resource> adSpecialEffectList = new ArrayList<>();
+        if(objectAdSpecialEffects!=null){
+            List<ResourceFile> specialEffectsList = (List<ResourceFile>)objectAdSpecialEffects;
+            if(ListUtils.checkListIsNotNull(specialEffectsList)){
+
+                for(ResourceFile resourceFile : specialEffectsList){
+                    Resource resource = new Resource();
+                    resource.setId(resourceFile.getId());
+                    resource.setUrl(resourceFile.getLocalFilePath());
+                    adSpecialEffectList.add(resource);
+                }
+            }
+        }
+        jsonObject.put("adSpecialEffects",adSpecialEffectList);
+
+        List<VideoResourceJson> adVideoList = new ArrayList<>();
+        if(objectAdVideoUrl!=null){
+            List<ResourceFile> specialEffectsList = (List<ResourceFile>)objectAdVideoUrl;
+            if(ListUtils.checkListIsNotNull(specialEffectsList)){
+                for(ResourceFile resourceFile : specialEffectsList){
+                    VideoResourceJson videoResourceJson = new VideoResourceJson();
+                    videoResourceJson.setId(resourceFile.getId());
+                    videoResourceJson.setUrl(resourceFile.getLocalFilePath());
+                    videoResourceJson.setType("click");
+                    adVideoList.add(videoResourceJson);
+                }
+            }
+        }
+        jsonObject.put("adVideoUrl",adVideoList);
+
+
+
+
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(JSON.toJSONString(jsonObject).getBytes());
+        }catch (FileNotFoundException e) {
+            log.error("", e);
+        } catch (IOException e) {
+            log.error("", e);
+        }
+
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                log.error("", e);
+            }
+        }
+
+
     }
+
+
 
     private TimerDanmuFileConfig initTimerDanmuFileConfig(){
         String jsonStr = HttpUtils.httpRequestStr(configUtils.getTimerDanmuNetUrl()+"?addressId="+properties.getAddressId(), "GET", null);

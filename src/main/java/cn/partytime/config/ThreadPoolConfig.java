@@ -1,6 +1,5 @@
 package cn.partytime.config;
 
-import com.sun.org.apache.regexp.internal.RE;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;

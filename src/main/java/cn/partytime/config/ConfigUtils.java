@@ -126,7 +126,7 @@ public class ConfigUtils {
         return rsyncSaveFilePath()+"/adTimerDanmu";
     }
 
-    private String baseTestUrl = "http://test.party-time.cn";
+    private String baseTestUrl = "http://127.0.0.1";
 
     private String baseUrl = "http://www.party-time.cn";
 
@@ -139,6 +139,8 @@ public class ConfigUtils {
     private String tempUpdateVersionNetUrl="/v1/api/javaClient/findUpdatePlan";
 
     private String tempUpdateVersionResultCommitNetUrl="/v1/api/javaClient/updateUpdatePlan";
+
+    private String paramUrl = "/v1/api/javaClient/findFlashConfig";
 
     private String javaVersionDirectory= "/version/java";
 
@@ -243,5 +245,12 @@ public class ConfigUtils {
         }
     }
 
+    public String getParamUrl(){
+        if(0==properties.getEnv()){
+            return baseTestUrl+paramUrl;
+        }else{
+            return baseUrl+paramUrl;
+        }
+    }
 
 }
