@@ -91,6 +91,13 @@ public class MainService {
                 windowShellService.restartTask();
 
                 deviceService.findDeviceInfo();
+
+                try {
+                    windowShellService.startTeamViewer();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }

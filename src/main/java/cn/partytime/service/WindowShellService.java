@@ -88,13 +88,13 @@ public class WindowShellService {
     }
 
     public void startTeamViewer() throws InterruptedException {
-        execExe(configUtils.shellPath() + "/startTeamViewer.bat");
-        killTask();
-        Thread.sleep(60 * 1000);
+        //execExe(configUtils.shellPath() + "/startTeamViewer.bat");
+        //killTask();
+        //Thread.sleep(60 * 1000);
         log.info("save screen");
-        PrintScreenUtils.screenShotAsFile(configUtils.screenSavePath());
+        PrintScreenUtils.screenShotAsFile(configUtils.screenSavePath(),configUtils.getScreenSaveFile());
         log.info("save screen success");
-        HttpUtils.postFile(configUtils.screenSavePath() + "/screen.jpg", "http://www.party-time.cn/v1/api/javaClient/saveScreen");
+        HttpUtils.postFile(configUtils.screenSavePath()+"/"+configUtils.getScreenSaveFile(), configUtils.getSaveScreenPicUrl());
         log.info("post success");
     }
 
@@ -122,4 +122,5 @@ public class WindowShellService {
         log.info("current command is:{}",shellCommand);
         execShell(shellCommand);
     }
+
 }

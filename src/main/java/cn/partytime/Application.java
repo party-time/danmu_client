@@ -1,5 +1,9 @@
+package cn.partytime;
+
+import cn.partytime.model.Properties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -8,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan("cn.partytime")
+@EnableConfigurationProperties({Properties.class})
 public class Application {
 
     public static void main(String[] args) {
@@ -15,5 +20,6 @@ public class Application {
         SpringApplication app = new SpringApplication(Application.class);
         app.setWebEnvironment(false);
         app.run(args);
+        System.setProperty("java.awt.headless", "false");
     }
 }

@@ -24,7 +24,7 @@ public class ConfigUtils {
     private String executeScript="executeScript";
     private String testExecuteScript="testExecuteScript";
     public String saveFilePath = "resource";
-    private String baseTestUrl = "http://test.party-time.cn";
+    private String baseTestUrl = "http://127.0.0.1";
     private String baseUrl = "http://www.party-time.cn";
     private String logTestUrl="http://testlog.party-time.cn";
     private String logUrl="http://log.party-time.cn";
@@ -53,6 +53,8 @@ public class ConfigUtils {
 
     private String paramUrl="/v1/api/javaClient/findFlashConfig";
 
+    private String saveScreenPicUrl="/v1/api/javaClient/saveScreen";
+
     private String filePath(){
         return properties.getBasePath()+"/enterX";
     }
@@ -72,9 +74,6 @@ public class ConfigUtils {
             return productionRsyncName;
         }
     }
-
-
-
 
     public String rsyncClientName(){
         if(0==properties.getEnv()){
@@ -115,6 +114,10 @@ public class ConfigUtils {
 
     public String screenSavePath(){
         return filePath()+"/screenPic";
+    }
+
+    public String getScreenSaveFile(){
+        return properties.getRegistCode()+".jpg";
     }
 
 
@@ -253,5 +256,12 @@ public class ConfigUtils {
         }
     }
 
+    public String getSaveScreenPicUrl(){
+        if(0==properties.getEnv()){
+            return baseTestUrl+saveScreenPicUrl;
+        }else{
+            return baseUrl+saveScreenPicUrl;
+        }
+    }
 
 }

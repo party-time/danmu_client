@@ -16,12 +16,15 @@ public class PrintScreenUtils {
 
 
 
-    public static void screenShotAsFile(String savePath) {
+    public static void screenShotAsFile(String savePath,String saveFile) {
         try {
             Robot robot = new Robot();
-            BufferedImage bfImage = robot.createScreenCapture(new Rectangle(0, 0, 1024, 1024));
+            BufferedImage bfImage = robot.createScreenCapture(new Rectangle(0, 0, 1366 , 768 ));
             File path = new File(savePath);
-            File file = new File(path, "screen.jpg");
+            if(!path.exists()){
+                path.mkdir();
+            }
+            File file = new File(path, saveFile);
             ImageIO.write(bfImage, "jpg", file);
         } catch (AWTException e) {
             log.error("",e);

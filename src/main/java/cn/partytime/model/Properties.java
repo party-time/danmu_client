@@ -1,12 +1,13 @@
 package cn.partytime.model;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by administrator on 2017/2/16.
  */
-@Service
+@ConfigurationProperties
 public class Properties {
 
     @Value("${basePath}")
