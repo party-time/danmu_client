@@ -27,7 +27,7 @@ public class WindowShellService {
 
     private static String FIND_TASK = "tasklist | find ";
 
-    private String execShell(String shellString) {
+    public String execShell(String shellString) {
         log.info(shellString);
         Process process = null;
         StringBuffer sb = new StringBuffer();
@@ -84,7 +84,7 @@ public class WindowShellService {
     }
 
     public void startTask() {
-        execExe(configUtils.programFlashPath()+"/"+configUtils.appName+".exe");
+        execExe(configUtils.findFlashProgramPath()+"/"+configUtils.appName+".exe");
     }
 
     public void startTeamViewer() throws InterruptedException {
@@ -104,23 +104,23 @@ public class WindowShellService {
 
     public void javaClientUpdate() {
         //execShell(configUtils.getJaveUpdateVbsPath());
-        execShell("cscript "+configUtils.getJaveUpdateVbsPath());
+        //execShell("cscript "+configUtils.getJaveUpdateVbsPath());
     }
 
     public void flashClientUpdate() {
-        execShell("cscript "+configUtils.getFlashUpdateVbsPath());
+        //execShell("cscript "+configUtils.getFlashUpdateVbsPath());
     }
 
     public void javaClientRollback(){
-        String shellCommand="cscript "+configUtils.getJavaRollbackVbsPath();
-        log.info("current command is:{}",shellCommand);
-        execShell(shellCommand);
+        //String shellCommand="cscript "+configUtils.getJavaRollbackVbsPath();
+        //log.info("current command is:{}",shellCommand);
+        //execShell(shellCommand);
     }
 
     public void flashClientRollback(){
-        String shellCommand="cscript " +configUtils.getFlashRollbackVbsPath();
-        log.info("current command is:{}",shellCommand);
-        execShell(shellCommand);
+        //String shellCommand="cscript " +configUtils.getFlashRollbackVbsPath();
+       // log.info("current command is:{}",shellCommand);
+        //execShell(shellCommand);
     }
 
 }

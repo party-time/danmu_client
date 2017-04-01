@@ -92,11 +92,11 @@ public class MainService {
 
                 deviceService.findDeviceInfo();
 
-                try {
+                /*try {
                     windowShellService.startTeamViewer();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 
             }
         });

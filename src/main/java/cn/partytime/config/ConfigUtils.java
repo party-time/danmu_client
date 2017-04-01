@@ -3,7 +3,6 @@ package cn.partytime.config;
 import cn.partytime.model.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by administrator on 2017/2/15.
@@ -24,12 +23,13 @@ public class ConfigUtils {
     private String executeScript="executeScript";
     private String testExecuteScript="testExecuteScript";
     public String saveFilePath = "resource";
-    private String baseTestUrl = "http://127.0.0.1";
+    private String baseTestUrl = "http://test.party-time.cn";
     private String baseUrl = "http://www.party-time.cn";
     private String logTestUrl="http://testlog.party-time.cn";
     private String logUrl="http://log.party-time.cn";
 
     private String logUrlPath="/log/java";
+
     public String cmdRsyncFilePath = "/enterX/flash/"+saveFilePath;
     private String tempInitUrl="/v1/api/javaClient/latelyParty";
     private String tempAdTimerDanmuNetUrl="/v1/api/javaClient/findAdTimerDanmu";
@@ -38,18 +38,10 @@ public class ConfigUtils {
     private String tempUpdateVersionResultCommitNetUrl="/v1/api/javaClient/updateUpdatePlan";
     private String deviceInfoUrlUrl="/v1/api/admin/device/find";
 
-    private String javaVersionDirectory= "/version/java";
-    private String flashVersionDirectory= "/version/flash";
-    private String javaUpateVbsName = "/javaUpdate.vbs";
-    private String flashUpateVbsName = "/flashUpdate.vbs";
-    private String timerJavaUpateVbsName = "/timerjavaUpdate.vbs";
-    private String timerFlashUpateVbsName = "/timerflashUpdate.vbs";
-    private String javaRollbackVbsName = "/javaRollback.vbs";
-    private String flashRollbackVbsName = "/flashRollback.vbs";
-
-
     private String projectorOpenPath="/tgi/console.tgi?powerOn131658";
     private String projectorClosePath="/tgi/console.tgi?powerOff131047";
+
+    private String updatePlanPath="/v1/api/javaClient/updateUpdatePlan";
 
     private String paramUrl="/v1/api/javaClient/findFlashConfig";
 
@@ -82,8 +74,6 @@ public class ConfigUtils {
             return clientdownload;
         }
     }
-
-
 
     public String getExecuteScriptName(){
         if(0==properties.getEnv()){
@@ -121,55 +111,21 @@ public class ConfigUtils {
     }
 
 
-    public String programFlashPath(){
-        return filePath() + "/flash";
-    }
+    public String findFlashProgramPath() {return filePath() + "/flash";}
+    public String findJavaProgramPath() {return filePath() + "/java";}
+    public String findBakFlashProgramPath() {return filePath() + "/bak/flash";}
+    public String findBakJavaProgramPath() {return filePath() + "/bak/java";}
+    public String findVersionJavaPath(){return filePath() + "/version/java"; }
+    public String findVersionFlashPath(){return filePath() + "/version/flash"; }
+    public String findJavaNewClientPath(){return filePath() + "/newClient/java";}
+    public String findFlashNewClientPath(){return filePath() + "/newClient/flash";}
 
+    public String programPath(){return "/enterX/newClient";}
 
-    public String findJavaProgramPath() {
-        return filePath() + "/java";
-    }
-
-
-
-    public String programPath(){
-
-        return "/enterX/newClient";
-    }
-
-    public String findJavaConfigPath(){
-        return findJavaProgramPath()+"/"+"config";
-    }
-
-    public String getEecuteScriptPath(){
-        return "/enterX/bin";
-    }
-
+    public String findJavaConfigPath(){return findJavaProgramPath()+"/"+"config";}
 
     public String realSaveAdtimerFilePath(){
         return rsyncSaveFilePath()+"/adTimerDanmu";
-    }
-
-    public String getJaveUpdateVbsPath(){
-        return shellPath()+javaUpateVbsName;
-    }
-    public String getFlashUpdateVbsPath(){  return shellPath()+flashUpateVbsName; }
-
-    public String getTimerJaveUpdateVbsPath(){
-        return shellPath()+timerJavaUpateVbsName;
-    }
-    public String getTimerFlashUpdateVbsPath(){  return shellPath()+timerFlashUpateVbsName; }
-
-    public String getJavaRollbackVbsPath(){ return shellPath()+javaRollbackVbsName;}
-
-    public String getFlashRollbackVbsPath(){ return shellPath()+flashRollbackVbsName;}
-
-    public String getJavaVersionDirectory() {
-        return filePath()+javaVersionDirectory;
-    }
-
-    public String getFlashVersionDirectory(){
-        return filePath()+flashVersionDirectory;
     }
 
     public String  getDomain(){
@@ -244,15 +200,25 @@ public class ConfigUtils {
     public String getProjectorCloseUrl(String ip){
         return "http://"+ip+projectorClosePath;
     }
+
     public String getAddressId(){
         return  properties.getAddressId();
     }
+
 
     public String getParamUrl(){
         if(0==properties.getEnv()){
             return baseTestUrl+paramUrl;
         }else{
             return baseUrl+paramUrl;
+        }
+    }
+
+    public String findUpdatePlanUrl(){
+        if(0==properties.getEnv()){
+            return baseTestUrl+updatePlanPath;
+        }else{
+            return baseUrl+updatePlanPath;
         }
     }
 
@@ -263,5 +229,6 @@ public class ConfigUtils {
             return baseUrl+saveScreenPicUrl;
         }
     }
+
 
 }

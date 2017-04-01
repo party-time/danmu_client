@@ -191,11 +191,11 @@ public class RsyncFileService {
 
 
     private void createConfigFile(Map<String, Object> model,Map<String,Object> paramMap) {
-        File saveDir = new File(configUtils.programFlashPath());
+        File saveDir = new File(configUtils.findFlashProgramPath());
         if (!saveDir.exists()) {
             saveDir.mkdirs();
         }
-        File file = new File(configUtils.programFlashPath() + File.separator + "config");
+        File file = new File(configUtils.findFlashProgramPath() + File.separator + "config");
         JSONObject jsonObject = jsonObject = new JSONObject(true);
 
         //放入服务器端自定义配置表
@@ -477,7 +477,7 @@ public class RsyncFileService {
 
 
     public void downloadExecuteShell(){
-        String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.getExecuteScriptName()+" "+configUtils.getEecuteScriptPath();
+        String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.getExecuteScriptName()+" "+configUtils.shellPath();
         Process process = null;
         List<String> processList = new ArrayList<String>();
         try {

@@ -42,8 +42,8 @@ public class ClientSchedular {
         rsyncFileService.downloadExecuteShell();
     }
 
-    @Scheduled(cron = "0 */10 * * * ?")
-    public void planSchtasks(){
+    //@Scheduled(cron = "0 */10 * * * ?")
+    /*public void planSchtasks(){
         log.info("execute update plan");
         VersionConfig versionConfig = clientUpdateService.findVersionConfig();
         if(versionConfig!=null){
@@ -54,7 +54,7 @@ public class ClientSchedular {
                 }
             }
         }
-    }
+    }*/
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void repeatFailedRequest(){
