@@ -38,17 +38,15 @@
 package cn.partytime.netty.client.handler;
 
 import io.netty.channel.*;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.websocketx.*;
-import io.netty.util.CharsetUtil;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 
-public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
+public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
     private final WebSocketClientHandshaker handshaker;
 
     private ChannelPromise handshakeFuture;
 
-    public ServerWebSocketClientHandler(WebSocketClientHandshaker handshaker) {
+    public LocalServerWebSocketClientHandler(WebSocketClientHandshaker handshaker) {
         this.handshaker = handshaker;
     }
 

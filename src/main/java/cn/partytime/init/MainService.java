@@ -1,7 +1,8 @@
 package cn.partytime.init;
 
-import cn.partytime.netty.client.ServerWebSocketClient;
 import cn.partytime.model.Properties;
+import cn.partytime.netty.client.LocalServerWebSocketClient;
+import cn.partytime.netty.client.ServerWebSocketClient;
 import cn.partytime.service.DeviceService;
 import cn.partytime.service.LogLogicService;
 import cn.partytime.service.RsyncFileService;
@@ -27,8 +28,11 @@ import java.net.URISyntaxException;
 public class MainService {
     private static final Logger logger = LoggerFactory.getLogger(MainService.class);
 
+    @Value("${netty.port:7070}")
+    private int clientSeverPort;
+
     @Value("${netty.port:8080}")
-    private int port;
+    private int tmsServerPort;
 
     @Autowired
     private Properties properties;
@@ -59,6 +63,9 @@ public class MainService {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private LocalServerWebSocketClient localServerWebSocketClient;
+
     /**
      * 启动系统加载项目
      */
@@ -68,8 +75,9 @@ public class MainService {
         startNettyServer();
         startClientServer();
         //TODO:启动client1连接远程server
-        startClinetFirstToClientServer();
+        startClientConnectRemoteServer();
         //TODO:启动client2连接Javaclient
+        startClientConnectLocalServer();
 
         //TODO:加载本地资源
         initResource();
@@ -105,13 +113,32 @@ public class MainService {
     /**
      * 启动第一个客户端连接远程server
      */
-    private void startClinetFirstToClientServer(){
+    private void startClientConnectRemoteServer(){
         threadPoolTaskExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
                     serverWebSocketClient.initBootstrap();
                 } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    /**
+     * 启动第一个客户端连接远程server
+     */
+    private void startClientConnectLocalServer(){
+        threadPoolTaskExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    localServerWebSocketClient.initBootstrap();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -128,7 +155,7 @@ public class MainService {
                 @Override
                 public void run() {
                     try {
-                        tmsServer.bind(9090);
+                        tmsServer.bind(tmsServerPort);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -148,7 +175,7 @@ public class MainService {
             threadPoolTaskExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    clientServer.nettyStart(port);
+                    clientServer.nettyStart(clientSeverPort);
                 }
             });
         }catch (Exception e){

@@ -47,6 +47,8 @@ public class ConfigUtils {
 
     private String saveScreenPicUrl="/v1/api/javaClient/saveScreen";
 
+    private String webSocketPath="/ws";
+
     private String filePath(){
         return properties.getBasePath()+"/enterX";
     }
@@ -230,5 +232,9 @@ public class ConfigUtils {
         }
     }
 
+    public String getWebSocketUrl(int port){
+        //return getRsyncIp()+webSocketPath+"?code="+properties.getRegistCode()+"&clientType=3";
+        return "http://localhost:"+port+"?code="+properties.getRegistCode()+"&clientType=3";
+    }
 
 }

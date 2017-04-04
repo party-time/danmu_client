@@ -15,8 +15,12 @@
  */
 package cn.partytime.netty.client;
 
+import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.model.device.DeviceInfo;
+import cn.partytime.netty.client.handler.LocalServerWebSocketClientHandler;
 import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
+import cn.partytime.util.CommonUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -25,28 +29,37 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public final class ServerWebSocketClient {
+public final class LocalServerWebSocketClient {
 
 
     @Autowired
+    private ClientCache clientCache;
+
+    @Autowired
     private ConfigUtils configUtils;
+
     public  void initBootstrap() throws Exception {
-        URI uri = new URI(configUtils.getWebSocketUrl(9090));
+
+
+        String url = "ws://"+serverIp()+":7070/ws";
+        URI uri = new URI(url);
         String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
-        final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
+        //final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
         final int port = uri.getPort();
         EventLoopGroup group = new NioEventLoopGroup();
         try {
-            final ServerWebSocketClientHandler handler =
-                    new ServerWebSocketClientHandler(
+            final LocalServerWebSocketClientHandler handler =
+                    new LocalServerWebSocketClientHandler(
                             WebSocketClientHandshakerFactory.newHandshaker(
                                     uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
 
@@ -69,10 +82,22 @@ public final class ServerWebSocketClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("远程服务器连接不上，重新接连");
+            System.out.println("本地客户端重连");
             group.shutdownGracefully();
             initBootstrap();
-
         }
+    }
+
+    private String serverIp(){
+        String ip = CommonUtils.getIpAddress();
+        ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap = clientCache.findConcurrentHashMap();
+        if (deviceInfoConcurrentHashMap != null && deviceInfoConcurrentHashMap.size() > 0) {
+            for (ConcurrentHashMap.Entry<String, DeviceInfo> entry : deviceInfoConcurrentHashMap.entrySet()) {
+                if ( !ip.equals(entry.getValue().getIp()) && entry.getValue().getType()==1) {
+                    return entry.getValue().getIp();
+                }
+            }
+        }
+        return "";
     }
 }
