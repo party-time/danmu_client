@@ -34,12 +34,12 @@ public class TmsCommandService {
             case PROJECTOR_START:
                 //投影仪开启
                 logLogicService.logUploadHandler("投影仪开启");
-                projectorService.projectorHandler(true);
+                projectorService.projectorHandler(0);
                 return;
             case PROJECTOR_CLOSE:
                 //投影仪关闭
                 logLogicService.logUploadHandler("投影仪关闭");
-                projectorService.projectorHandler(false);
+                projectorService.projectorHandler(1);
                 return;
             default:
                 return;
