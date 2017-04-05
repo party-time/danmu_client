@@ -234,7 +234,7 @@ public class ConfigUtils {
 
     public String getWebSocketUrl(int port){
         //return getRsyncIp()+webSocketPath+"?code="+properties.getRegistCode()+"&clientType=3";
-        return "http://localhost:"+port+"?code="+properties.getRegistCode()+"&clientType=3";
+        return "http://localhost:"+port+"?code="+properties.getRegistCode()+"&clientType=2";
     }
 
 }

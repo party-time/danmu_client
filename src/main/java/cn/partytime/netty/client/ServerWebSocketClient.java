@@ -17,6 +17,7 @@ package cn.partytime.netty.client;
 
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
+import cn.partytime.netty.server.clienthandler.ClientServerHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -28,6 +29,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -35,21 +37,24 @@ import java.net.URI;
 @Component
 public final class ServerWebSocketClient {
 
+    @Autowired
+    @Qualifier("serverWebSocketClientHandler")
+    private ServerWebSocketClientHandler serverWebSocketClientHandler;
 
     @Autowired
     private ConfigUtils configUtils;
+
+
     public  void initBootstrap() throws Exception {
-        URI uri = new URI(configUtils.getWebSocketUrl(9090));
-        String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
-        final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
-        final int port = uri.getPort();
+
         EventLoopGroup group = new NioEventLoopGroup();
         try {
-            final ServerWebSocketClientHandler handler =
+            /*final ServerWebSocketClientHandler handler =
                     new ServerWebSocketClientHandler(
                             WebSocketClientHandshakerFactory.newHandshaker(
-                                    uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
-
+                                    uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));*/
+            URI uri = new URI(configUtils.getWebSocketUrl(9090));
+            final int port = uri.getPort();
             Bootstrap b = new Bootstrap();
             b.group(group)
              .channel(NioSocketChannel.class)
@@ -61,7 +66,7 @@ public final class ServerWebSocketClient {
                              new HttpClientCodec(),
                              new HttpObjectAggregator(8192),
                              WebSocketClientCompressionHandler.INSTANCE,
-                             handler);
+                             serverWebSocketClientHandler);
                  }
              });
             ChannelFuture channelFuture = b.connect(uri.getHost(), port).sync();

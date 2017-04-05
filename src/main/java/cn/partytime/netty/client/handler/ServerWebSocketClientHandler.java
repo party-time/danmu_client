@@ -37,20 +37,42 @@
 
 package cn.partytime.netty.client.handler;
 
+import cn.partytime.config.ConfigUtils;
+import cn.partytime.model.client.ClientCommand;
+import cn.partytime.model.client.ClientCommandConfig;
+import cn.partytime.service.CommandExecuteService;
+import com.alibaba.fastjson.JSON;
 import io.netty.channel.*;
+import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+
+@Component
+@Qualifier("serverWebSocketClientHandler")
+@ChannelHandler.Sharable
 public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
-    private final WebSocketClientHandshaker handshaker;
+
+    @Autowired
+    private ConfigUtils configUtils;
+
+    @Autowired
+    private CommandExecuteService commandExecuteService;
+
+    private  WebSocketClientHandshaker handshaker;
 
     private ChannelPromise handshakeFuture;
 
-    public ServerWebSocketClientHandler(WebSocketClientHandshaker handshaker) {
-        this.handshaker = handshaker;
-    }
 
     public ChannelFuture handshakeFuture() {
         return handshakeFuture;
@@ -63,7 +85,18 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        handshaker.handshake(ctx.channel());
+        URI uri = null;
+        try {
+            uri = new URI(configUtils.getWebSocketUrl(9090));
+            String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
+            final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
+            final int port = uri.getPort();
+            handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
+            handshaker.handshake(ctx.channel());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -74,19 +107,55 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         Channel ch = ctx.channel();
+        if (!handshaker.isHandshakeComplete()) {
+            handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+            System.out.println("WebSocket Client connected!");
+            handshakeFuture.setSuccess();
+            return;
+        }
 
-
-        /*WebSocketFrame frame = (WebSocketFrame) msg;
+        if (msg instanceof FullHttpResponse) {
+            FullHttpResponse response = (FullHttpResponse) msg;
+            throw new IllegalStateException(
+                    "Unexpected FullHttpResponse (getStatus=" + response.status() +
+                            ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
+        }
+        WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             System.out.println("WebSocket Client received message: " + textFrame.text());
-        } else if (frame instanceof PongWebSocketFrame) {
-            System.out.println("WebSocket Client received pong");
-        } else if (frame instanceof CloseWebSocketFrame) {
-            System.out.println("WebSocket Client received closing");
-            ch.close();
-        }*/
+            String commandTxt = textFrame.text();
+            ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
+            //System.out.print(clientCommandConfig);
+
+            ClientCommand clientCommand = clientCommandConfig.getData();
+            String type = clientCommand.getName();
+            new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    execute(type);
+                }
+            }).start();
+
+        }
     }
+
+    public void execute(String command){
+        String commandStr = command.substring(0, 1).toUpperCase() + command.substring(1);
+        String methodName="execute"+commandStr+"CallBack";
+        try {
+            Class<CommandExecuteService> clz = CommandExecuteService.class;
+            Method method = clz.getMethod(methodName);
+            method.invoke(commandExecuteService);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
