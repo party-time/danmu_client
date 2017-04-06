@@ -14,7 +14,9 @@ import java.io.IOException;
 @Slf4j
 public class PrintScreenUtils {
 
-
+    static{
+        System.setProperty("java.awt.headless", "false");
+    }
 
     public static void screenShotAsFile(String savePath,String saveFile) {
         try {

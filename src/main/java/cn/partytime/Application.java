@@ -20,6 +20,5 @@ public class Application {
         SpringApplication app = new SpringApplication(Application.class);
         app.setWebEnvironment(false);
         app.run(args);
-        System.setProperty("java.awt.headless", "false");
     }
 }

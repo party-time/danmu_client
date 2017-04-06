@@ -89,6 +89,7 @@ public class MainService {
         threadPoolTaskExecutor.execute(new Runnable() {
             @Override
             public void run() {
+                /**
                 if(properties.getIfDownload()==0) {
                     rsyncFileService.rsyncFile();
                     rsyncFileService.downloadClient();
@@ -99,12 +100,9 @@ public class MainService {
                 windowShellService.restartTask();
 
                 deviceService.findDeviceInfo();
+                **/
 
-                /*try {
-                    windowShellService.startTeamViewer();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
+                windowShellService.printScreenPic();
 
             }
         });
