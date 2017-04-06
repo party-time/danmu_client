@@ -91,26 +91,15 @@ public class CommandExecuteService {
     public void executeConfigCreateCallBack() {
     }
 
-    public void executeTeamViewStart1CallBack() {
+    public void executeTeamViewStartCallBack() {
         windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTTEAMVIEWER_BAT));
     }
 
-    public void executeScreenPic1CallBack() {
-
+    public void executeScreenPicCallBack() {
+        windowShellService.printScreenPic();
     }
 
-    public void executeTeamViewClose1CallBack() {
-        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLTEAMVIEWER_BAT));
-    }
-
-    public void executeTeamViewStart2CallBack() {
-        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTTEAMVIEWER_BAT));
-    }
-
-    public void executeScreenPic2CallBack() {
-    }
-
-    public void executeTeamViewClose2CallBack() {
+    public void executeTeamViewCloseCallBack() {
         windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLTEAMVIEWER_BAT));
     }
 

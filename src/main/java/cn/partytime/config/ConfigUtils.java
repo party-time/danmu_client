@@ -109,7 +109,7 @@ public class ConfigUtils {
     }
 
     public String getScreenSaveFile(){
-        return properties.getRegistCode()+".jpg";
+        return properties.getAddressId()+"_"+properties.getMachineNum()+".jpg";
     }
 
 

@@ -29,7 +29,6 @@ public class Properties {
     @Value("${machineNum}")
     private String machineNum;
 
-
     public String getBasePath() {
         return basePath;
     }

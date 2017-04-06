@@ -88,9 +88,11 @@ public class WindowShellService {
     }
 
     public void startTeamViewer() throws InterruptedException {
-        //execExe(configUtils.shellPath() + "/startTeamViewer.bat");
-        //killTask();
-        //Thread.sleep(60 * 1000);
+        execExe(configUtils.shellPath() + "/startTeamViewer.bat");
+        killTask();
+    }
+
+    public void printScreenPic(){
         log.info("save screen");
         PrintScreenUtils.screenShotAsFile(configUtils.screenSavePath(),configUtils.getScreenSaveFile());
         log.info("save screen success");
