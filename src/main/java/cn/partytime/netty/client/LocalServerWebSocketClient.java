@@ -19,8 +19,7 @@ import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.netty.client.handler.LocalServerWebSocketClientHandler;
-import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
-import cn.partytime.util.CommonUtils;
+import cn.partytime.util.CommonUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -49,7 +48,6 @@ public final class LocalServerWebSocketClient {
     private ConfigUtils configUtils;
 
     public  void initBootstrap() throws Exception {
-
 
         String url = "ws://"+serverIp()+":7070/ws";
         URI uri = new URI(url);
@@ -82,14 +80,15 @@ public final class LocalServerWebSocketClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("本地客户端重连");
             group.shutdownGracefully();
+            Thread.sleep(2000);
+            System.out.println("本地客户端重连");
             initBootstrap();
         }
     }
 
     private String serverIp(){
-        String ip = CommonUtils.getIpAddress();
+        String ip = CommonUtil.getIpAddress();
         ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap = clientCache.findConcurrentHashMap();
         if (deviceInfoConcurrentHashMap != null && deviceInfoConcurrentHashMap.size() > 0) {
             for (ConcurrentHashMap.Entry<String, DeviceInfo> entry : deviceInfoConcurrentHashMap.entrySet()) {

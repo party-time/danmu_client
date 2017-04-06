@@ -31,6 +31,7 @@ public class ConfigUtils {
     private String logUrlPath="/log/java";
 
     public String cmdRsyncFilePath = "/enterX/flash/"+saveFilePath;
+
     private String tempInitUrl="/v1/api/javaClient/latelyParty";
     private String tempAdTimerDanmuNetUrl="/v1/api/javaClient/findAdTimerDanmu";
     private String tempTimerDanmuNetUrl="/v1/api/javaClient/findTimerDanmuFile";
@@ -46,6 +47,9 @@ public class ConfigUtils {
     private String paramUrl="/v1/api/javaClient/findFlashConfig";
 
     private String saveScreenPicUrl="/v1/api/javaClient/saveScreen";
+
+
+
 
     private String webSocketPath="/ws";
 
@@ -186,6 +190,24 @@ public class ConfigUtils {
             return logUrl+logUrlPath;
         }
     }
+
+    public String findSpecialVideosPath() {
+        return cmdRsyncFilePath +"/upload"+"/specialVideos";
+    }
+    public  String  findExpressionsPath() {
+        return cmdRsyncFilePath +"/upload"+"/expressions";
+    }
+    public  String  findSpecialImagesPath(){
+        return cmdRsyncFilePath +"/upload"+"/specialImages";
+    }
+    public  String  findTimerDanmuPath() {
+        return cmdRsyncFilePath +"/timerDanmu";
+    }
+    public  String   findAdTimerDanmuPath(){
+        return cmdRsyncFilePath +"/adTimerDanmu";
+    }
+
+
 
     public String getDeviceInfoUrlUrl(){
         if(0==properties.getEnv()){

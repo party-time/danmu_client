@@ -41,6 +41,9 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.service.CommandExecuteService;
+import cn.partytime.service.ServerCommandHandlerService;
+import cn.partytime.util.CommonUtil;
+import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
@@ -72,6 +75,11 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     private  WebSocketClientHandshaker handshaker;
 
     private ChannelPromise handshakeFuture;
+
+
+
+    @Autowired
+    private ServerCommandHandlerService serverCommandHandlerService;
 
 
     public ChannelFuture handshakeFuture() {
@@ -127,13 +135,17 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
             //System.out.print(clientCommandConfig);
-
             ClientCommand clientCommand = clientCommandConfig.getData();
             String type = clientCommand.getName();
             new Thread(new Runnable(){
                 @Override
                 public void run() {
+                    //直接脚本
                     execute(type);
+                    //执行回调
+                    if(clientCommand.getBcallBack()!=null){
+                        HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
+                    }
                 }
             }).start();
 
@@ -141,6 +153,21 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     }
 
     public void execute(String command){
+
+        if(CommonUtil.hasDigit(command)){
+            if(!serverCommandHandlerService.chckerIsLocalCommand(command)){
+                System.out.print("不是本机要执行的命令");
+                //通知下个服务器
+                return;
+            }
+        }else{
+            //通知下个服务器
+        }
+        command = command.replaceAll("\\d+", "");
+        /*if(!serverCommandHandlerService.chckerIsLocalCommand(command)){
+            System.out.print("不是本机要执行的命令");
+            return;
+        }*/
         String commandStr = command.substring(0, 1).toUpperCase() + command.substring(1);
         String methodName="execute"+commandStr+"CallBack";
         try {

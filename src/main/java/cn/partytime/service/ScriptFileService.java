@@ -82,34 +82,64 @@ public class ScriptFileService {
         map.put("javaCommonUpdateVbsPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS));
 
 
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.START_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATE_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAROLLBACK_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHROLLBACK_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHUPDATE_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHUPDATECOMMON_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERFLASHUPDATE_VBS);
-        createFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS);
-        createFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.JAVASTART_BAT);
-        createFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.KILLFLASH_BAT);
-        createFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.STARTFLASH_BAT);
-        createFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.KILLTEAMVIEWER_BAT);
-        createFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.STARTTEAMVIEWER_BAT);
-        createFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHROLLBACK_SH);
-        createFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHUPDATE_SH);
-        createFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAROLLBACK_SH);
-        createFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAUPDATE_SH);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.START_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATE_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAROLLBACK_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHROLLBACK_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHUPDATE_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHUPDATECOMMON_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERFLASHUPDATE_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS);
+        createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.JAVASTART_BAT);
+        createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.KILLFLASH_BAT);
+        createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.STARTFLASH_BAT);
+        createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.KILLTEAMVIEWER_BAT);
+        createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.STARTTEAMVIEWER_BAT);
+        createShellFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHROLLBACK_SH);
+        createShellFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHUPDATE_SH);
+        createShellFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAROLLBACK_SH);
+        createShellFile(map,scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAUPDATE_SH);
+
+        map.put("rsyncScriptPath",configUtils.findSpecialVideosPath());
+        map.put("resourceType",scriptConfigUtils.SPECIALVIDEOS_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.SPECIALVIDEOS_BAT);
+
+        map.put("rsyncScriptPath",configUtils.findExpressionsPath());
+        map.put("resourceType",scriptConfigUtils.EXPRESSIONS_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.EXPRESSIONS_BAT);
+
+        map.put("rsyncScriptPath",configUtils.findSpecialImagesPath());
+        map.put("resourceType",scriptConfigUtils.SPECIALIMAGES_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.SPECIALIMAGES_BAT);
+
+        map.put("rsyncScriptPath",configUtils.findTimerDanmuPath());
+        map.put("resourceType",scriptConfigUtils.TIMERDANMU_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.TIMERDANMU_BAT);
+
+        map.put("rsyncScriptPath",configUtils.findAdTimerDanmuPath());
+        map.put("resourceType",scriptConfigUtils.ADTIMERDANMU_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.ADTIMERDANMU_BAT);
     }
 
-    public void createFile(Map<String, Object> model,String type,String fileName){
+    public void createRsyncDownloadShellFile(Map<String, Object> model,String type,String freemakerName,String fileName){
+        String freemarkerPath = scriptConfigUtils.findFreemarkerPath(freemakerName,type);
+        String filePath = scriptConfigUtils.fineScriptPath(type,fileName);
+        createFile(model,freemarkerPath,filePath);
+    }
+
+    public void createShellFile(Map<String, Object> model,String type,String fileName){
+        String freemarkerPath = scriptConfigUtils.findFreemarkerPath(fileName,type);
+        String filePath = scriptConfigUtils.fineScriptPath(type,fileName);
+        createFile(model,freemarkerPath,filePath);
+    }
+
+
+    public void createFile(Map<String, Object> model,String freemarkerPath,String filePath){
         Template template = null; // freeMarker template
         String content = null;
         FileOutputStream fos = null;
-
-        //String binPath= configUtils.shellPath();
-       String freemarkerPath = scriptConfigUtils.findFreemarkerPath(fileName,type);
         try {
             template = configuration.getTemplate(freemarkerPath);
             content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
@@ -118,8 +148,6 @@ public class ScriptFileService {
         } catch (TemplateException e) {
             e.printStackTrace();
         }
-
-        String filePath = scriptConfigUtils.fineScriptPath(type,fileName);
         File file = new File(filePath);
 
         try {

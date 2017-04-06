@@ -26,6 +26,9 @@ public class CommandExecuteService {
     private ScriptConfigUtils scriptConfigUtils;
 
     @Autowired
+    private RsyncFileService rsyncFileService;
+
+    @Autowired
     private ConfigUtils configUtils;
 
     @Autowired
@@ -58,37 +61,43 @@ public class CommandExecuteService {
     }
 
     public void executeFlashUpdateCallBack() {
-        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHUPDATE_VBS));
+        windowShellService.execShell("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHUPDATE_VBS));
     }
 
     public void executeFlashRollBackCallBack() {
-        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHROLLBACK_VBS));
+        windowShellService.execShell("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHROLLBACK_VBS));
     }
 
     public void executeJavaUpdateCallBack() {
-        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAUPDATE_VBS));
+        windowShellService.execShell("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAUPDATE_VBS));
     }
 
     public void executeJavaRollBackCallBack() {
-        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAROLLBACK_VBS));
+        windowShellService.execShell("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAROLLBACK_VBS));
     }
 
     public void executeVideoDownCallBack() {
+        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.SPECIALVIDEOS_BAT));
     }
 
     public void executeExpressionDownCallBack() {
+        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.EXPRESSIONS_BAT));
     }
 
     public void executeSpecialImgDownCallBack() {
+        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.SPECIALIMAGES_BAT));
     }
 
     public void executeTimerDmDownCallBack() {
+        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.TIMERDANMU_BAT));
     }
 
     public void executeAdDmDownCallBack() {
+        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.ADTIMERDANMU_BAT));
     }
 
     public void executeConfigCreateCallBack() {
+        rsyncFileService.createFlashConfig();
     }
 
     public void executeTeamViewStartCallBack() {
@@ -103,7 +112,7 @@ public class CommandExecuteService {
         windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLTEAMVIEWER_BAT));
     }
 
-    public void createScriptFile() {
+    public void executeScriptCreateCallBack() {
         scriptFileService.createShell();
     }
 

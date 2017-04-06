@@ -1,6 +1,8 @@
 package cn.partytime.config;
 
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.util.CommonConst;
+import cn.partytime.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +38,15 @@ public class ScriptConfigUtils {
     public final String JAVAUPDATE_SH="javaUpdate";
     private final String VERSION_NAME="version";
     public final String UPDATE_PLAN="updatePlan";
-    private final String UPDATE_FREEMARKER_PATH="updateScript";
 
-    public final String SEPARATOR="/";
-    private final String COMMA=".";
+    public final String SPECIALVIDEOS_BAT="specialVideos";
+    public final String EXPRESSIONS_BAT="expressions";
+    public final String SPECIALIMAGES_BAT="specialImages";
+    public final String TIMERDANMU_BAT="timerDanmu";
+    public final String ADTIMERDANMU_BAT="adTimerDanmu";
+
+    public final String RSYNCRESOURCEDOWN_BAT="rsyncResourceDown";
+    private final String UPDATE_FREEMARKER_PATH="updateScript";
 
     public final  String FTL_TYPE="ftl";
     public final  String BAT_TYPE="bat";
@@ -50,47 +57,33 @@ public class ScriptConfigUtils {
     public final String JAVA_JAR_NAME="danmu_java_client.jar";
     public final String FLASH_START_NAME="dmMovie.exe";
     public String findJavaJarPath(){
-        return configUtils.findJavaProgramPath()+SEPARATOR+JAVA_JAR_NAME;
+        return configUtils.findJavaProgramPath()+CommonConst.SEPARATOR+JAVA_JAR_NAME;
     }
     public String findJavaPropertiesPath(){
-        return configUtils.findJavaProgramPath()+SEPARATOR+JAVA_PROPERTIESE_NAME;
+        return configUtils.findJavaProgramPath()+CommonConst.SEPARATOR+JAVA_PROPERTIESE_NAME;
     }
-    public String findFlashStartExe(){return configUtils.findFlashProgramPath()+SEPARATOR+FLASH_START_NAME;}
-
-
-
-
-
-
-
-
-
+    public String findFlashStartExe(){return configUtils.findFlashProgramPath()+CommonConst.SEPARATOR+FLASH_START_NAME;}
 
     public String findEecuteScriptDirectory() {
         return configUtils.shellPath();
     }
 
     public String findFreemarkerPath(String name,String type){
-        return UPDATE_FREEMARKER_PATH+SEPARATOR+type+SEPARATOR+name+convertFirstWordUpperCase(type)+COMMA+FTL_TYPE;
+        return UPDATE_FREEMARKER_PATH+CommonConst.SEPARATOR+type+ CommonConst.SEPARATOR+name+ CommonUtil.convertFirstWordUpperCase(type)+CommonConst.COMMA+FTL_TYPE;
     }
     public String fineScriptPath(String type,String name){
-        return findEecuteScriptDirectory()+SEPARATOR+name+COMMA+type;
+        return findEecuteScriptDirectory()+CommonConst.SEPARATOR+name+CommonConst.COMMA+type;
     }
 
-
-
-    public String convertFirstWordUpperCase(String str){
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
-    }
 
     public String findJavaUpdatePlan() {
-        return configUtils.findVersionJavaPath() +SEPARATOR+UPDATE_PLAN;
+        return configUtils.findVersionJavaPath() +CommonConst.SEPARATOR+UPDATE_PLAN;
     }
-    public String findFlashUpdatePlan() { return configUtils.findVersionFlashPath()  +SEPARATOR+UPDATE_PLAN;}
-    public String findJavaVersionPath() {return configUtils.findJavaProgramPath() + SEPARATOR+VERSION_NAME;}
-    public String findFlashVersionPath() {return configUtils.findFlashProgramPath() + SEPARATOR+VERSION_NAME;}
-    public String findBakJavaVersionPath() {return configUtils.findBakJavaProgramPath() + SEPARATOR+VERSION_NAME;}
-    public String findBakFlashVersionPath() {return configUtils.findBakFlashProgramPath()+ SEPARATOR+VERSION_NAME;  }
+    public String findFlashUpdatePlan() { return configUtils.findVersionFlashPath()  +CommonConst.SEPARATOR+UPDATE_PLAN;}
+    public String findJavaVersionPath() {return configUtils.findJavaProgramPath() + CommonConst.SEPARATOR+VERSION_NAME;}
+    public String findFlashVersionPath() {return configUtils.findFlashProgramPath() + CommonConst.SEPARATOR+VERSION_NAME;}
+    public String findBakJavaVersionPath() {return configUtils.findBakJavaProgramPath() + CommonConst.SEPARATOR+VERSION_NAME;}
+    public String findBakFlashVersionPath() {return configUtils.findBakFlashProgramPath()+ CommonConst.SEPARATOR+VERSION_NAME;  }
 
 
 

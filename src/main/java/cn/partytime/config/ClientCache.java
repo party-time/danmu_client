@@ -14,6 +14,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ClientCache {
 
+
+    public static String clientStatus = "";
+
+    public static String getClientStatus() {
+        return clientStatus;
+    }
+
+    public static void setClientStatus(String clientStatus) {
+        ClientCache.clientStatus = clientStatus;
+    }
+
     private ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap = new ConcurrentHashMap<String, DeviceInfo>();
 
     public void setDeviceInfoConcurrentHashMap(String id,DeviceInfo deviceInfo){
