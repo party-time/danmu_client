@@ -102,7 +102,7 @@ public class MainService {
                 deviceService.findDeviceInfo();
                 **/
 
-                //windowShellService.printScreenPic();
+                windowShellService.startTask();
 
             }
         });

@@ -2,6 +2,7 @@ package cn.partytime.service;
 
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.ScriptConfigUtils;
+import cn.partytime.util.PrintScreenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class CommandExecuteService {
 
     public void executeAppStartCallBack() {
         windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
+        PrintScreenUtils.open2Screen();
     }
 
     public void executeAppCloseCallBack() {

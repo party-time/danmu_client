@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,32 @@ public class PrintScreenUtils {
             log.error("",e);
         }
     }
+
+    public static void open2Screen() {
+        try {
+            Thread.sleep(5*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Toolkit.getDefaultToolkit().setLockingKeyState(KeyEvent.VK_NUM_LOCK, false);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+        try {
+            Robot robot = new Robot();
+            robot.keyPress(KeyEvent.VK_WINDOWS);
+            robot.keyPress(KeyEvent.VK_SHIFT);
+            robot.keyPress(KeyEvent.VK_RIGHT);
+            robot.keyRelease(KeyEvent.VK_RIGHT);
+            robot.keyRelease(KeyEvent.VK_WINDOWS);
+            robot.keyRelease(KeyEvent.VK_SHIFT);
+
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+        log.info("end");
+    }
+
+
 
 
 }

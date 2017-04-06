@@ -48,9 +48,7 @@ public class WindowShellService {
         } catch (Exception e) {
             log.error("", e);
         }
-
         return sb.toString();
-
     }
 
     private String execExe(String shellString) {
@@ -85,6 +83,7 @@ public class WindowShellService {
 
     public void startTask() {
         execExe(configUtils.findFlashProgramPath()+"/"+configUtils.appName+".exe");
+        PrintScreenUtils.open2Screen();
     }
 
     public void startTeamViewer() throws InterruptedException {
@@ -124,5 +123,6 @@ public class WindowShellService {
        // log.info("current command is:{}",shellCommand);
         //execShell(shellCommand);
     }
+
 
 }
