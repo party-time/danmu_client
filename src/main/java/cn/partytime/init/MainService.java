@@ -79,11 +79,20 @@ public class MainService {
         //启动netty服务
         startNettyServer();
         startClientServer();
-        //TODO:启动client1连接远程server
-        startClientConnectRemoteServer();
-        //TODO:启动client2连接Javaclient
-        startClientConnectLocalServer();
-        //TODO:加载本地资源
+
+
+        //启动client1连接远程server
+        if(properties.getMachineNum()=="1") {
+            startClientConnectRemoteServer();
+        }
+
+        //启动client2连接Javaclient
+        if(properties.getMachineNum()=="2"){
+            startClientConnectLocalServer();
+        }
+
+
+        //加载本地资源
         initResource();
     }
 
@@ -122,10 +131,9 @@ public class MainService {
             @Override
             public void run() {
                 try {
-                    if(properties.getMachineNum()=="1"){
-                        commonService.getServerInfo();
-                        serverWebSocketClient.initBootstrap();
-                    }
+
+                    commonService.getServerInfo();
+                    serverWebSocketClient.initBootstrap();
 
                 } catch (URISyntaxException e) {
                     e.printStackTrace();

@@ -55,7 +55,7 @@ public class ClientSchedular {
                 }
             }
         }
-    }
+    }*/
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void repeatFailedRequest(){

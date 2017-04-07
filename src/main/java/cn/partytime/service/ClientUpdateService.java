@@ -5,6 +5,8 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.json.RestResult;
 import cn.partytime.model.ClientVersion;
+import cn.partytime.model.Properties;
+import cn.partytime.model.UpdatePlanConfig;
 import cn.partytime.model.VersionInfo;
 import cn.partytime.util.FileUtils;
 import cn.partytime.util.HttpUtils;

@@ -1,6 +1,8 @@
 package cn.partytime.config;
 
+import cn.partytime.model.client.PartyInfo;
 import cn.partytime.model.device.DeviceInfo;
+import cn.partytime.model.server.ServerInfo;
 import io.netty.channel.Channel;
 import org.springframework.stereotype.Component;
 
