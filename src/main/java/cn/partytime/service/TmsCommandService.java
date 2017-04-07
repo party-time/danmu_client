@@ -132,7 +132,7 @@ public class TmsCommandService {
     }
 
     private String httpRequestHandler(String url){
-        System.out.print("===========>"+url);
+        System.out.println("===========>"+url);
         int count = 0;
         while (count<3){
             String versionStr = HttpUtils.httpRequestStr(url,"GET",null);;
@@ -144,7 +144,7 @@ public class TmsCommandService {
                 System.out.print("获取数据异常");
             }
             count++;
-            System.out.print("请求失败，等待"+count+"秒，再次发起请求");
+            System.out.println("请求失败，等待"+count+"秒，再次发起请求");
             try {
                 Thread.sleep(count*2000);
             } catch (InterruptedException e) {

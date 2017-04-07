@@ -171,7 +171,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
         if(CommonUtil.hasDigit(command)){
             if(!serverCommandHandlerService.chckerIsLocalCommand(command)){
-                System.out.print("不是本机要执行的命令");
+                System.out.println("不是本机要执行的命令");
                 //通知下个服务器
                 return;
             }
