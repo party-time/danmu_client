@@ -1,10 +1,8 @@
 package cn.partytime.config;
 
 import cn.partytime.model.device.DeviceInfo;
-import io.netty.channel.Channel;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

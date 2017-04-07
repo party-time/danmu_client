@@ -1,19 +1,13 @@
 package cn.partytime.scheduler;
 
 
-import cn.partytime.model.VersionConfig;
-import cn.partytime.model.VersionInfo;
-
-import cn.partytime.service.RsyncFileService;
 import cn.partytime.service.ClientUpdateService;
-import cn.partytime.util.ListUtils;
+import cn.partytime.service.RsyncFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/3/3 0003.

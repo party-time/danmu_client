@@ -4,7 +4,6 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.util.PrintScreenUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
