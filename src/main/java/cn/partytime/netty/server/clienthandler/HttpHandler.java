@@ -20,13 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.HOST;
-import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
-import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
-import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONNECTION;
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_LENGTH;
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 /**

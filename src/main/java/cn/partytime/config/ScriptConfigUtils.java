@@ -1,6 +1,5 @@
 package cn.partytime.config;
 
-import cn.partytime.config.ConfigUtils;
 import cn.partytime.util.CommonConst;
 import cn.partytime.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;

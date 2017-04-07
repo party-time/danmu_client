@@ -1,6 +1,5 @@
 package cn.partytime.model.device;
 
-import cn.partytime.model.AdTimerFileResource;
 
 import java.util.List;
 

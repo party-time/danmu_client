@@ -83,7 +83,6 @@ public class MainService {
         startClientConnectRemoteServer();
         //TODO:启动client2连接Javaclient
         startClientConnectLocalServer();
-
         //TODO:加载本地资源
         initResource();
     }
@@ -136,6 +135,7 @@ public class MainService {
             }
         });
     }
+
     /**
      * 启动第一个客户端连接远程server
      */

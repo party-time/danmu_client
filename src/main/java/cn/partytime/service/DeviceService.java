@@ -8,11 +8,9 @@ import cn.partytime.util.FileUtils;
 import cn.partytime.util.HttpUtils;
 import cn.partytime.util.ListUtils;
 import com.alibaba.fastjson.JSON;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.List;
 
 /**

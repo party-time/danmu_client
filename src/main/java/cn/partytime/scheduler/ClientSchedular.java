@@ -43,8 +43,8 @@ public class ClientSchedular {
         rsyncFileService.downloadExecuteShell();
     }
 
-    @Scheduled(cron = "0 */10 * * * ?")
-    public void planSchtasks(){
+    //@Scheduled(cron = "0 */10 * * * ?")
+    /*public void planSchtasks(){
         log.info("execute update plan");
         UpdatePlanConfig versionConfig = clientUpdateService.findVersionConfig();
         if(versionConfig!=null){
