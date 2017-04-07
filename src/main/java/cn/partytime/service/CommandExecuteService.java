@@ -47,15 +47,19 @@ public class CommandExecuteService {
     }
 
     public void executeAppRestartCallBack() {
-        //windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLFLASH_BAT));
-        //windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
         executeAppCloseCallBack();
         executeAppStartCallBack();
     }
 
     public void executeAppStartCallBack() {
         windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
-        PrintScreenUtils.open2Screen();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PrintScreenUtils.open2Screen();
+            }
+        }).start();
     }
 
     public void executeAppCloseCallBack() {

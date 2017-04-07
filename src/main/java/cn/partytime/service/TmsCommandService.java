@@ -77,7 +77,7 @@ public class TmsCommandService {
             case MOVIE_START:
                 logLogicService.logUploadHandler("电影开始");
                 url = configUtils.getPartyRequestUrl(MOVIE_START,command);
-                if(clientCache.getPartyInfo()!=null && StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
+                if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
                     url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId();
                     httpRequestHandler(url);
                 }
@@ -85,7 +85,7 @@ public class TmsCommandService {
             case MOVIE_CLOSE:
                 logLogicService.logUploadHandler("电影关闭");
                 url = configUtils.getPartyRequestUrl(MOVIE_CLOSE,command);
-                if(clientCache.getPartyInfo()!=null && StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
+                if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
                     url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId();
                     String resultStr = httpRequestHandler(url);
                     if(!StringUtils.isEmpty(resultStr)){
