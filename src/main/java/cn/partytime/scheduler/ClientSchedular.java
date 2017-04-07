@@ -1,6 +1,7 @@
 package cn.partytime.scheduler;
 
 
+import cn.partytime.model.UpdatePlanConfig;
 import cn.partytime.model.VersionConfig;
 import cn.partytime.model.VersionInfo;
 
@@ -42,19 +43,19 @@ public class ClientSchedular {
         rsyncFileService.downloadExecuteShell();
     }
 
-    //@Scheduled(cron = "0 */10 * * * ?")
-    /*public void planSchtasks(){
+    @Scheduled(cron = "0 */10 * * * ?")
+    public void planSchtasks(){
         log.info("execute update plan");
-        VersionConfig versionConfig = clientUpdateService.findVersionConfig();
+        UpdatePlanConfig versionConfig = clientUpdateService.findVersionConfig();
         if(versionConfig!=null){
             List<VersionInfo> versionInfoList = versionConfig.getData();
             if(ListUtils.checkListIsNotNull(versionInfoList)){
                 for(VersionInfo versionInfo:versionInfoList){
-                    clientUpdateService.createSchtasks(versionInfo);
+                    //clientUpdateService.createSchtasks(versionInfo);
                 }
             }
         }
-    }*/
+    }
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void repeatFailedRequest(){

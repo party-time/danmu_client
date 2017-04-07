@@ -1,6 +1,8 @@
 package cn.partytime.config;
 
 import cn.partytime.model.Properties;
+import cn.partytime.util.CommonConst;
+import cn.partytime.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,8 @@ public class ConfigUtils {
     public String saveFilePath = "resource";
     private String baseTestUrl = "http://test.party-time.cn";
     private String baseUrl = "http://www.party-time.cn";
+    private String localUrl="http://127.0.0.1";
+
     private String logTestUrl="http://testlog.party-time.cn";
     private String logUrl="http://log.party-time.cn";
 
@@ -48,8 +52,7 @@ public class ConfigUtils {
 
     private String saveScreenPicUrl="/v1/api/javaClient/saveScreen";
 
-
-
+    private String baseJavaClientUrl="/v1/api/javaClient";
 
     private String webSocketPath="/ws";
 
@@ -137,58 +140,46 @@ public class ConfigUtils {
     public String  getDomain(){
         if(0==properties.getEnv()){
             return baseTestUrl;
-        }else{
+        }else if(1==properties.getEnv()){
             return baseUrl;
+        }else {
+            return localUrl;
+        }
+    }
+
+    public String getLogDomain(){
+        if(0==properties.getEnv()){
+            return logTestUrl;
+        }else if(1==properties.getEnv()){
+            return logUrl;
+        }else {
+            return localUrl;
         }
     }
 
     public String getUpdateVersionResultCommitNetUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+tempUpdateVersionResultCommitNetUrl;
-        }else{
-            return baseUrl+tempUpdateVersionResultCommitNetUrl;
-        }
+        return getDomain()+tempUpdateVersionResultCommitNetUrl;
     }
 
     public String getUpdateVersionUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+tempUpdateVersionNetUrl;
-        }else{
-            return baseUrl+tempUpdateVersionNetUrl;
-        }
+        return getDomain()+tempUpdateVersionNetUrl;
     }
 
 
     public String getInitUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+tempInitUrl;
-        }else{
-            return baseUrl+tempInitUrl;
-        }
+        return getDomain()+tempInitUrl;
     }
 
     public String getAdTimerDanmuNetUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+tempAdTimerDanmuNetUrl;
-        }else{
-            return baseUrl+tempAdTimerDanmuNetUrl;
-        }
+        return getDomain()+tempAdTimerDanmuNetUrl;
     }
 
     public String getTimerDanmuNetUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+tempTimerDanmuNetUrl;
-        }else{
-            return baseUrl+tempTimerDanmuNetUrl;
-        }
+        return getDomain()+tempTimerDanmuNetUrl;
     }
 
     public String getLogUrl(){
-        if(0==properties.getEnv()){
-            return logTestUrl+logUrlPath;
-        }else{
-            return logUrl+logUrlPath;
-        }
+        return getLogDomain()+logUrlPath;
     }
 
     public String findSpecialVideosPath() {
@@ -210,11 +201,7 @@ public class ConfigUtils {
 
 
     public String getDeviceInfoUrlUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+deviceInfoUrlUrl+"?addressId="+properties.getAddressId();
-        }else{
-            return baseUrl+deviceInfoUrlUrl+"?addressId="+properties.getAddressId();
-        }
+        return getDomain()+deviceInfoUrlUrl+"?addressId="+properties.getAddressId();
     }
 
     public String getProjectorOpenUrl(String ip){
@@ -231,32 +218,32 @@ public class ConfigUtils {
 
 
     public String getParamUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+paramUrl;
-        }else{
-            return baseUrl+paramUrl;
-        }
+        return getDomain()+paramUrl;
     }
 
     public String findUpdatePlanUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+updatePlanPath;
-        }else{
-            return baseUrl+updatePlanPath;
-        }
+        return getDomain()+updatePlanPath;
     }
 
     public String getSaveScreenPicUrl(){
-        if(0==properties.getEnv()){
-            return baseTestUrl+saveScreenPicUrl;
-        }else{
-            return baseUrl+saveScreenPicUrl;
-        }
+        return getDomain()+saveScreenPicUrl;
     }
 
-    public String getWebSocketUrl(int port){
+    public String getWebSocketUrl(String ip,int port){
         //return getRsyncIp()+webSocketPath+"?code="+properties.getRegistCode()+"&clientType=3";
-        return "http://192.168.1.108:"+port+"?code="+properties.getRegistCode()+"&clientType=2";
+        return "http://"+ip+":"+port+"?code="+properties.getRegistCode()+"&clientType=2";
+    }
+
+    public String getDistributeServerUrl(){
+        return getDomain()+"/distribute/client/login/"+properties.getRegistCode();
+    }
+
+    public String getPartyRequestUrl(String type,String command){
+        return getDomain()+baseJavaClientUrl+ CommonConst.SEPARATOR+type+CommonConst.SEPARATOR+properties.getRegistCode()+CommonConst.SEPARATOR+command;
+    }
+
+    public String getPromotionalFilmUrl(String command,String status){
+        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+command+CommonConst.SEPARATOR+properties.getRegistCode()+CommonConst.SEPARATOR+status;
     }
 
 }

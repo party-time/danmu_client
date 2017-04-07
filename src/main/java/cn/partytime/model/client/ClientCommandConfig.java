@@ -1,12 +1,14 @@
 package cn.partytime.model.client;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/4/5 0005.
  */
-public class ClientCommandConfig {
+public class ClientCommandConfig<T> implements Serializable {
     private String type;
 
-    private ClientCommand  data;
+    private T data;
 
     public String getType() {
         return type;
@@ -16,11 +18,11 @@ public class ClientCommandConfig {
         this.type = type;
     }
 
-    public ClientCommand getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(ClientCommand data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

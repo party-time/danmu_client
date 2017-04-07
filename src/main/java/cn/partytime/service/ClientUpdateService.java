@@ -35,6 +35,10 @@ public class ClientUpdateService {
     private ConfigUtils configUtils;
 
     @Autowired
+    private Properties properties;
+
+
+    @Autowired
     private ScriptConfigUtils scriptConfigUtils;
 
     public boolean setRequestResult(VersionInfo versionInfo, String machineNum,String status, int code){
@@ -125,6 +129,39 @@ public class ClientUpdateService {
                 }
             }
         }
+    }
+
+
+    public UpdatePlanConfig findVersionConfig(){
+        int count = 0;
+        while (count<3){
+            String versionStr = findVersionByHttp();
+            try {
+                if(!StringUtils.isEmpty(versionStr)){
+                    return strToVersionConfig(versionStr);
+                }
+            }catch (Exception e){
+                System.out.print("获取数据异常");
+            }
+            count++;
+            System.out.print("请求失败，等待"+count+"秒，再次发起请求");
+            try {
+                Thread.sleep(count*2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public String findVersionByHttp(){
+        return HttpUtils.httpRequestStr(configUtils.getUpdateVersionUrl()+"?addressId="+properties.getAddressId(), "GET", null);
+    }
+
+
+    public static UpdatePlanConfig strToVersionConfig(String jsonStr){
+        UpdatePlanConfig updatePlanConfig = JSON.parseObject(jsonStr, UpdatePlanConfig.class);
+        return updatePlanConfig;
     }
 
 

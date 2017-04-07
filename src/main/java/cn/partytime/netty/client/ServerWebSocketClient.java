@@ -15,7 +15,9 @@
  */
 package cn.partytime.netty.client;
 
+import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.model.server.ServerInfo;
 import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
 import cn.partytime.netty.server.clienthandler.ClientServerHandler;
 import io.netty.bootstrap.Bootstrap;
@@ -44,6 +46,9 @@ public final class ServerWebSocketClient {
     @Autowired
     private ConfigUtils configUtils;
 
+    @Autowired
+    private ClientCache clientCache;
+
 
     public  void initBootstrap() throws Exception {
 
@@ -53,7 +58,9 @@ public final class ServerWebSocketClient {
                     new ServerWebSocketClientHandler(
                             WebSocketClientHandshakerFactory.newHandshaker(
                                     uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));*/
-            URI uri = new URI(configUtils.getWebSocketUrl(9090));
+
+            ServerInfo serverInfo = clientCache.getServerInfo();
+            URI uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
             final int port = uri.getPort();
             Bootstrap b = new Bootstrap();
             b.group(group)

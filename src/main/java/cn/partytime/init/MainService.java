@@ -3,12 +3,10 @@ package cn.partytime.init;
 import cn.partytime.model.Properties;
 import cn.partytime.netty.client.LocalServerWebSocketClient;
 import cn.partytime.netty.client.ServerWebSocketClient;
-import cn.partytime.service.DeviceService;
-import cn.partytime.service.LogLogicService;
-import cn.partytime.service.RsyncFileService;
+import cn.partytime.service.*;
 import cn.partytime.netty.server.ClientServer;
 import cn.partytime.netty.server.TmsServer;
-import cn.partytime.service.WindowShellService;
+import cn.partytime.util.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ import java.net.URISyntaxException;
 public class MainService {
     private static final Logger logger = LoggerFactory.getLogger(MainService.class);
 
-    @Value("${netty.port:7070}")
+    @Value("${netty.port:8081}")
     private int clientSeverPort;
 
     @Value("${netty.port:8080}")
@@ -36,6 +34,10 @@ public class MainService {
 
     @Autowired
     private Properties properties;
+
+
+    @Autowired
+    private CommandExecuteService commandExecuteService;
 
     @Autowired
     private ClientServer clientServer;
@@ -65,6 +67,9 @@ public class MainService {
 
     @Autowired
     private LocalServerWebSocketClient localServerWebSocketClient;
+
+    @Autowired
+    private CommonService commonService;
 
     /**
      * 启动系统加载项目
@@ -104,6 +109,8 @@ public class MainService {
 
                 //windowShellService.startTask();
 
+                commandExecuteService.executeAppRestartCallBack();
+
             }
         });
     }
@@ -116,7 +123,11 @@ public class MainService {
             @Override
             public void run() {
                 try {
-                    serverWebSocketClient.initBootstrap();
+                    if(properties.getMachineNum()=="1"){
+                        commonService.getServerInfo();
+                        serverWebSocketClient.initBootstrap();
+                    }
+
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 } catch (Exception e) {

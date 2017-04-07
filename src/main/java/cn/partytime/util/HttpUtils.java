@@ -15,6 +15,30 @@ import java.net.URL;
 @Slf4j
 public class HttpUtils {
 
+
+
+    public static String repeatRequest(String requestUrl, String requestMethod, String outputStr){
+        int count = 0;
+        while (count<3){
+            String str = HttpUtils.httpRequestStr(requestUrl,"GET",null);;
+            try {
+                if(!StringUtils.isEmpty(str)){
+                    return str;
+                }
+            }catch (Exception e){
+                System.out.print("获取数据异常");
+            }
+            count++;
+            System.out.print("请求失败，等待"+count+"秒，再次发起请求");
+            try {
+                Thread.sleep(count*2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     /**
      * http请求
      *
@@ -24,6 +48,7 @@ public class HttpUtils {
      * @return
      */
     public static String httpRequestStr(String requestUrl, String requestMethod, String outputStr) {
+        System.out.println("url:"+requestUrl);
         StringBuffer buffer = new StringBuffer();
         try {
             URL url = new URL(requestUrl);

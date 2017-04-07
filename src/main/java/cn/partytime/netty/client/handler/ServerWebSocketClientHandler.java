@@ -37,14 +37,18 @@
 
 package cn.partytime.netty.client.handler;
 
+import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
+import cn.partytime.model.client.PartyInfo;
+import cn.partytime.model.server.ServerInfo;
 import cn.partytime.service.CommandExecuteService;
 import cn.partytime.service.ServerCommandHandlerService;
 import cn.partytime.util.CommonUtil;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
+import freemarker.template.utility.StringUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -53,6 +57,7 @@ import io.netty.util.CharsetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -68,6 +73,9 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
     @Autowired
     private ConfigUtils configUtils;
+
+    @Autowired
+    private ClientCache clientCache;
 
     @Autowired
     private CommandExecuteService commandExecuteService;
@@ -95,7 +103,8 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     public void channelActive(ChannelHandlerContext ctx) {
         URI uri = null;
         try {
-            uri = new URI(configUtils.getWebSocketUrl(9090));
+            ServerInfo serverInfo = clientCache.getServerInfo();
+            uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
             String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
             final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
             final int port = uri.getPort();
@@ -104,7 +113,6 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -134,21 +142,28 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             System.out.println("WebSocket Client received message: " + textFrame.text());
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
-            //System.out.print(clientCommandConfig);
-            ClientCommand clientCommand = clientCommandConfig.getData();
-            String type = clientCommand.getName();
-            new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    //直接脚本
-                    execute(type);
-                    //执行回调
-                    if(clientCommand.getBcallBack()!=null){
-                        HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
-                    }
-                }
-            }).start();
 
+            if("command".equals(clientCommandConfig.getType())){
+                System.out.print(clientCommandConfig.getData());
+                String partyInfoStr = String.valueOf(clientCommandConfig.getData());
+                PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
+                clientCache.setPartyInfo(partyInfo);
+            }else{
+                String clientCommandData = String.valueOf(clientCommandConfig.getData());
+                ClientCommand clientCommand = JSON.parseObject(clientCommandData,ClientCommand.class);
+                String type = clientCommand.getName();
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        //直接脚本
+                        execute(type);
+                        //执行回调
+                        if(!StringUtils.isEmpty(clientCommand.getBcallBack())){
+                            HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
+                        }
+                    }
+                }).start();
+            }
         }
     }
 

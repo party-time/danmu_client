@@ -1,6 +1,7 @@
 package cn.partytime.netty.server.clienthandler;
 
 import cn.partytime.config.ClientCache;
+import com.sun.org.apache.regexp.internal.RE;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
@@ -66,8 +67,8 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         logger.info("建立连接url:{}",url);
         QueryStringDecoder queryStringDecoder = new QueryStringDecoder(url);
         Map<String, List<String>> parameters = queryStringDecoder.parameters();
-        if(url.startsWith("/flashCheck")){
 
+        if(url.startsWith("/flashCheck")){
             if (parameters.size() == 1){
                 String status = parameters.get("status").get(0);
                 clientCache.setClientStatus(status);
@@ -75,6 +76,18 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
             ctx.close();
             return;
         }
+
+        if(url.startsWith("/flashIsOk")){
+            httpHandler(url,ctx,req,clientCache.getClientStatus());
+            return;
+        }
+
+        if(url.startsWith("/javaIsOk")){
+            httpHandler(url,ctx,req,"ok");
+            return;
+        }
+
+
 
         /*if (parameters.size() != 2) {
             logger.info("参数不可缺省");
@@ -112,11 +125,18 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         }
     }
 
-    private void httpHandler(String url,ChannelHandlerContext ctx,FullHttpRequest req){
-        String res = "I am OK";
+    private void httpHandler(String url,ChannelHandlerContext ctx,FullHttpRequest req,String message){
+        FullHttpResponse response = findFullHttpResponse(req,message);
+        ctx.write(response);
+        ctx.flush();
+        return;
+    }
+
+
+    private FullHttpResponse findFullHttpResponse(FullHttpRequest req,String message){
         FullHttpResponse response = null;
         try {
-            response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(res.getBytes("UTF-8")));
+            response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(message.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -126,9 +146,7 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         if (HttpHeaders.isKeepAlive(req)) {
             response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         }
-        ctx.write(response);
-        ctx.flush();
-        return;
+        return response;
     }
 
 }
