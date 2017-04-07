@@ -51,7 +51,7 @@ public class WindowShellService {
         return sb.toString();
     }
 
-    private String execExe(String shellString) {
+    public String execExe(String shellString) {
         log.info(shellString);
         Process process = null;
         StringBuffer sb = new StringBuffer();

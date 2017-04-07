@@ -22,9 +22,6 @@ public class Properties {
     @Value("${registCode}")
     private String registCode;
 
-    @Value("${if_boot_download_resource}")
-    private Integer ifDownload;
-
     @Value("${machineNum}")
     private String machineNum;
 
@@ -50,14 +47,6 @@ public class Properties {
 
     public void setAddressId(String addressId) {
         this.addressId = addressId;
-    }
-
-    public Integer getIfDownload() {
-        return ifDownload;
-    }
-
-    public void setIfDownload(Integer ifDownload) {
-        this.ifDownload = ifDownload;
     }
 
     public String getMachineNum() {

@@ -54,7 +54,7 @@ public class CommandExecuteService {
     }
 
     public void executeAppStartCallBack() {
-        windowShellService.execShell(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
+        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
         PrintScreenUtils.open2Screen();
     }
 

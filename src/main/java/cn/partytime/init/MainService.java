@@ -82,12 +82,12 @@ public class MainService {
 
 
         //启动client1连接远程server
-        if(properties.getMachineNum()=="1") {
+        if("1".equals(properties.getMachineNum())) {
             startClientConnectRemoteServer();
         }
 
         //启动client2连接Javaclient
-        if(properties.getMachineNum()=="2"){
+        if("2".equals(properties.getMachineNum())){
             startClientConnectLocalServer();
         }
 
@@ -115,9 +115,9 @@ public class MainService {
                 deviceService.findDeviceInfo();
                 **/
 
-                //windowShellService.startTask();
+                windowShellService.startTask();
 
-                commandExecuteService.executeAppRestartCallBack();
+               // commandExecuteService.executeAppStartCallBack();
 
             }
         });

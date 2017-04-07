@@ -148,7 +148,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
                 String partyInfoStr = String.valueOf(clientCommandConfig.getData());
                 PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
                 clientCache.setPartyInfo(partyInfo);
-            }else{
+            }else if("clientCommand".equals(clientCommandConfig.getType())){
                 String clientCommandData = String.valueOf(clientCommandConfig.getData());
                 ClientCommand clientCommand = JSON.parseObject(clientCommandData,ClientCommand.class);
                 String type = clientCommand.getName();

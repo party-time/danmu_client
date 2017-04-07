@@ -1,7 +1,6 @@
 package cn.partytime.netty.server.clienthandler;
 
 import cn.partytime.config.ClientCache;
-import com.sun.org.apache.regexp.internal.RE;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
