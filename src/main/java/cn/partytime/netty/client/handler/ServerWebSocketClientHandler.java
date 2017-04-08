@@ -41,6 +41,7 @@ import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
+import cn.partytime.model.client.ClientModel;
 import cn.partytime.model.client.PartyInfo;
 import cn.partytime.model.server.ServerInfo;
 import cn.partytime.service.CommandExecuteService;
@@ -63,6 +64,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Component
@@ -156,7 +158,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
                     @Override
                     public void run() {
                         //直接脚本
-                        execute(type);
+                        execute(type,clientCommandConfig);
                         //执行回调
                         if(!StringUtils.isEmpty(clientCommand.getBcallBack())){
                             HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
@@ -167,16 +169,31 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
         }
     }
 
-    public void execute(String command){
+    public void execute(String command,ClientCommandConfig clientCommandConfig){
 
         if(CommonUtil.hasDigit(command)){
             if(!serverCommandHandlerService.chckerIsLocalCommand(command)){
                 System.out.println("不是本机要执行的命令");
                 //通知下个服务器
+
+                ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findClientModelConcurrentHashMap();
+                if (channelClientModelConcurrentHashMap != null && channelClientModelConcurrentHashMap.size() > 0) {
+                    for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : channelClientModelConcurrentHashMap.entrySet()) {
+                        Channel channel = entry.getKey();
+                        channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(clientCommandConfig)));
+                    }
+                }
                 return;
             }
         }else{
             //通知下个服务器
+            ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findClientModelConcurrentHashMap();
+            if (channelClientModelConcurrentHashMap != null && channelClientModelConcurrentHashMap.size() > 0) {
+                for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : channelClientModelConcurrentHashMap.entrySet()) {
+                    Channel channel = entry.getKey();
+                    channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(clientCommandConfig)));
+                }
+            }
         }
         command = command.replaceAll("\\d+", "");
         /*if(!serverCommandHandlerService.chckerIsLocalCommand(command)){

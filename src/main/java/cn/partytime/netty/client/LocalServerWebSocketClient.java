@@ -19,6 +19,7 @@ import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.netty.client.handler.LocalServerWebSocketClientHandler;
+import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
 import cn.partytime.util.CommonUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -32,6 +33,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -47,9 +49,13 @@ public final class LocalServerWebSocketClient {
     @Autowired
     private ConfigUtils configUtils;
 
+    @Autowired
+    @Qualifier("localServerWebSocketClientHandler")
+    private LocalServerWebSocketClientHandler localServerWebSocketClientHandler;
+
     public  void initBootstrap() throws Exception {
 
-        String url = "ws://"+serverIp()+":7070/ws";
+        String url = "ws://"+serverIp()+":8081/ws";
         URI uri = new URI(url);
         String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
         //final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
@@ -72,7 +78,7 @@ public final class LocalServerWebSocketClient {
                              new HttpClientCodec(),
                              new HttpObjectAggregator(8192),
                              WebSocketClientCompressionHandler.INSTANCE,
-                             handler);
+                             localServerWebSocketClientHandler);
                  }
              });
             ChannelFuture channelFuture = b.connect(uri.getHost(), port).sync();

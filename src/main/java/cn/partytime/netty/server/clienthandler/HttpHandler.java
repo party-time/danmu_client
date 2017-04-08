@@ -1,6 +1,7 @@
 package cn.partytime.netty.server.clienthandler;
 
 import cn.partytime.config.ClientCache;
+import cn.partytime.model.client.ClientModel;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
@@ -63,6 +64,7 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         QueryStringDecoder queryStringDecoder = new QueryStringDecoder(url);
         Map<String, List<String>> parameters = queryStringDecoder.parameters();
 
+
         if(url.startsWith("/flashCheck")){
             if (parameters.size() == 1){
                 String status = parameters.get("status").get(0);
@@ -81,22 +83,6 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
             httpHandler(url,ctx,req,"ok");
             return;
         }
-
-
-
-        /*if (parameters.size() != 2) {
-            logger.info("参数不可缺省");
-            sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND));
-            return;
-        }
-        String code = parameters.get("code").get(0);
-        String clientType = parameters.get("clientType").get(0);
-        if(StringUtils.isEmpty(clientType) || StringUtils.isEmpty(code)){
-            logger.info("唯一标识,客户端类型都不能为空");
-            sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND));
-            return;
-        }*/
-
         // Handshake
         WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketLocation(req), null, true);
         handshaker = wsFactory.newHandshaker(req);
@@ -104,7 +90,8 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
             ChannelFuture channelFuture = handshaker.handshake(ctx.channel(), req);
-            //clientLoginService.clientLogin(code,clientType,ctx.channel());
+            ClientModel clientModel = new ClientModel();
+            clientCache.addClientModelConcurrentHashMap(ctx.channel(),clientModel);
         }
     }
 

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class ClientServerInitializer extends ChannelInitializer<SocketChannel> {
 
     @Autowired
-    @Qualifier("danmuServerHandler")
+    @Qualifier("clientServerHandler")
     private ClientServerHandler danmuServerHandler;
 
     @Autowired

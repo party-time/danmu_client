@@ -1,5 +1,6 @@
 package cn.partytime.netty.server.clienthandler;
 
+import cn.partytime.config.ClientCache;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,6 +10,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +18,15 @@ import org.springframework.stereotype.Component;
  * Created by task on 2016/6/15.
  */
 @Component
-@Qualifier("danmuServerHandler")
+@Qualifier("clientServerHandler")
 @ChannelHandler.Sharable
 public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientServerHandler.class);
 
+
+    @Autowired
+    private ClientCache clientCache;
 
 
     @Override
@@ -36,6 +41,7 @@ public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSock
         Channel channel = ctx.channel();
         logger.info("客户端:" + channel.id() + " 离开");
         //potocolService.forceLogout(channel);
+        clientCache.removeClientModelConcurrentHashMap(channel);
     }
 
     @Override

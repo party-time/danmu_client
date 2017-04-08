@@ -1,5 +1,6 @@
 package cn.partytime.config;
 
+import cn.partytime.model.client.ClientModel;
 import cn.partytime.model.client.PartyInfo;
 import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.model.server.ServerInfo;
@@ -24,6 +25,21 @@ public class ClientCache {
     private ServerInfo serverInfo;
 
     private ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap = new ConcurrentHashMap<String, DeviceInfo>();
+
+    private ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = new ConcurrentHashMap<>();
+
+
+    public ConcurrentHashMap findClientModelConcurrentHashMap(){
+        return channelClientModelConcurrentHashMap;
+    }
+
+    public void addClientModelConcurrentHashMap(Channel channel,ClientModel clientModel){
+         channelClientModelConcurrentHashMap.put(channel,clientModel);
+    }
+
+    public void removeClientModelConcurrentHashMap(Channel channel){
+        channelClientModelConcurrentHashMap.remove(channel);
+    }
 
     public  String getClientStatus() {
         return clientStatus;

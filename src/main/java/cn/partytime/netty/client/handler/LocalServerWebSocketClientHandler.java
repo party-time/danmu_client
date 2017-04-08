@@ -38,11 +38,22 @@
 package cn.partytime.netty.client.handler;
 
 import io.netty.channel.*;
-import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.websocketx.*;
+import io.netty.util.CharsetUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
+@Component
+@Qualifier("localServerWebSocketClientHandler")
+@ChannelHandler.Sharable
 public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
-    private final WebSocketClientHandshaker handshaker;
+    private  WebSocketClientHandshaker handshaker;
 
     private ChannelPromise handshakeFuture;
 
@@ -61,7 +72,17 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        handshaker.handshake(ctx.channel());
+        URI uri = null;
+        try {
+            uri = new URI("ws://localhost:8081/ws");
+            String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
+            final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
+            final int port = uri.getPort();
+            handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
+            handshaker.handshake(ctx.channel());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -72,18 +93,24 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         Channel ch = ctx.channel();
+        if (!handshaker.isHandshakeComplete()) {
+            handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+            System.out.println("WebSocket Client connected!");
+            handshakeFuture.setSuccess();
+            return;
+        }
 
-
-        /*WebSocketFrame frame = (WebSocketFrame) msg;
+        if (msg instanceof FullHttpResponse) {
+            FullHttpResponse response = (FullHttpResponse) msg;
+            throw new IllegalStateException(
+                    "Unexpected FullHttpResponse (getStatus=" + response.status() +
+                            ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
+        }
+        WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             System.out.println("WebSocket Client received message: " + textFrame.text());
-        } else if (frame instanceof PongWebSocketFrame) {
-            System.out.println("WebSocket Client received pong");
-        } else if (frame instanceof CloseWebSocketFrame) {
-            System.out.println("WebSocket Client received closing");
-            ch.close();
-        }*/
+        }
     }
 
     @Override
