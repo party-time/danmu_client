@@ -62,11 +62,6 @@ public final class LocalServerWebSocketClient {
         final int port = uri.getPort();
         EventLoopGroup group = new NioEventLoopGroup();
         try {
-            final LocalServerWebSocketClientHandler handler =
-                    new LocalServerWebSocketClientHandler(
-                            WebSocketClientHandshakerFactory.newHandshaker(
-                                    uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));
-
             Bootstrap b = new Bootstrap();
             b.group(group)
              .channel(NioSocketChannel.class)

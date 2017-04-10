@@ -57,9 +57,6 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
 
     private ChannelPromise handshakeFuture;
 
-    public LocalServerWebSocketClientHandler(WebSocketClientHandshaker handshaker) {
-        this.handshaker = handshaker;
-    }
 
     public ChannelFuture handshakeFuture() {
         return handshakeFuture;

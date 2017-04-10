@@ -152,6 +152,7 @@ public class MainService {
             @Override
             public void run() {
                 try {
+                    //获取客户端信息
                     localServerWebSocketClient.initBootstrap();
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
