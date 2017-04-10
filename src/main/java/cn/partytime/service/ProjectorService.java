@@ -4,14 +4,18 @@ import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.util.HttpUtils;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,7 +29,7 @@ public class ProjectorService {
     private ClientCache clientCache;
 
     @Autowired
-    private ConfigUtils configUtils;
+    private DeviceService deviceService;
 
     @Autowired
     private LogLogicService logLogicService;
@@ -39,28 +43,45 @@ public class ProjectorService {
      * @param type 0开启，1：关闭； 2：切白
      */
     public void projectorHandler(int type) {
-        ConcurrentHashMap concurrentHashMap = clientCache.findConcurrentHashMap();
-        List<DeviceInfo> deviceInfoList = findDeviceInfo(concurrentHashMap);
-        String url = "";
-        for (DeviceInfo deviceInfo : deviceInfoList) {
-            if (type == 0) {
-                url = configUtils.getProjectorOpenUrl(deviceInfo.getIp());
-                logLogicService.logUploadHandler("开启投影仪的url:" + url);
-            } else if (type == 1) {
-                url = configUtils.getProjectorCloseUrl(deviceInfo.getIp());
-                logLogicService.logUploadHandler("关闭投影仪的url:" + url);
-            } else if (type == 2) {}
-            /*if(openFlg){
-                url = configUtils.getProjectorOpenUrl(deviceInfo.getIp());
-                logLogicService.logUploadHandler("开启投影仪的url:"+url);
-            }else{
-                url = configUtils.getProjectorCloseUrl(deviceInfo.getIp());
-                logLogicService.logUploadHandler("关闭投影仪的url:"+url);
-            }*/
-            executeProjector(url);
+        try {
+
+            List<DeviceInfo> deviceInfoList = deviceService.findDeviceInfoList(0);
+            String url = "";
+            for (DeviceInfo deviceInfo : deviceInfoList) {
+                if(deviceInfo.getType()==0){
+                    String urlTemp[] = deviceInfo.getUrl().split(";");
+                    projectorHandler(urlTemp,type);
+                }
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 
+    private void projectorHandler(String [] urlArrays,int type) throws URISyntaxException {
+        String url = "";
+        if(urlArrays!=null && urlArrays.length>0){
+            for(int i=0; i<urlArrays.length; i++){
+                String tempUrl = urlArrays[i];
+                URI uri = new URI(tempUrl);
+                QueryStringDecoder queryStringDecoder = new QueryStringDecoder(uri);
+                Map<String, List<String>> parameters = queryStringDecoder.parameters();
+                String urlType = parameters.get("param").get(0);
+                if(type==0 && "start".contentEquals(urlType)){
+                    url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
+                    logLogicService.logUploadHandler("开启投影仪的url:" + urlArrays[i]);
+                }else if(type==1 && "stop".contentEquals(urlType)){
+                    url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
+                    logLogicService.logUploadHandler("开启投影仪的url:" + urlArrays[i]);
+                }else if(type==1 && "change".contentEquals(urlType)){
+                    url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
+                    logLogicService.logUploadHandler("切白投影仪的url:" + urlArrays[i]);
+                }
+
+            }
+            executeProjector(url);
+        }
+    }
 
     private void executeProjector(final String url) {
         threadPoolTaskExecutor.execute(new Runnable() {
@@ -69,18 +90,5 @@ public class ProjectorService {
                 HttpUtils.httpRequestStr(url, "GET", null);
             }
         });
-    }
-
-    private List<DeviceInfo> findDeviceInfo(ConcurrentHashMap concurrentHashMap) {
-        Iterator iterator = concurrentHashMap.keySet().iterator();
-        List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-        while (iterator.hasNext()) {
-            String key = (String) iterator.next();
-            DeviceInfo deviceInfo = (DeviceInfo) concurrentHashMap.get(key);
-            if (deviceInfo.getType() == 0) {
-                deviceInfoList.add(deviceInfo);
-            }
-        }
-        return deviceInfoList;
     }
 }

@@ -5,8 +5,7 @@ Set http = CreateObject("Msxml2.ServerXMLHTTP")
 Set wShell=CreateObject("Wscript.Shell")
 
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
-checkJavaIsOkUrl="http://localhost:8080/v1/api/javaClient/startOk"
-
+checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
 javaRollBackShell = "bash " & "${javaRollBakShellPath}"
 javacurrentVersionPath = "${javaCurrentVersionPath}"

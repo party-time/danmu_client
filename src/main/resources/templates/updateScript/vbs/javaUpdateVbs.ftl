@@ -8,7 +8,7 @@ Set wShell=CreateObject("Wscript.Shell")
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 executeglobal fso.opentextfile("${javaCommonUpdateVbsPath}", 1).readall
 
-checkJavaIsOkUrl="http://localhost:8080/v1/api/javaClient/startOk"
+checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
 javaUpdateShell = "bash " & "${javaUpdateShellPath}"
 javaRollBackShell = "bash " & "${javaRollBakShellPath}"
@@ -39,11 +39,6 @@ Function doExecute()
         Call showDailog("update plan is null")
         wscript.quit
     End If
-
-
-
-
-
 
     version=updatePlanObject.version
     status=updatePlanObject.status

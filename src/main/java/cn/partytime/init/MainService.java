@@ -52,6 +52,7 @@ public class MainService {
     private RsyncFileService rsyncFileService;
 
 
+
     @Resource(name = "threadPoolTaskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
@@ -80,7 +81,7 @@ public class MainService {
         startNettyServer();
         startClientServer();
 
-
+        deviceService.findDeviceInfo();
         //启动client1连接远程server
         if("1".equals(properties.getMachineNum())) {
             startClientConnectRemoteServer();

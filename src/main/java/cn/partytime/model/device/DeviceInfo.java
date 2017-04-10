@@ -12,6 +12,8 @@ public class DeviceInfo {
      */
     private String addressId;
 
+    private Integer number;
+
     /**
      * ip信息
      */
@@ -26,6 +28,8 @@ public class DeviceInfo {
      * 类型 0 投影ip  1 javaClient ip
      */
     private Integer type;
+
+    private String url;
 
     public String getId() {
         return id;
@@ -65,5 +69,21 @@ public class DeviceInfo {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

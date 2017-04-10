@@ -6,8 +6,8 @@ Set wShell=CreateObject("Wscript.Shell")
 
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 
-checkflashIsOkUrl="http://localhost:8080/v1/api/javaClient/flashIsOk"
-checkJavaIsOkUrl="http://localhost:8080/v1/api/javaClient/startOk"
+checkflashIsOkUrl="${checkJavaIsOkUrl}"
+checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
 flashRollbackShell = "bash " & "${flashRollBakShellPath}"
 flashcurrentVersionPath = "${flashCurrentVersionPath}"
