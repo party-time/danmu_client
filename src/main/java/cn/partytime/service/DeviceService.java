@@ -11,7 +11,9 @@ import cn.partytime.util.ListUtils;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,17 +37,38 @@ public class DeviceService {
      * 获取设备基本信息
      */
     public void findDeviceInfo(){
-        String url =configUtils.findDeviceInfoUrl();
-        String deviceStr = HttpUtils.httpRequestStr(url,"GET",null);
-        DeviceConfig deviceConfig = JSON.parseObject(deviceStr,DeviceConfig.class);
-        List<DeviceInfo> deviceInfoList = deviceConfig.getData();
         String filePath = configUtils.findJavaConfigPath();
+        File file = new File(filePath);
+        List<DeviceInfo> deviceInfoList = new ArrayList<>();
+        DeviceConfig deviceConfig=null;
+        if(file.exists()){
+            String deviceStr = FileUtils.txt2String(filePath);
+            if(!StringUtils.isEmpty(deviceStr)){
+                deviceInfoList = JSON.parseArray(deviceStr,DeviceInfo.class);
+            }else {
+                String url = configUtils.findDeviceInfoUrl();
+                deviceStr = HttpUtils.httpRequestStr(url, "GET", null);
+                deviceConfig = JSON.parseObject(deviceStr, DeviceConfig.class);
+                if(deviceConfig!=null){
+                    deviceInfoList = deviceConfig.getData();
+                }
+            }
+        }else{
+            String url =configUtils.findDeviceInfoUrl();
+            String deviceStr = HttpUtils.httpRequestStr(url,"GET",null);
+            deviceConfig = JSON.parseObject(deviceStr,DeviceConfig.class);
+            if(deviceConfig!=null){
+                deviceInfoList = deviceConfig.getData();
+            }
+        }
+
         if(ListUtils.checkListIsNotNull(deviceInfoList)){
             FileUtils.writeContentToFile(filePath,JSON.toJSONString(deviceInfoList));
             for(DeviceInfo deviceInfo:deviceInfoList){
                 clientCache.setDeviceInfoConcurrentHashMap(deviceInfo.getId(),deviceInfo);
             }
         }
+
     }
 
     public List<DeviceInfo> findDeviceInfoList(int type) {
