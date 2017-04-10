@@ -53,7 +53,6 @@ public class PrintScreenUtils {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        log.info("end");
     }
 
 

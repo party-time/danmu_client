@@ -92,11 +92,8 @@ public class WindowShellService {
     }
 
     public void printScreenPic(){
-        log.info("save screen");
         PrintScreenUtils.screenShotAsFile(configUtils.screenSavePath(),configUtils.getScreenSaveFile());
-        log.info("save screen success");
         HttpUtils.postFile(configUtils.screenSavePath()+"/"+configUtils.getScreenSaveFile(), configUtils.getSaveScreenPicUrl());
-        log.info("post success");
     }
 
     public void killTeamViewer() {

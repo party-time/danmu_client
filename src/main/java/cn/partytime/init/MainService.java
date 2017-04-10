@@ -115,7 +115,7 @@ public class MainService {
                 deviceService.findDeviceInfo();
                 **/
 
-                //windowShellService.startTask();
+                windowShellService.startTask();
 
                commandExecuteService.executeAppStartCallBack();
 
