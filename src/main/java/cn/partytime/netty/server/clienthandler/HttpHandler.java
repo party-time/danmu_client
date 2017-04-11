@@ -2,6 +2,8 @@ package cn.partytime.netty.server.clienthandler;
 
 import cn.partytime.config.ClientCache;
 import cn.partytime.model.client.ClientModel;
+import cn.partytime.model.common.RestResultModel;
+import com.alibaba.fastjson.JSON;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
@@ -47,8 +49,6 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         if (object instanceof FullHttpRequest) {
             handleHttpRequest(ctx, (FullHttpRequest) object);
         }else if (object instanceof WebSocketFrame) {//如果是Websocket请求，则进行websocket操作
-            //handleWebSocketFrame(ctx, (WebSocketFrame) msg);
-            System.out.print("======================");
             Channel channel = ctx.channel();
             TextWebSocketFrame textWebSocketFrame = (TextWebSocketFrame) object;
             String accecptStr = textWebSocketFrame.text();
@@ -63,7 +63,7 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         logger.info("建立连接url:{}",url);
         QueryStringDecoder queryStringDecoder = new QueryStringDecoder(url);
         Map<String, List<String>> parameters = queryStringDecoder.parameters();
-
+        RestResultModel restResultModel= new RestResultModel();
 
         if(url.startsWith("/flashCheck")){
             if (parameters.size() == 1){
@@ -75,12 +75,16 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         }
 
         if(url.startsWith("/flashIsOk")){
-            httpHandler(url,ctx,req,clientCache.getClientStatus());
+            restResultModel.setResult(200);
+            restResultModel.setData(clientCache.getClientStatus());
+            httpHandler(url,ctx,req, JSON.toJSONString(restResultModel));
             return;
         }
 
         if(url.startsWith("/javaIsOk")){
-            httpHandler(url,ctx,req,"ok");
+            restResultModel.setResult(200);
+            restResultModel.setData(clientCache.getClientStatus());
+            httpHandler(url,ctx,req,JSON.toJSONString(restResultModel));
             return;
         }
         // Handshake
@@ -107,6 +111,10 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         }
     }
 
+
+
+
+
     private void httpHandler(String url,ChannelHandlerContext ctx,FullHttpRequest req,String message){
         FullHttpResponse response = findFullHttpResponse(req,message);
         ctx.write(response);
@@ -130,5 +138,6 @@ public class HttpHandler extends SimpleChannelInboundHandler<Object> {
         }
         return response;
     }
+
 
 }

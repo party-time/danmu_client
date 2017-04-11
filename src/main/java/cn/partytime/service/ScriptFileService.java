@@ -82,6 +82,11 @@ public class ScriptFileService {
         map.put("javaCommonUpdateVbsPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS));
 
 
+        map.put("checkJavaIsOkUrl","http://localhost:8081/javaIsOk");
+        map.put("checkflashIsOkUrl","http://localhost:8081/flashIsOk");
+
+
+
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.START_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATE_VBS);

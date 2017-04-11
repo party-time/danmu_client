@@ -20,6 +20,7 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.netty.client.handler.LocalServerWebSocketClientHandler;
 import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
+import cn.partytime.service.DeviceService;
 import cn.partytime.util.CommonUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -50,12 +51,18 @@ public final class LocalServerWebSocketClient {
     private ConfigUtils configUtils;
 
     @Autowired
+    private DeviceService deviceService;
+
+    @Autowired
     @Qualifier("localServerWebSocketClientHandler")
     private LocalServerWebSocketClientHandler localServerWebSocketClientHandler;
 
     public  void initBootstrap() throws Exception {
 
-        String url = "ws://"+serverIp()+":8081/ws";
+
+        DeviceInfo deviceInfo = deviceService.findServiceDevice();
+
+        String url = "ws://"+deviceInfo.getIp()+":"+deviceInfo.getPort()+"/ws";
         URI uri = new URI(url);
         String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
         //final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();

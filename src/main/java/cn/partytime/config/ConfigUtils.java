@@ -54,6 +54,7 @@ public class ConfigUtils {
 
     private String baseJavaClientUrl="/v1/api/javaClient";
 
+
     private String webSocketPath="/ws";
 
     private String filePath(){
@@ -199,19 +200,6 @@ public class ConfigUtils {
     }
 
 
-
-    public String getDeviceInfoUrlUrl(){
-        return getDomain()+deviceInfoUrlUrl+"?addressId="+properties.getAddressId();
-    }
-
-    public String getProjectorOpenUrl(String ip){
-        return "http://"+ip+projectorOpenPath;
-    }
-
-    public String getProjectorCloseUrl(String ip){
-        return "http://"+ip+projectorClosePath;
-    }
-
     public String getAddressId(){
         return  properties.getAddressId();
     }
@@ -244,6 +232,10 @@ public class ConfigUtils {
 
     public String getPromotionalFilmUrl(String command,String status){
         return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+command+CommonConst.SEPARATOR+properties.getRegistCode()+CommonConst.SEPARATOR+status;
+    }
+
+    public String findDeviceInfoUrl(){
+        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+"findDeviceInfo"+CommonConst.SEPARATOR+properties.getAddressId();
     }
 
 }

@@ -37,16 +37,32 @@
 
 package cn.partytime.netty.client.handler;
 
+import cn.partytime.config.ClientCache;
+import cn.partytime.model.client.ClientCommand;
+import cn.partytime.model.client.ClientCommandConfig;
+import cn.partytime.model.client.ClientModel;
+import cn.partytime.model.client.PartyInfo;
+import cn.partytime.model.device.DeviceInfo;
+import cn.partytime.service.CommandExecuteService;
+import cn.partytime.service.DeviceService;
+import cn.partytime.util.CommonUtil;
+import cn.partytime.util.HttpUtils;
+import com.alibaba.fastjson.JSON;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Qualifier("localServerWebSocketClientHandler")
@@ -56,6 +72,16 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
     private  WebSocketClientHandshaker handshaker;
 
     private ChannelPromise handshakeFuture;
+
+
+    @Autowired
+    private CommandExecuteService commandExecuteService;
+
+    @Autowired
+    private ClientCache clientCache;
+
+    @Autowired
+    private DeviceService deviceService;
 
 
     public ChannelFuture handshakeFuture() {
@@ -71,7 +97,10 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
     public void channelActive(ChannelHandlerContext ctx) {
         URI uri = null;
         try {
-            uri = new URI("ws://localhost:8081/ws");
+
+            DeviceInfo deviceInfo = deviceService.findServiceDevice();
+
+            uri = new URI("ws://"+deviceInfo.getIp()+":"+deviceInfo.getPort()+"/ws");
             String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
             final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
             final int port = uri.getPort();
@@ -96,7 +125,6 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
             handshakeFuture.setSuccess();
             return;
         }
-
         if (msg instanceof FullHttpResponse) {
             FullHttpResponse response = (FullHttpResponse) msg;
             throw new IllegalStateException(
@@ -107,6 +135,48 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             System.out.println("WebSocket Client received message: " + textFrame.text());
+            String commandTxt = textFrame.text();
+            ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
+
+            if("command".equals(clientCommandConfig.getType())){
+                System.out.print(clientCommandConfig.getData());
+                String partyInfoStr = String.valueOf(clientCommandConfig.getData());
+                PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
+                clientCache.setPartyInfo(partyInfo);
+            }else if("clientCommand".equals(clientCommandConfig.getType())){
+                String clientCommandData = String.valueOf(clientCommandConfig.getData());
+                ClientCommand clientCommand = JSON.parseObject(clientCommandData,ClientCommand.class);
+                String type = clientCommand.getName();
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        //直接脚本
+                        execute(type,clientCommandConfig);
+                        //执行回调
+                        if(!StringUtils.isEmpty(clientCommand.getBcallBack())){
+                            HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
+                        }
+                    }
+                }).start();
+            }
+        }
+    }
+    public void execute(String command,ClientCommandConfig clientCommandConfig){
+
+
+        command = command.replaceAll("\\d+", "");
+        String commandStr = command.substring(0, 1).toUpperCase() + command.substring(1);
+        String methodName="execute"+commandStr+"CallBack";
+        try {
+            Class<CommandExecuteService> clz = CommandExecuteService.class;
+            Method method = clz.getMethod(methodName);
+            method.invoke(commandExecuteService);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 

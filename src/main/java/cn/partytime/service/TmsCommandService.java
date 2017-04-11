@@ -120,7 +120,6 @@ public class TmsCommandService {
                 return;
             default:
                 if(command.startsWith(AD_START_PREFIX)){
-                    //TODO:广告开始处理
                     logLogicService.logUploadHandler("广告开始");
                     //sendAdCommandToServer("promotionalFilm",command,0);
                     url = configUtils.getPromotionalFilmUrl(AD_START_PREFIX,"0");
@@ -132,7 +131,6 @@ public class TmsCommandService {
     }
 
     private String httpRequestHandler(String url){
-        System.out.println("===========>"+url);
         int count = 0;
         while (count<3){
             String versionStr = HttpUtils.httpRequestStr(url,"GET",null);;
