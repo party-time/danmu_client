@@ -1,8 +1,11 @@
 package cn.partytime.util;
 
+import cn.partytime.jna.User32;
+import jdk.nashorn.tools.Shell;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -42,6 +45,7 @@ public class PrintScreenUtils {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gs = ge.getScreenDevices();
         try {
+            log.info("press win+shift+->");
             Robot robot = new Robot();
             robot.keyPress(KeyEvent.VK_WINDOWS);
             robot.keyPress(KeyEvent.VK_SHIFT);
@@ -55,6 +59,11 @@ public class PrintScreenUtils {
         }
     }
 
+    public static void moveWindow(){
+        User32 user32 = User32.INSTANCE;
+        int hdwn = user32.FindWindow(null,"dmMovie.exe");
+        user32.MoveWindow(hdwn,0,500,500,500,false);
+    }
 
 
 
