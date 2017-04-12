@@ -29,7 +29,7 @@ public class CommandExecuteService {
     private RsyncFileService rsyncFileService;
 
     @Autowired
-    private ConfigUtils configUtils;
+    private ClientUpdateService clientUpdateService;
 
     @Autowired
     private ProjectorService projectorService;
@@ -105,6 +105,10 @@ public class CommandExecuteService {
 
     public void executeUpdateClientDownCallBack() {
         windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.CLIENTDOWNLOAD_BAT));
+    }
+
+    public void executeUpdatePlanCreateCallBack() {
+        clientUpdateService.createUpdatePlanHandler();
     }
 
     public void executeConfigCreateCallBack() {
