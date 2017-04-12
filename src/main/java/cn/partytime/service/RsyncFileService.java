@@ -35,7 +35,7 @@ public class RsyncFileService {
     private ConfigUtils configUtils;
 
     public void rsyncFile(){
-        String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.rsyncName()+" "+configUtils.cmdRsyncFilePath;
+        /*String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.rsyncName()+" "+configUtils.cmdRsyncFilePath;
         Process process = null;
         List<String> processList = new ArrayList<String>();
         try {
@@ -54,7 +54,7 @@ public class RsyncFileService {
             }
         } catch (Exception e) {
             log.error("",e);
-        }
+        }*/
 
     }
 
@@ -452,7 +452,7 @@ public class RsyncFileService {
 
 
     public void downloadClient(){
-        String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.rsyncClientName()+" "+configUtils.programPath();
+        /*String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.rsyncClientName()+" "+configUtils.programPath();
         Process process = null;
         List<String> processList = new ArrayList<String>();
         try {
@@ -471,32 +471,7 @@ public class RsyncFileService {
             }
         } catch (Exception e) {
             log.error("",e);
-        }
-
-    }
-
-
-    public void downloadExecuteShell(){
-        String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.getExecuteScriptName()+" "+configUtils.shellPath();
-        Process process = null;
-        List<String> processList = new ArrayList<String>();
-        try {
-            process = Runtime.getRuntime().exec(shellString);
-            BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = "";
-            while ((line = input.readLine()) != null) {
-                log.info(line);
-            }
-            input.close();
-            int exitValue = process.waitFor();
-            if (0 != exitValue) {
-                log.info("call shell failed. error code is :" + exitValue);
-            }else{
-                log.info("client upload success");
-            }
-        } catch (Exception e) {
-            log.error("",e);
-        }
+        }*/
 
     }
 

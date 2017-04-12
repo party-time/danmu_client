@@ -14,43 +14,32 @@ public class ConfigUtils {
 
     @Autowired
     private Properties properties;
-
     public String appName="dmMovie";
     public String testRsyncIp="101.201.80.206";
     public String productionRsyncIp="59.110.148.54";
-    private String testRsyncName="testdownload";
-    private String productionRsyncName="appbackup";
-    private String testDownloadClient = "testclientdownload";
-    private String clientdownload ="clientdownload";
-    private String executeScript="executeScript";
-    private String testExecuteScript="testExecuteScript";
+
+
+
     public String saveFilePath = "resource";
+
     private String baseTestUrl = "http://test.party-time.cn";
     private String baseUrl = "http://www.party-time.cn";
     private String localUrl="http://127.0.0.1";
-
     private String logTestUrl="http://testlog.party-time.cn";
     private String logUrl="http://log.party-time.cn";
-
     private String logUrlPath="/log/java";
 
+
     public String cmdRsyncFilePath = "/enterX/flash/"+saveFilePath;
-
-    private String tempInitUrl="/v1/api/javaClient/latelyParty";
-    private String tempAdTimerDanmuNetUrl="/v1/api/javaClient/findAdTimerDanmu";
-    private String tempTimerDanmuNetUrl="/v1/api/javaClient/findTimerDanmuFile";
-    private String tempUpdateVersionNetUrl="/v1/api/javaClient/findUpdatePlan";
-    private String tempUpdateVersionResultCommitNetUrl="/v1/api/javaClient/updateUpdatePlan";
-    private String deviceInfoUrlUrl="/v1/api/admin/device/find";
-
-    private String updatePlanPath="/v1/api/javaClient/updateUpdatePlan";
-
-    private String paramUrl="/v1/api/javaClient/findFlashConfig";
-
-    private String saveScreenPicUrl="/v1/api/javaClient/saveScreen";
-
     private String baseJavaClientUrl="/v1/api/javaClient";
-
+    private String tempInitUrl=baseJavaClientUrl+"/latelyParty";
+    private String tempAdTimerDanmuNetUrl=baseJavaClientUrl+"/findAdTimerDanmu";
+    private String tempTimerDanmuNetUrl=baseJavaClientUrl+"/findTimerDanmuFile";
+    private String tempUpdateVersionNetUrl=baseJavaClientUrl+"/findUpdatePlan";
+    private String tempUpdateVersionResultCommitNetUrl=baseJavaClientUrl+"/updateUpdatePlan";
+    private String updatePlanPath=baseJavaClientUrl+"/updateUpdatePlan";
+    private String paramUrl=baseJavaClientUrl+"/findFlashConfig";
+    private String saveScreenPicUrl=baseJavaClientUrl+"/saveScreen";
 
     private String webSocketPath="/ws";
 
@@ -66,29 +55,6 @@ public class ConfigUtils {
         }
     }
 
-    public String rsyncName(){
-        if(0==properties.getEnv()){
-            return testRsyncName;
-        }else{
-            return productionRsyncName;
-        }
-    }
-
-    public String rsyncClientName(){
-        if(0==properties.getEnv()){
-            return testDownloadClient;
-        }else{
-            return clientdownload;
-        }
-    }
-
-    public String getExecuteScriptName(){
-        if(0==properties.getEnv()){
-            return testExecuteScript;
-        }else{
-            return executeScript;
-        }
-    }
     public String getMachineNum(){
         return properties.getMachineNum();
     }

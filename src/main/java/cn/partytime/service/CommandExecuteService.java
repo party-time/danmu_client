@@ -103,6 +103,10 @@ public class CommandExecuteService {
         windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.ADTIMERDANMU_BAT));
     }
 
+    public void executeResourceAllDownCallBack() {
+        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.RESOURCE_BAT));
+    }
+
     public void executeUpdateClientDownCallBack() {
         windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.CLIENTDOWNLOAD_BAT));
     }

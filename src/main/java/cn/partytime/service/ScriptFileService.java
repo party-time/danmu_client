@@ -82,9 +82,6 @@ public class ScriptFileService {
         map.put("javaUpdateShellPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAUPDATE_SH));
         map.put("javaCommonUpdateVbsPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS));
 
-
-
-
         map.put("checkJavaIsOkUrl","http://localhost:8081/javaIsOk");
         map.put("checkflashIsOkUrl","http://localhost:8081/flashIsOk");
 
@@ -131,6 +128,17 @@ public class ScriptFileService {
         map.put("rsyncScriptPath",configUtils.findUpdateClientDownPath());
         map.put("resourceType",scriptConfigUtils.CLIENTDOWNLOAD_BAT);
         createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.CLIENTDOWNLOAD_BAT);
+
+        map.put("rsyncScriptPath",configUtils.findUpdateClientDownPath());
+        map.put("resourceType",scriptConfigUtils.CLIENTDOWNLOAD_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.CLIENTDOWNLOAD_BAT);
+
+        map.put("rsyncScriptPath",configUtils.cmdRsyncFilePath);
+        map.put("resourceType",scriptConfigUtils.RESOURCE_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.RESOURCE_BAT);
+
+
+
     }
 
     public void createRsyncDownloadShellFile(Map<String, Object> model,String type,String freemakerName,String fileName){
