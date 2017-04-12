@@ -40,7 +40,7 @@ else
     tar xvf "flash_version.$UPDATE_VERSION.tar"  -C $FLASH_PATH
 
     #echo $VERSION_NUM>$FLASH_PATH/version
-    java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
+    #java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
 fi
 exit 0
 

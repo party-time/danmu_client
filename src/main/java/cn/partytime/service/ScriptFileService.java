@@ -48,7 +48,8 @@ public class ScriptFileService {
         map.put("rootPath",properties.getBasePath());
         map.put("javaJarPath",scriptConfigUtils.findJavaJarPath());
         map.put("javaPropertiesPath",scriptConfigUtils.findJavaPropertiesPath());
-        map.put("flashStartExe",scriptConfigUtils.findFlashStartExe());
+        map.put("flashStartExePath",scriptConfigUtils.findFlashStartExe());
+        map.put("teamViewerExePath",scriptConfigUtils.findTeamViewerExe());
         map.put("javaPath",configUtils.findJavaProgramPath());
         map.put("flashPath",configUtils.findFlashProgramPath());
         map.put("javaNewClietPath",configUtils.findJavaNewClientPath());
@@ -82,10 +83,10 @@ public class ScriptFileService {
         map.put("javaCommonUpdateVbsPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS));
 
 
+
+
         map.put("checkJavaIsOkUrl","http://localhost:8081/javaIsOk");
         map.put("checkflashIsOkUrl","http://localhost:8081/flashIsOk");
-
-
 
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.START_VBS);

@@ -25,7 +25,7 @@ Function executeFlashUpdate(version)
 
     Call showDailog("flash update shell execute:" & flashUpdateShell &" "& version)
     Call executeShellFunction(flashUpdateShell &" "& version)
-
+    Call executeShellFunction(javaStartBatPath)
 End Function
 
 

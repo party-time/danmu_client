@@ -37,7 +37,7 @@ else
         #cp -r $NEW_JAVA_PATH/"danmu_java_client_version.$UPDATE_VERSION.jar"  $JAVA_PATH
         cp -r $NEW_JAVA_PATH/"danmu_java_client_version.$UPDATE_VERSION.jar"  $JAVA_PATH/danmu_java_client.jar
         #echo -e $UPDATE_VERSION>$JAVA_PATH/version
-        java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
+        #java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
     fi
 fi
 exit 0

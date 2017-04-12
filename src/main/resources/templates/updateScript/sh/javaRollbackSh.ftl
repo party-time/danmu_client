@@ -15,5 +15,5 @@ else
         cp -r $OLD_JAVA_PATH/* $JAVA_PATH
     fi
 fi
-java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
+#java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
 exit 0

@@ -7,6 +7,7 @@ Set wShell=CreateObject("Wscript.Shell")
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
+javaStartBatPath = "${javaStartBatPath}"
 javaRollBackShell = "bash " & "${javaRollBakShellPath}"
 javacurrentVersionPath = "${javaCurrentVersionPath}"
 javabakVersionPath = "${javaBakVersionPath}"
@@ -85,8 +86,9 @@ Function doExecute()
     'execute update shell
     'ws.run javaRollBackShell
     Call executeShellFunction(javaRollBackShell)
+    Call executeShellFunction(javaStartBatPath)
 
-    WScript.Sleep 10000
+    WScript.Sleep 20000
     strComputer = "."
 
     Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")

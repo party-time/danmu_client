@@ -43,9 +43,6 @@ public class ConfigUtils {
     private String tempUpdateVersionResultCommitNetUrl="/v1/api/javaClient/updateUpdatePlan";
     private String deviceInfoUrlUrl="/v1/api/admin/device/find";
 
-    private String projectorOpenPath="/tgi/console.tgi?powerOn131658";
-    private String projectorClosePath="/tgi/console.tgi?powerOff131047";
-
     private String updatePlanPath="/v1/api/javaClient/updateUpdatePlan";
 
     private String paramUrl="/v1/api/javaClient/findFlashConfig";
@@ -129,6 +126,8 @@ public class ConfigUtils {
     public String findVersionFlashPath(){return filePath() + "/version/flash"; }
     public String findJavaNewClientPath(){return filePath() + "/newClient/java";}
     public String findFlashNewClientPath(){return filePath() + "/newClient/flash";}
+
+    public String findTeamViewerPath(){return properties.getBasePath()+"/TeamViewer";}
 
     public String programPath(){return "/enterX/newClient";}
 

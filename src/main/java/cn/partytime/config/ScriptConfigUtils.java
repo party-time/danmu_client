@@ -48,6 +48,7 @@ public class ScriptConfigUtils {
     public final String RSYNCRESOURCEDOWN_BAT="rsyncResourceDown";
     private final String UPDATE_FREEMARKER_PATH="updateScript";
 
+
     public final  String FTL_TYPE="ftl";
     public final  String BAT_TYPE="bat";
     public final  String SH_TYPE="sh";
@@ -56,13 +57,17 @@ public class ScriptConfigUtils {
     public final String JAVA_PROPERTIESE_NAME="application.properties";
     public final String JAVA_JAR_NAME="danmu_java_client.jar";
     public final String FLASH_START_NAME="dmMovie.exe";
+    public final String TEAMVIEWER_START_NAME="TeamViewer.exe";
     public String findJavaJarPath(){
         return configUtils.findJavaProgramPath()+CommonConst.SEPARATOR+JAVA_JAR_NAME;
     }
+
     public String findJavaPropertiesPath(){
         return configUtils.findJavaProgramPath()+CommonConst.SEPARATOR+JAVA_PROPERTIESE_NAME;
     }
     public String findFlashStartExe(){return configUtils.findFlashProgramPath()+CommonConst.SEPARATOR+FLASH_START_NAME;}
+
+    public String findTeamViewerExe(){return configUtils.findTeamViewerPath()+CommonConst.SEPARATOR+TEAMVIEWER_START_NAME;}
 
     public String findEecuteScriptDirectory() {
         return configUtils.shellPath();

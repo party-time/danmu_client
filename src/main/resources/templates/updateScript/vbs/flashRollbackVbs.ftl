@@ -9,6 +9,8 @@ executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 checkflashIsOkUrl="${checkJavaIsOkUrl}"
 checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
+
+javaStartBatPath = "${javaStartBatPath}"
 flashRollbackShell = "bash " & "${flashRollBakShellPath}"
 flashcurrentVersionPath = "${flashCurrentVersionPath}"
 flashbakVersionPath = "${flashBakVersionPath}"
@@ -76,6 +78,7 @@ Function doExecute()
     Call showDailog("flash execute rollback")
     'ws.run flashRollbackShell
     Call executeShellFunction(flashRollbackShell)
+    Call executeShellFunction(javaStartBatPath)
 
     WScript.Sleep 20000
 

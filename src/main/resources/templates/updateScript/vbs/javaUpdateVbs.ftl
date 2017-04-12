@@ -10,6 +10,7 @@ executeglobal fso.opentextfile("${javaCommonUpdateVbsPath}", 1).readall
 
 checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
+javaStartBatPath = "${javaStartBatPath}"
 javaUpdateShell = "bash " & "${javaUpdateShellPath}"
 javaRollBackShell = "bash " & "${javaRollBakShellPath}"
 javacurrentVersionPath = "${javaCurrentVersionPath}"

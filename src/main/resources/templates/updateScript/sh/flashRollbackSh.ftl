@@ -25,7 +25,7 @@ else
         fileNameNoSuffix=$(basename $file)
         cp -r $file  $FLASH_PATH
     done
-    java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
+    #java -jar ${javaJarPath} --spring.config.location=${javaPropertiesPath}
 fi
 exit 0
 

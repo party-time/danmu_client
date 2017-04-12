@@ -30,8 +30,8 @@ End Function
 
 Function executeUpdateShell(version)
     'ws.run javaUpdateShell & " " &version
-
-    ExecuteShellFunction(javaUpdateShell & " " &version)
+    Call ExecuteShellFunction(javaUpdateShell & " " &version)
+    Call executeShellFunction(javaStartBatPath)
 End Function
 
 Function SendFailRequestToServer(param,versionObject)
