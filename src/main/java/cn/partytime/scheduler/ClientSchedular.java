@@ -40,22 +40,16 @@ public class ClientSchedular {
         //客户端版本下载
         rsyncFileService.downloadClient();
         //下载执行脚本
-        rsyncFileService.downloadExecuteShell();
+        //rsyncFileService.downloadExecuteShell();
     }
 
-    //@Scheduled(cron = "0 */10 * * * ?")
-    /*public void planSchtasks(){
+
+
+    @Scheduled(cron = "0 */10 * * * ?")
+    public void planSchtasks(){
         log.info("execute update plan");
-        UpdatePlanConfig versionConfig = clientUpdateService.findVersionConfig();
-        if(versionConfig!=null){
-            List<VersionInfo> versionInfoList = versionConfig.getData();
-            if(ListUtils.checkListIsNotNull(versionInfoList)){
-                for(VersionInfo versionInfo:versionInfoList){
-                    //clientUpdateService.createSchtasks(versionInfo);
-                }
-            }
-        }
-    }*/
+        clientUpdateService.createUpdatePlanHandler();
+    }
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void repeatFailedRequest(){

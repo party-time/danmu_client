@@ -3,6 +3,7 @@
 #JAVA VERSION
 NEW_JAVA_PATH=${javaNewClietPath}
 OLD_JAVA_PATH=${javaBakClietPath}
+JAVA_PATH=${javaPath}
 IFS=$(echo -en "\n\b")
 if [ "`ls -A $OLD_JAVA_PATH`" = "" ]; then
         echo "you could not resotore your client,because your histroy resource is null"

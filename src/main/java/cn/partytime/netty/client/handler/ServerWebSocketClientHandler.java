@@ -107,9 +107,9 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
         try {
             ServerInfo serverInfo = clientCache.getServerInfo();
             uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
-            String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
-            final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
-            final int port = uri.getPort();
+            //String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
+            //final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
+            //final int port = uri.getPort();
             handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
             handshaker.handshake(ctx.channel());
         } catch (URISyntaxException e) {

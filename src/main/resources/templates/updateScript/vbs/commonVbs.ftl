@@ -63,7 +63,6 @@ Function setResultToFile(status,code,versionObject)
     file.Write(Chr(34) & "status" & Chr(34)&":"&Chr(34)& status & Chr(34) & ",")
     file.Write(Chr(34) & "domainName" & Chr(34)&":"&Chr(34)& versionObject.domainName & Chr(34) & ",")
     file.Write(Chr(34) & "updateDate" & Chr(34)&":"&Chr(34)& versionObject.updateDate & Chr(34) & ",")
-    file.Write(Chr(34) & "updateDateStr" & Chr(34)&":"&Chr(34)& versionObject.updateDateStr & Chr(34) & ",")
     file.Write(Chr(34) & "code" & Chr(34)&":"&Chr(34)& code & Chr(34) )
     file.write("}")
     file.close

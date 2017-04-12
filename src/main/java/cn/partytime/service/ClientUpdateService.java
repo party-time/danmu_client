@@ -4,10 +4,7 @@ package cn.partytime.service;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.json.RestResult;
-import cn.partytime.model.ClientVersion;
-import cn.partytime.model.Properties;
-import cn.partytime.model.UpdatePlanConfig;
-import cn.partytime.model.VersionInfo;
+import cn.partytime.model.*;
 import cn.partytime.util.FileUtils;
 import cn.partytime.util.HttpUtils;
 import cn.partytime.util.ListUtils;
@@ -41,6 +38,23 @@ public class ClientUpdateService {
 
     @Autowired
     private ScriptConfigUtils scriptConfigUtils;
+
+
+    public void createUpdatePlanHandler(){
+        log.info("execute update plan");
+        UpdatePlanConfig versionConfig = findVersionConfig();
+        if(versionConfig!=null){
+            List<VersionInfo> versionInfoList = versionConfig.getData();
+            if(ListUtils.checkListIsNotNull(versionInfoList)){
+                for(VersionInfo versionInfo:versionInfoList){
+                    createSchtasks(versionInfo);
+                }
+            }
+        }
+    }
+
+
+
 
     public boolean setRequestResult(VersionInfo versionInfo, String machineNum,String status, int code){
         try {
@@ -163,6 +177,19 @@ public class ClientUpdateService {
     public static UpdatePlanConfig strToVersionConfig(String jsonStr){
         UpdatePlanConfig updatePlanConfig = JSON.parseObject(jsonStr, UpdatePlanConfig.class);
         return updatePlanConfig;
+    }
+
+    public void createSchtasks(VersionInfo versionInfo){
+        //判断是否获取新的定时任务；如果本地有定时任务未执行就不拉新的定时任务=
+        String  machineNum = configUtils.getMachineNum();
+        List<UpdatePlanMachine> updatePlanMachineList =  versionInfo.getUpdatePlanMachineList();
+        if(ListUtils.checkListIsNull(updatePlanMachineList)){
+            if(0==versionInfo.getType()){
+                setRequestResult(versionInfo,machineNum,"none",0);
+            }else{
+                setRequestResult(versionInfo,machineNum,"none",0);
+            }
+        }
     }
 
 
