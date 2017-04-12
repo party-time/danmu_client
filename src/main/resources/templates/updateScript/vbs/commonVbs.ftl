@@ -7,7 +7,8 @@ End Function
 
 Function ExecuteShellFunction(shellContent)
     Call showDailog("shellContent:" & shellContent)
-    ws.run shellContent,vbhide
+    'ws.run shellContent,vbhide
+    ws.run shellContent
 End Function
 
 Function Format_Time(s_Time, n_Flag)
