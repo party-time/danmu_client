@@ -1,1 +1,1 @@
-taskkill /F /IM teamView.exe
+taskkill /F /IM TeamViewer.exe
