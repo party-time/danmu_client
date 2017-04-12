@@ -77,16 +77,18 @@ public class PrintScreenUtils {
                 }
             }
         }
-        try {
-            Thread.sleep(5*1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if( gs.length > 1){
+            try {
+                Thread.sleep(5*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("start move");
+            User32 user32 = User32.INSTANCE;
+            WinDef.HWND hwnd = user32.FindWindow(null,"聚时代弹幕影院");
+            user32.MoveWindow(hwnd,screenWidth,0,screenWidth,screenHeight,false);
+            log.info("move end");
         }
-        log.info("start move");
-        User32 user32 = User32.INSTANCE;
-        WinDef.HWND hwnd = user32.FindWindow(null,"聚时代弹幕影院");
-        user32.MoveWindow(hwnd,screenWidth,0,screenWidth,screenHeight,false);
-        log.info("move end");
     }
 
 
