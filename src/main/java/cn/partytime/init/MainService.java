@@ -7,6 +7,7 @@ import cn.partytime.service.*;
 import cn.partytime.netty.server.ClientServer;
 import cn.partytime.netty.server.TmsServer;
 import cn.partytime.util.HttpUtils;
+import cn.partytime.util.PrintScreenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,8 +116,9 @@ public class MainService {
 
                 deviceService.findDeviceInfo();
                 **/
+                commandExecuteService.executeAppStartCallBack();
 
-               commandExecuteService.executeAppStartCallBack();
+
 
             }
         });

@@ -52,14 +52,14 @@ public class CommandExecuteService {
     }
 
     public void executeAppStartCallBack() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PrintScreenUtils.open2Screen();
-            }
-        }).start();
+        log.info("execute printScreen logic");
+        PrintScreenUtils.moveWindow();
     }
 
     public void executeAppCloseCallBack() {
@@ -101,6 +101,10 @@ public class CommandExecuteService {
 
     public void executeAdDmDownCallBack() {
         windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.ADTIMERDANMU_BAT));
+    }
+
+    public void executeUpdateClientDownCallBack() {
+        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.CLIENTDOWNLOAD_BAT));
     }
 
     public void executeConfigCreateCallBack() {

@@ -43,6 +43,7 @@ public class ScriptConfigUtils {
     public final String SPECIALIMAGES_BAT="specialImages";
     public final String TIMERDANMU_BAT="timerDanmu";
     public final String ADTIMERDANMU_BAT="adTimerDanmu";
+    public final String CLIENTDOWNLOAD_BAT="clientdownload";
 
     public final String RSYNCRESOURCEDOWN_BAT="rsyncResourceDown";
     private final String UPDATE_FREEMARKER_PATH="updateScript";

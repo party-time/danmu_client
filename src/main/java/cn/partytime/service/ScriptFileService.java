@@ -126,6 +126,10 @@ public class ScriptFileService {
         map.put("rsyncScriptPath",configUtils.findAdTimerDanmuPath());
         map.put("resourceType",scriptConfigUtils.ADTIMERDANMU_BAT);
         createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.ADTIMERDANMU_BAT);
+
+        map.put("rsyncScriptPath",configUtils.findUpdateClientDownPath());
+        map.put("resourceType",scriptConfigUtils.CLIENTDOWNLOAD_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.CLIENTDOWNLOAD_BAT);
     }
 
     public void createRsyncDownloadShellFile(Map<String, Object> model,String type,String freemakerName,String fileName){

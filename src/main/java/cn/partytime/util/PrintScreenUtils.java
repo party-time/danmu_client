@@ -1,7 +1,7 @@
 package cn.partytime.util;
 
-import cn.partytime.jna.User32;
-import jdk.nashorn.tools.Shell;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -60,9 +60,33 @@ public class PrintScreenUtils {
     }
 
     public static void moveWindow(){
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+        int screenWidth = 0;
+        int screenHeight = 0;
+        if( null != gs ){
+            for( int i=0;i<gs.length;i++){
+                if(!ge.getDefaultScreenDevice().equals(gs[i])){
+                    GraphicsConfiguration[] gc =gs[i].getConfigurations();
+                    for(GraphicsConfiguration curGc : gc) {
+                        Rectangle bounds = curGc.getBounds();
+                        log.info( "width:"+new Double(bounds.getWidth()).intValue() + "height:" + new Double(bounds.getHeight()).intValue()  );
+                        screenWidth = new Double(bounds.getWidth()).intValue();
+                        screenHeight = new Double(bounds.getHeight()).intValue();
+                    }
+                }
+            }
+        }
+        try {
+            Thread.sleep(5*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("start move");
         User32 user32 = User32.INSTANCE;
-        int hdwn = user32.FindWindow(null,"dmMovie.exe");
-        user32.MoveWindow(hdwn,0,500,500,500,false);
+        WinDef.HWND hwnd = user32.FindWindow(null,"聚时代弹幕影院");
+        user32.MoveWindow(hwnd,screenWidth,0,screenWidth,screenHeight,false);
+        log.info("move end");
     }
 
 

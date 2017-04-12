@@ -41,8 +41,10 @@ public class DeviceService {
         File file = new File(filePath);
         List<DeviceInfo> deviceInfoList = new ArrayList<>();
         DeviceConfig deviceConfig=null;
+
         if(file.exists()){
             String deviceStr = FileUtils.txt2String(filePath);
+            System.out.println("get local server Info:"+deviceStr);
             if(!StringUtils.isEmpty(deviceStr)){
                 deviceInfoList = JSON.parseArray(deviceStr,DeviceInfo.class);
             }else {

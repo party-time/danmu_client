@@ -198,6 +198,9 @@ public class ConfigUtils {
     public  String   findAdTimerDanmuPath(){
         return cmdRsyncFilePath +"/adTimerDanmu";
     }
+    public String findUpdateClientDownPath(){
+        return  "/enterX/newClient";
+    }
 
 
     public String getAddressId(){
