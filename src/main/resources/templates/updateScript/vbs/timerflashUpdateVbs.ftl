@@ -13,13 +13,13 @@ Call doExecute
 Function doExecute()
 
     'Determine whether the update plan exists
-    if fso.fileExists(resultFilePath)=False Then
+    if fso.fileExists(flashresultFilePath)=False Then
         Call showDailog("No update plan found, will exit update......")
         wscript.quit
     end If
 
     'Get update plan information
-    versionInfo=getFileContent(resultFilePath,1)
+    versionInfo=getFileContent(flashresultFilePath,1)
 
     Set updatePlanObject=ParseJson(versionInfo)
     If updatePlanObject="" Then

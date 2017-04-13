@@ -10,14 +10,14 @@ executeglobal fso.opentextfile("${javaCommonUpdateVbsPath}", 1).readall
 Call doExecute
 
 Function doExecute()
-    Call showDailog("update File Path:" & resultFilePath)
+    Call showDailog("update File Path:" & javaresultFilePath)
     'Determine whether the update plan exists
-    if fso.fileExists(resultFilePath)=False Then
+    if fso.fileExists(javaresultFilePath)=False Then
         Call showDailog("No update plan found, will exit update......")
         wscript.quit
     end If
 
-    versionInfo=getFileContent(resultFilePath,1)
+    versionInfo=getFileContent(javaresultFilePath,1)
     Call showDailog("versionInfo:" & versionInfo)
     Set updatePlanObject=ParseJson(versionInfo)
     If updatePlanObject="" Then
