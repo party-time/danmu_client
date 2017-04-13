@@ -28,7 +28,7 @@ public class LogLogicService {
             public void run() {
                 String addressId = configUtils.getAddressId();
                 String url = configUtils.getLogUrl()+"?addressId="+addressId+"&param="+content;
-                //HttpUtils.httpRequestStr(url,"GET",null);
+                HttpUtils.httpRequestStr(url,"GET",null);
             }
         });
     }
