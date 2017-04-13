@@ -4,20 +4,9 @@ Set html = CreateObject("htmlfile")
 Set http = CreateObject("Msxml2.ServerXMLHTTP")
 Set wShell=CreateObject("Wscript.Shell")
 
-
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 executeglobal fso.opentextfile("${javaCommonUpdateVbsPath}", 1).readall
 
-checkJavaIsOkUrl="http://localhost:8080/v1/api/javaClient/startOk"
-
-javaUpdateShell = "bash " & "${javaUpdateShellPath}"
-javaRollBackShell = "bash " & "${javaRollBakShellPath}"
-javacurrentVersionPath = "${javaCurrentVersionPath}"
-operateRequestUrl="${updatePlanCommitUrl}"
-
-resultFilePath="${javaUpdatePlan}"
-
-'Call doExecute
 Call doExecute
 
 Function doExecute()
@@ -44,31 +33,7 @@ Function doExecute()
         Call showDailog("The update time is not today and can not be updated")
         wscript.quit
     END IF
-    version=updatePlanObject.version
-    status=updatePlanObject.status
-
-    flashcurrentVersion=getFileContent(javacurrentVersionPath,1)
-
-    If updatePlanObject.status="success" OR  version=flashcurrentVersion Then
-        Call showDailog("the current version is the latest version")
-        wscript.quit
-    end If
-
-    'Send start request command
-    url = myRequestUrl("start",updatePlanObject,0)
-    Set requestResult=HttpRequest(url)
-
-    code =requestResult.readystate
-
-    If code=4 Then
-        Set resultObject=ParseJson(requestResult.responsetext)
-        'MsgBox resultObject.result
-        If resultObject.result =200 Then
-            requestCode=1
-            Call setResultToFile("start",requestCode,updatePlanObject)
-            Call doUpdateExecute(updatePlanObject)
-        END IF
-    END if
+    Call doStart(updatePlanObject)
 End Function
 
 

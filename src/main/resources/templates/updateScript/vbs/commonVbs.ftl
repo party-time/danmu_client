@@ -1,5 +1,22 @@
+
+checkflashIsOkUrl="${checkflashIsOkUrl}"
+checkJavaIsOkUrl="${checkJavaIsOkUrl}"
+javaresultFilePath="${javaUpdatePlan}"
+flashresultFilePath="${flashUpdatePlan}"
+operateRequestUrl="${updatePlanCommitUrl}"
+
+javaStartBatPath = "${javaStartBatPath}"
+javaRollBackShell = "bash " & "${javaRollBakShellPath}"
+javaUpdateShell = "bash " & "${javaUpdateShellPath}"
+javacurrentVersionPath = "${javaCurrentVersionPath}"
+javabakVersionPath = "${javaBakVersionPath}"
+flashRollbackShell = "bash " & "${flashRollBakShellPath}"
+flashUpdateShell = "bash " & "${flashUpdateShellPath}"
+flashcurrentVersionPath = "${flashCurrentVersionPath}"
+flashbakVersionPath = "${flashBakVersionPath}"
+
 Function showDailog(message)
-    flg=TRUE
+    flg=false
     if flg=true then
     wShell.Popup message,3
     end if
@@ -55,15 +72,15 @@ Function HttpRequest(url)
     Set HttpRequest=http
 End Function
 
-Function setResultToFile(status,code,versionObject)
+Function setResultToFile(resultFilePath,status,code,versionObject)
     Set file = fso.OpenTextFile(resultFilePath, 2)
     file.write("{")
     file.Write(Chr(34) & "id" & Chr(34)&":"&Chr(34)& versionObject.id & Chr(34) & ",")
     file.Write(Chr(34) & "version" & Chr(34)&":"&Chr(34)& versionObject.version & Chr(34) & ",")
     file.Write(Chr(34) & "machineNum" & Chr(34)&":"&Chr(34)& versionObject.machineNum & Chr(34) & ",")
     file.Write(Chr(34) & "status" & Chr(34)&":"&Chr(34)& status & Chr(34) & ",")
-    file.Write(Chr(34) & "domainName" & Chr(34)&":"&Chr(34)& versionObject.domainName & Chr(34) & ",")
     file.Write(Chr(34) & "updateDate" & Chr(34)&":"&Chr(34)& versionObject.updateDate & Chr(34) & ",")
+    file.Write(Chr(34) & "updateDateStr" & Chr(34)&":"&Chr(34)& versionObject.updateDateStr & Chr(34) & ",")
     file.Write(Chr(34) & "code" & Chr(34)&":"&Chr(34)& code & Chr(34) )
     file.write("}")
     file.close

@@ -5,6 +5,7 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.json.RestResult;
 import cn.partytime.model.*;
+import cn.partytime.util.DateUtils;
 import cn.partytime.util.FileUtils;
 import cn.partytime.util.HttpUtils;
 import cn.partytime.util.ListUtils;
@@ -65,7 +66,7 @@ public class ClientUpdateService {
             clientVersion.setUpdateDate(versionInfo.getUpdateDate());
             clientVersion.setStatus(status);
             clientVersion.setCode(code);
-            clientVersion.setDomainName(configUtils.getDomain());
+            clientVersion.setUpdateDateStr(DateUtils.transferLongToDate("yyyy-MM-dd",versionInfo.getUpdateDate()));
             String str = JSON.toJSONString(clientVersion);
 
             int type = versionInfo.getType();

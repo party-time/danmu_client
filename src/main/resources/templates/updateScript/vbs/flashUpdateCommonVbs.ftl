@@ -1,3 +1,35 @@
+Function doStart(updatePlanObject)
+    version=updatePlanObject.version
+    'Call showDailog("operateRequestUrl:" & updatePlanObject.updateUpdatePlanPath)
+
+    status=updatePlanObject.status
+    'Call showDailog("update status:" & status)
+
+    'Call showDailog("flashcurrentVersionPath:" & flashcurrentVersionPath)
+    flashcurrentVersion=getFileContent(flashcurrentVersionPath,1)
+
+    'Call showDailog("current version:" & flashcurrentVersion)
+    If updatePlanObject.status="success" OR  version=flashcurrentVersion Then
+        Call showDailog("the current version is the latest version")
+        wscript.quit
+    end If
+
+    url = myRequestUrl("start",updatePlanObject,1)
+    Set requestResult=HttpRequest(url)
+    code =requestResult.readystate
+
+    If code=4 Then
+        Call showDailog("server response content:" & requestResult.responsetext)
+
+        Set  resultObject=ParseJson(requestResult.responsetext)
+        If resultObject.result =200 Then
+            requestCode=1
+            Call setResultToFile(flashresultFilePath,"start",requestCode,updatePlanObject)
+            Call doUpdateExecute(updatePlanObject)
+        END IF
+    END IF
+End Function
+
 Function doUpdateExecute(versionObject)
 
     'Call showDailog("kill java and flash process")
@@ -88,7 +120,7 @@ Function rollBack()
     Call showDailog("flash execute rollback")
     'ws.run flashRollbackShell
     Call executeShellFunction(flashRollbackShell)
-
+    Call executeShellFunction(javaStartBatPath)
     WScript.Sleep 20000
     If checkJavaIsStart=1 Then
         strComputer = "."
@@ -133,7 +165,7 @@ Function SendFailRequestToServer(param,versionObject)
         requestCode=0
     End If
 
-    Call setResultToFile(param,requestCode,versionObject)
+    Call setResultToFile(flashresultFilePath,param,requestCode,versionObject)
     Call rollBack
 End Function
 
@@ -152,5 +184,5 @@ Function SendSuccessRequestToServer(param,versionObject)
     Else
         requestCode=0
     End If
-    Call setResultToFile(param,requestCode,versionObject)
+    Call setResultToFile(flashresultFilePath,param,requestCode,versionObject)
 End Function

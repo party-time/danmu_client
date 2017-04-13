@@ -1,3 +1,26 @@
+Function doStart(updatePlanObject)
+    version=updatePlanObject.version
+    status=updatePlanObject.status
+    flashcurrentVersion=getFileContent(javacurrentVersionPath,1)
+    If updatePlanObject.status="success" OR  version=flashcurrentVersion Then
+        Call showDailog("the current version is the latest version")
+        wscript.quit
+    end If
+    'Send start request command
+    url = myRequestUrl("start",updatePlanObject,0)
+    Set requestResult=HttpRequest(url)
+    code =requestResult.readystate
+    If code=4 Then
+        Set resultObject=ParseJson(requestResult.responsetext)
+        'MsgBox resultObject.result
+        If resultObject.result =200 Then
+            requestCode=1
+            Call setResultToFile(javaresultFilePath,"start",requestCode,updatePlanObject)
+            Call doUpdateExecute(updatePlanObject)
+        END IF
+    END IF
+End Function
+
 Function doUpdateExecute(currentVersionObject)
     'Call showDailog("kill java and flash process")
     Call killProcess
@@ -53,7 +76,7 @@ Function SendFailRequestToServer(param,versionObject)
         requestCode=0
     End If
 
-    Call setResultToFile(param,requestCode,versionObject)
+    Call setResultToFile(javaresultFilePath,param,requestCode,versionObject)
     Call showDailog("Execute rollback")
     Call rollBack
 End Function
@@ -98,5 +121,5 @@ Function SendSuccessRequestToServer(param,versionObject)
     Else
         requestCode=0
     End If
-    Call setResultToFile(param,requestCode,versionObject)
+    Call setResultToFile(javaresultFilePath,param,requestCode,versionObject)
 End Function

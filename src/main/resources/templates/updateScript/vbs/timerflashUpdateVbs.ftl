@@ -6,19 +6,8 @@ Set wShell=CreateObject("Wscript.Shell")
 
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 executeglobal fso.opentextfile("${flashCommonUpdateVbsPath}", 1).readall
-checkflashIsOkUrl="http://localhost:8080/v1/api/javaClient/flashIsOk"
-checkJavaIsOkUrl="http://localhost:8080/v1/api/javaClient/startOk"
-testlogPath="http://testlog.party-time.cn"
-
-flashUpdateShell = "bash " & "${flashUpdateShellPath}"
-flashRollbackShell = "bash " & ${flashRollBakShellPath}
-flashcurrentVersionPath = ${flashCurrentVersionPath}
-operateRequestUrl=${updatePlanCommitUrl}
-
-resultFilePath="${flashUpdatePlan}"
 
 
-'Call showDailog("update File Path:" & resultFilePath)
 Call doExecute
 
 Function doExecute()
@@ -46,36 +35,7 @@ Function doExecute()
         Call showDailog("The update time is not today and can not be updated")
         wscript.quit
     END IF
-
-    version=updatePlanObject.version
-    'Call showDailog("operateRequestUrl:" & updatePlanObject.updateUpdatePlanPath)
-
-    status=updatePlanObject.status
-    'Call showDailog("update status:" & status)
-
-    'Call showDailog("flashcurrentVersionPath:" & flashcurrentVersionPath)
-    flashcurrentVersion=getFileContent(flashcurrentVersionPath,1)
-
-    'Call showDailog("current version:" & flashcurrentVersion)
-    If updatePlanObject.status="success" OR  version=flashcurrentVersion Then
-        Call showDailog("the current version is the latest version")
-        wscript.quit
-    end If
-
-    url = myRequestUrl("start",updatePlanObject,1)
-    Set requestResult=HttpRequest(url)
-    code =requestResult.readystate
-
-    If code=4 Then
-        Call showDailog("server response content:" & requestResult.responsetext)
-
-        Set  resultObject=ParseJson(requestResult.responsetext)
-        If resultObject.result =200 Then
-            requestCode=1
-            Call setResultToFile("start",requestCode,updatePlanObject)
-            Call doUpdateExecute(updatePlanObject)
-        END IF
-    END IF
+    Call doStart(updatePlanObject)
 
 End Function
 

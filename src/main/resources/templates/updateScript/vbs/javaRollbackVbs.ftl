@@ -5,21 +5,13 @@ Set http = CreateObject("Msxml2.ServerXMLHTTP")
 Set wShell=CreateObject("Wscript.Shell")
 
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
-checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
-javaStartBatPath = "${javaStartBatPath}"
-javaRollBackShell = "bash " & "${javaRollBakShellPath}"
-javacurrentVersionPath = "${javaCurrentVersionPath}"
-javabakVersionPath = "${javaBakVersionPath}"
-operateRequestUrl="${updatePlanCommitUrl}"
-
-resultFilePath="${javaUpdatePlan}"
 
 Call javaRollBack
 
 Function javaRollBack()
 
-    versionInfo=getFileContent(resultFilePath,1)
+    versionInfo=getFileContent(javaresultFilePath,1)
     Call showDailog("versionInfo:" & 	versionInfo)
 
     Set updatePlanObject=ParseJson(versionInfo)
@@ -76,7 +68,7 @@ Function doRollBackRequest(param,versionObject)
     Else
         requestCode=0
     End If
-    Call setResultToFile(param,requestCode,versionObject)
+    Call setResultToFile(javaresultFilePath,param,requestCode,versionObject)
 End Function
 
 Function doExecute()

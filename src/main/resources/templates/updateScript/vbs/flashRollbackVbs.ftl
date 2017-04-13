@@ -6,22 +6,12 @@ Set wShell=CreateObject("Wscript.Shell")
 
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 
-checkflashIsOkUrl="${checkJavaIsOkUrl}"
-checkJavaIsOkUrl="${checkflashIsOkUrl}"
 
-
-javaStartBatPath = "${javaStartBatPath}"
-flashRollbackShell = "bash " & "${flashRollBakShellPath}"
-flashcurrentVersionPath = "${flashCurrentVersionPath}"
-flashbakVersionPath = "${flashBakVersionPath}"
-operateRequestUrl="${updatePlanCommitUrl}"
-
-resultFilePath="${flashUpdatePlan}"
 
 Call javaRollBack
 
 Function javaRollBack()
-    versionInfo=getFileContent(resultFilePath,1)
+    versionInfo=getFileContent(flashresultFilePath,1)
     Call showDailog("versionInfo:" & 	versionInfo)
 
     Set updatePlanObject=ParseJson(versionInfo)
@@ -68,7 +58,7 @@ Function doRollBackRequest(param,updatePlanObject)
     Else
         requestCode=0
     End If
-    Call setResultToFile(param,requestCode,updatePlanObject)
+    Call setResultToFile(flashresultFilePath,param,requestCode,updatePlanObject)
 End Function
 
 Function doExecute()

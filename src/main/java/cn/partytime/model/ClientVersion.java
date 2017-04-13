@@ -14,9 +14,9 @@ public class ClientVersion {
 
     private String status;
 
-    private String domainName;
-
     private long updateDate;
+
+    private String updateDateStr;
 
     //0:失败；1:成功
     private int code;
@@ -62,19 +62,19 @@ public class ClientVersion {
         this.code = code;
     }
 
-    public String getDomainName() {
-        return domainName;
-    }
-
-    public void setDomainName(String domainName) {
-        this.domainName = domainName;
-    }
-
     public long getUpdateDate() {
         return updateDate;
     }
 
     public void setUpdateDate(long updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getUpdateDateStr() {
+        return updateDateStr;
+    }
+
+    public void setUpdateDateStr(String updateDateStr) {
+        this.updateDateStr = updateDateStr;
     }
 }

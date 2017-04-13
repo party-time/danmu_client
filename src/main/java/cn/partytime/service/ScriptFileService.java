@@ -63,8 +63,8 @@ public class ScriptFileService {
         map.put("flashCurrentVersionPath",scriptConfigUtils.findFlashVersionPath());
         map.put("javaCurrentVersionPath",scriptConfigUtils.findJavaVersionPath());
 
-        map.put("flashBakVersionPath",scriptConfigUtils.findBakJavaVersionPath());
-        map.put("javaBakVersionPath",scriptConfigUtils.findBakFlashVersionPath());
+        map.put("flashBakVersionPath",scriptConfigUtils.findBakFlashVersionPath());
+        map.put("javaBakVersionPath",scriptConfigUtils.findBakJavaVersionPath());
 
         map.put("updatePlanCommitUrl",configUtils.findUpdatePlanUrl());
 
