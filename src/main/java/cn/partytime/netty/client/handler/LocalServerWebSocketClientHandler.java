@@ -44,6 +44,7 @@ import cn.partytime.model.client.ClientModel;
 import cn.partytime.model.client.PartyInfo;
 import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.service.CommandExecuteService;
+import cn.partytime.service.CommandHandlerService;
 import cn.partytime.service.DeviceService;
 import cn.partytime.util.CommonUtil;
 import cn.partytime.util.HttpUtils;
@@ -76,6 +77,9 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
 
     @Autowired
     private CommandExecuteService commandExecuteService;
+
+    @Autowired
+    private CommandHandlerService commandHandlerService;
 
     @Autowired
     private ClientCache clientCache;
@@ -137,46 +141,7 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
             System.out.println("WebSocket Client received message: " + textFrame.text());
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
-
-            if("command".equals(clientCommandConfig.getType())){
-                System.out.print(clientCommandConfig.getData());
-                String partyInfoStr = String.valueOf(clientCommandConfig.getData());
-                PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
-                clientCache.setPartyInfo(partyInfo);
-            }else if("clientCommand".equals(clientCommandConfig.getType())){
-                String clientCommandData = String.valueOf(clientCommandConfig.getData());
-                ClientCommand clientCommand = JSON.parseObject(clientCommandData,ClientCommand.class);
-                String type = clientCommand.getName();
-                new Thread(new Runnable(){
-                    @Override
-                    public void run() {
-                        //直接脚本
-                        execute(type,clientCommandConfig);
-                        //执行回调
-                        if(!StringUtils.isEmpty(clientCommand.getBcallBack())){
-                            HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
-                        }
-                    }
-                }).start();
-            }
-        }
-    }
-    public void execute(String command,ClientCommandConfig clientCommandConfig){
-
-
-        command = command.replaceAll("\\d+", "");
-        String commandStr = command.substring(0, 1).toUpperCase() + command.substring(1);
-        String methodName="execute"+commandStr+"CallBack";
-        try {
-            Class<CommandExecuteService> clz = CommandExecuteService.class;
-            Method method = clz.getMethod(methodName);
-            method.invoke(commandExecuteService);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            commandHandlerService.commandHandler(clientCommandConfig);
         }
     }
 

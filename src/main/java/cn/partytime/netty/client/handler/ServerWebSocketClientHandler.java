@@ -45,8 +45,7 @@ import cn.partytime.model.client.ClientModel;
 import cn.partytime.model.client.PartyInfo;
 import cn.partytime.model.server.ServerInfo;
 import cn.partytime.service.CommandExecuteService;
-import cn.partytime.service.ServerCommandHandlerService;
-import cn.partytime.util.CommonUtil;
+import cn.partytime.service.CommandHandlerService;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import freemarker.template.utility.StringUtil;
@@ -79,6 +78,10 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Autowired
     private ClientCache clientCache;
 
+
+    @Autowired
+    private CommandHandlerService commandHandlerService;
+
     @Autowired
     private CommandExecuteService commandExecuteService;
 
@@ -86,10 +89,6 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
     private ChannelPromise handshakeFuture;
 
-
-
-    @Autowired
-    private ServerCommandHandlerService serverCommandHandlerService;
 
 
     public ChannelFuture handshakeFuture() {
@@ -145,75 +144,11 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
 
-            if("command".equals(clientCommandConfig.getType())){
-                System.out.print(clientCommandConfig.getData());
-                String partyInfoStr = String.valueOf(clientCommandConfig.getData());
-                PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
-                clientCache.setPartyInfo(partyInfo);
-            }else if("clientCommand".equals(clientCommandConfig.getType())){
-                String clientCommandData = String.valueOf(clientCommandConfig.getData());
-                ClientCommand clientCommand = JSON.parseObject(clientCommandData,ClientCommand.class);
-                String type = clientCommand.getName();
-                new Thread(new Runnable(){
-                    @Override
-                    public void run() {
-                        //直接脚本
-                        execute(type,clientCommandConfig);
-                        //执行回调
-                        if(!StringUtils.isEmpty(clientCommand.getBcallBack())){
-                            HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
-                        }
-                    }
-                }).start();
-            }
+            commandHandlerService.commandHandler(clientCommandConfig);
         }
     }
 
-    public void execute(String command,ClientCommandConfig clientCommandConfig){
 
-        if(CommonUtil.hasDigit(command)){
-            if(!serverCommandHandlerService.chckerIsLocalCommand(command)){
-                System.out.println("不是本机要执行的命令");
-                //通知下个服务器
-
-                ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findClientModelConcurrentHashMap();
-                if (channelClientModelConcurrentHashMap != null && channelClientModelConcurrentHashMap.size() > 0) {
-                    for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : channelClientModelConcurrentHashMap.entrySet()) {
-                        Channel channel = entry.getKey();
-                        channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(clientCommandConfig)));
-                    }
-                }
-                return;
-            }
-        }else{
-            //通知下个服务器
-            ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findClientModelConcurrentHashMap();
-            if (channelClientModelConcurrentHashMap != null && channelClientModelConcurrentHashMap.size() > 0) {
-                for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : channelClientModelConcurrentHashMap.entrySet()) {
-                    Channel channel = entry.getKey();
-                    channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(clientCommandConfig)));
-                }
-            }
-        }
-        command = command.replaceAll("\\d+", "");
-        /*if(!serverCommandHandlerService.chckerIsLocalCommand(command)){
-            System.out.print("不是本机要执行的命令");
-            return;
-        }*/
-        String commandStr = command.substring(0, 1).toUpperCase() + command.substring(1);
-        String methodName="execute"+commandStr+"CallBack";
-        try {
-            Class<CommandExecuteService> clz = CommandExecuteService.class;
-            Method method = clz.getMethod(methodName);
-            method.invoke(commandExecuteService);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     @Override

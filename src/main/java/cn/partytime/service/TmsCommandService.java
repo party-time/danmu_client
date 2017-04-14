@@ -2,6 +2,8 @@ package cn.partytime.service;
 
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.model.client.ClientCommand;
+import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.common.RestResultModel;
 import cn.partytime.util.CommonConst;
 import cn.partytime.util.HttpUtils;
@@ -35,6 +37,9 @@ public class TmsCommandService {
 
     @Autowired
     private CommandExecuteService commandExecuteService;
+
+    @Autowired
+    private CommandHandlerService commandHandlerService;
 
 
     private final String PROJECTOR_START="projector-start";
@@ -92,6 +97,14 @@ public class TmsCommandService {
                         RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
                         if(restResultModel.getResult()==200){
                             commandExecuteService.executeAppRestartCallBack();
+                            //执行
+                            ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
+                            clientCommandClientCommandConfig.setType("clientCommand");
+                            ClientCommand clientCommand = new ClientCommand();
+                            clientCommand.setBcallBack(null);
+                            clientCommand.setName("appRestart");
+                            clientCommandClientCommandConfig.setData(clientCommand);
+                            commandHandlerService.pubCommandToOtherServer(JSON.toJSONString(clientCommandClientCommandConfig));
                         }
                     }
                 }
