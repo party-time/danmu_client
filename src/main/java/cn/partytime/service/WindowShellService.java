@@ -22,6 +22,10 @@ public class WindowShellService {
 
 
     @Autowired
+    private LogLogicService logLogicService;
+
+
+    @Autowired
     private ConfigUtils configUtils;
 
 
@@ -52,74 +56,21 @@ public class WindowShellService {
     }
 
     public String execExe(String shellString) {
-        log.info(shellString);
+        logLogicService.logUploadHandler("执行脚本:"+shellString);
         Process process = null;
         StringBuffer sb = new StringBuffer();
         try {
             Runtime.getRuntime().exec(shellString);
         } catch (Exception e) {
-            log.error("", e);
+            //log.error("", e);
+            logLogicService.logUploadHandler("执行脚本异常:"+e.getMessage());
         }
-
         return sb.toString();
-
-    }
-
-
-    public String findTask() {
-        return execShell(FIND_TASK + configUtils.appName);
-    }
-
-    public String killTask() {
-        return execShell(configUtils.shellPath() + "/killFlash.bat");
-    }
-
-    public void restartTask() {
-        killTask();
-        String result = findTask();
-        //TODO:增加验证，判断进程确实kill掉了
-        startTask();
-    }
-
-    public void startTask() {
-        execExe(configUtils.findFlashProgramPath()+"/"+configUtils.appName+".exe");
-        PrintScreenUtils.open2Screen();
-    }
-
-    public void startTeamViewer() throws InterruptedException {
-        execExe(configUtils.shellPath() + "/startTeamViewer.bat");
-        killTask();
     }
 
     public void printScreenPic(){
         PrintScreenUtils.screenShotAsFile(configUtils.screenSavePath(),configUtils.getScreenSaveFile());
         HttpUtils.postFile(configUtils.screenSavePath()+"/"+configUtils.getScreenSaveFile(), configUtils.getSaveScreenPicUrl());
     }
-
-    public void killTeamViewer() {
-        execShell(configUtils.shellPath() + "/killTeamViewer.bat");
-    }
-
-    public void javaClientUpdate() {
-        //execShell(configUtils.getJaveUpdateVbsPath());
-        //execShell("cscript "+configUtils.getJaveUpdateVbsPath());
-    }
-
-    public void flashClientUpdate() {
-        //execShell("cscript "+configUtils.getFlashUpdateVbsPath());
-    }
-
-    public void javaClientRollback(){
-        //String shellCommand="cscript "+configUtils.getJavaRollbackVbsPath();
-        //log.info("current command is:{}",shellCommand);
-        //execShell(shellCommand);
-    }
-
-    public void flashClientRollback(){
-        //String shellCommand="cscript " +configUtils.getFlashRollbackVbsPath();
-       // log.info("current command is:{}",shellCommand);
-        //execShell(shellCommand);
-    }
-
 
 }

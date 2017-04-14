@@ -39,17 +39,10 @@ public class ClientSchedular {
         rsyncFileService.createFlashConfig();
         //客户端版本下载
         rsyncFileService.downloadClient();
-        //下载执行脚本
-        //rsyncFileService.downloadExecuteShell();
-    }
-
-
-
-    @Scheduled(cron = "0 */10 * * * ?")
-    public void planSchtasks(){
-        log.info("execute update plan");
+        //下载更新计划
         clientUpdateService.createUpdatePlanHandler();
     }
+
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void repeatFailedRequest(){

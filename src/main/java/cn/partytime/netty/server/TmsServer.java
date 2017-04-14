@@ -20,7 +20,7 @@ public class TmsServer {
     @Autowired
     private TmsServerInitializer tmsServerInitializer;
 
-    public void bind(int port) throws Exception {
+    public void init(int port) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {

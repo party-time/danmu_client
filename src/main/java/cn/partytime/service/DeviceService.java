@@ -26,6 +26,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class DeviceService {
 
+    @Autowired
+    private LogLogicService logLogicService;
+
 
     @Autowired
     private ConfigUtils configUtils;

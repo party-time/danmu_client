@@ -31,6 +31,10 @@ import java.util.Map;
 public class ClientUpdateService {
 
     @Autowired
+    private LogLogicService logLogicService;
+
+
+    @Autowired
     private ConfigUtils configUtils;
 
     @Autowired
@@ -42,7 +46,7 @@ public class ClientUpdateService {
 
 
     public void createUpdatePlanHandler(){
-        log.info("execute update plan");
+        logLogicService.logUploadHandler("创建更新计划");
         UpdatePlanConfig versionConfig = findVersionConfig();
         if(versionConfig!=null){
             List<VersionInfo> versionInfoList = versionConfig.getData();
@@ -53,11 +57,8 @@ public class ClientUpdateService {
             }
         }
     }
-
-
-
-
     public boolean setRequestResult(VersionInfo versionInfo, String machineNum,String status, int code){
+        logLogicService.logUploadHandler("更新计划写入文件");
         try {
             ClientVersion clientVersion = new ClientVersion();
             clientVersion.setId(versionInfo.getId());
@@ -76,6 +77,7 @@ public class ClientUpdateService {
             }else{
                 filePath = configUtils.findVersionFlashPath()+ File.separator+scriptConfigUtils.UPDATE_PLAN;
             }
+            logLogicService.logUploadHandler("更新计划写入文件写入："+filePath);
             File file = new File(filePath);
             if(!file.exists()){
                 file.createNewFile();
@@ -111,43 +113,6 @@ public class ClientUpdateService {
     }
 
 
-    public void repeatRequest(){
-        String javaPath = configUtils.findVersionJavaPath();
-        String flashPath = configUtils.findVersionFlashPath();
-        sendReqeust(javaPath,0);
-        sendReqeust(flashPath,1);
-    }
-
-    private void sendReqeust(String path,int type){
-        List<String> fileList = findFileList(new File(path));
-        Map<String,ClientVersion> stringClientVersionMap = new HashMap<String,ClientVersion>();
-
-        if(ListUtils.checkListIsNotNull(fileList)){
-            for(String str:fileList){
-                String versionStr = FileUtils.txt2String(path+File.separator+ str);
-                if(!StringUtils.isEmpty(versionStr)){
-                    ClientVersion clientVersion = JSON.parseObject(versionStr, ClientVersion.class);
-                    if(!"none".equals(clientVersion.getStatus()) && clientVersion.getCode()==0){
-                        String result = HttpUtils.httpRequestStr(configUtils.getUpdateVersionResultCommitNetUrl()+"?id="+clientVersion.getId()+"&result="+clientVersion.getStatus()+"&machineNum="+clientVersion.getMachineNum()+"&type="+type, "GET", null);
-                        if(!StringUtils.isEmpty(result)){
-                            RestResult restResult = JSON.parseObject(result, RestResult.class);
-                            if(restResult.getResult()==200){
-                                VersionInfo versionInfo = new VersionInfo();
-                                versionInfo.setId(clientVersion.getId());
-                                versionInfo.setType(type);
-                                versionInfo.setUpdateDate(clientVersion.getUpdateDate());
-                                versionInfo.setVersion(clientVersion.getVersion());
-
-                                setRequestResult(versionInfo,clientVersion.getMachineNum(),clientVersion.getStatus(),1);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
     public UpdatePlanConfig findVersionConfig(){
         int count = 0;
         while (count<3){
@@ -157,10 +122,10 @@ public class ClientUpdateService {
                     return strToVersionConfig(versionStr);
                 }
             }catch (Exception e){
-                System.out.print("获取数据异常");
+                logLogicService.logUploadHandler("创建更新计划.获取数据异常:"+e.getMessage());
             }
             count++;
-            System.out.print("请求失败，等待"+count+"秒，再次发起请求");
+            logLogicService.logUploadHandler("创建更新计划.请求失败，等待"+count+"秒，再次发起请求");
             try {
                 Thread.sleep(count*2000);
             } catch (InterruptedException e) {
@@ -171,7 +136,11 @@ public class ClientUpdateService {
     }
 
     public String findVersionByHttp(){
-        return HttpUtils.httpRequestStr(configUtils.getUpdateVersionUrl()+"?addressId="+properties.getAddressId(), "GET", null);
+        String url = configUtils.getUpdateVersionUrl()+"?addressId="+properties.getAddressId();
+        logLogicService.logUploadHandler("创建更新计划.请求的url:"+url);
+        String result= HttpUtils.httpRequestStr(url, "GET", null);
+        logLogicService.logUploadHandler("创建更新计划.获取的信息：:"+result);
+        return result;
     }
 
 
@@ -189,6 +158,43 @@ public class ClientUpdateService {
                 setRequestResult(versionInfo,machineNum,"none",0);
             }else{
                 setRequestResult(versionInfo,machineNum,"none",0);
+            }
+        }
+    }
+
+
+    public void repeatRequest(){
+        String javaPath = configUtils.findVersionJavaPath();
+        String flashPath = configUtils.findVersionFlashPath();
+        sendReqeust(javaPath,0);
+        sendReqeust(flashPath,1);
+    }
+
+    private void sendReqeust(String path,int type){
+        List<String> fileList = findFileList(new File(path));
+        if(ListUtils.checkListIsNotNull(fileList)){
+            for(String str:fileList){
+                String versionStr = FileUtils.txt2String(path+File.separator+ str);
+                if(!StringUtils.isEmpty(versionStr)){
+                    ClientVersion clientVersion = JSON.parseObject(versionStr, ClientVersion.class);
+                    if(!"none".equals(clientVersion.getStatus()) && clientVersion.getCode()==0){
+                        String url = configUtils.getUpdateVersionResultCommitNetUrl()+"?id="+clientVersion.getId()+"&result="+clientVersion.getStatus()+"&machineNum="+clientVersion.getMachineNum()+"&type="+type;
+                        logLogicService.logUploadHandler("请求服务器url:"+url);
+                        String result = HttpUtils.httpRequestStr(url, "GET", null);
+                        if(!StringUtils.isEmpty(result)){
+                            RestResult restResult = JSON.parseObject(result, RestResult.class);
+                            if(restResult.getResult()==200){
+                                VersionInfo versionInfo = new VersionInfo();
+                                versionInfo.setId(clientVersion.getId());
+                                versionInfo.setType(type);
+                                versionInfo.setUpdateDate(clientVersion.getUpdateDate());
+                                versionInfo.setVersion(clientVersion.getVersion());
+
+                                setRequestResult(versionInfo,clientVersion.getMachineNum(),clientVersion.getStatus(),1);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

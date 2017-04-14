@@ -17,6 +17,9 @@ public class CommandExecuteService {
 
 
     @Autowired
+    private LogLogicService logLogicService;
+
+    @Autowired
     private WindowShellService windowShellService;
 
     @Autowired
@@ -64,7 +67,6 @@ public class CommandExecuteService {
 
     public void executeAppCloseCallBack() {
         windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLFLASH_BAT));
-
     }
 
     public void executeFlashUpdateCallBack() {

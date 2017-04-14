@@ -19,6 +19,7 @@ import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.server.ServerInfo;
 import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
+import cn.partytime.service.CommonService;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -49,16 +50,14 @@ public final class ServerWebSocketClient {
     @Autowired
     private ClientCache clientCache;
 
+    @Autowired
+    private CommonService commonService;
 
-    public  void initBootstrap() throws Exception {
 
+    public  void init() throws Exception {
+        commonService.getServerInfo();
         EventLoopGroup group = new NioEventLoopGroup();
         try {
-            /*final ServerWebSocketClientHandler handler =
-                    new ServerWebSocketClientHandler(
-                            WebSocketClientHandshakerFactory.newHandshaker(
-                                    uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders()));*/
-
             ServerInfo serverInfo = clientCache.getServerInfo();
             URI uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
             final int port = uri.getPort();
@@ -83,7 +82,7 @@ public final class ServerWebSocketClient {
         } finally {
             System.out.println("远程服务器连接不上，重新接连");
             group.shutdownGracefully();
-            initBootstrap();
+            init();
 
         }
     }

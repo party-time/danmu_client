@@ -34,43 +34,21 @@ public class RsyncFileService {
     @Autowired
     private ConfigUtils configUtils;
 
-    public void rsyncFile(){
-        /*String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.rsyncName()+" "+configUtils.cmdRsyncFilePath;
-        Process process = null;
-        List<String> processList = new ArrayList<String>();
-        try {
-            process = Runtime.getRuntime().exec(shellString);
-            BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = "";
-            while ((line = input.readLine()) != null) {
-                log.info(line);
-            }
-            input.close();
-            int exitValue = process.waitFor();
-            if (0 != exitValue) {
-                log.info("call shell failed. error code is :" + exitValue);
-            }else{
-                log.info("file upload success");
-            }
-        } catch (Exception e) {
-            log.error("",e);
-        }*/
+    @Autowired
+    private CommandExecuteService commandExecuteService;
 
+    public void rsyncFile(){
+        commandExecuteService.executeResourceAllDownCallBack();
     }
 
-
-
-
+    public void downloadClient(){
+        commandExecuteService.executeUpdateClientDownCallBack();
+    }
 
     public void createFlashConfig() {
 
         String paramJsonStr = HttpUtils.httpRequestStr(configUtils.getParamUrl()+"?code="+properties.getRegistCode(),"GET",null);
-
         String jsonStr = HttpUtils.httpRequestStr(configUtils.getInitUrl()+"?addressId="+properties.getAddressId(), "GET", null);
-        //GsonBuilder gsonBuilder = new GsonBuilder();
-        //gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
-        //Gson gson = gsonBuilder.create();
-        //DownloadFileConfig downloadFileConfig = gson.fromJson(jsonStr, DownloadFileConfig.class);
         DownloadFileConfig downloadFileConfig = JSON.parseObject(jsonStr,DownloadFileConfig.class);
         if (null != downloadFileConfig) {
             List<PartyResourceResult> partyResourceResultList = downloadFileConfig.getData();
@@ -180,8 +158,6 @@ public class RsyncFileService {
                     }
 
                 }
-
-
                 createConfigFile(resourceFileMap,paramMap);
             }
 
@@ -334,11 +310,6 @@ public class RsyncFileService {
             }
         }
         jsonObject.put("adVideoUrl",adVideoList);
-
-
-
-
-
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
@@ -364,10 +335,6 @@ public class RsyncFileService {
 
     private TimerDanmuFileConfig initTimerDanmuFileConfig(){
         String jsonStr = HttpUtils.httpRequestStr(configUtils.getTimerDanmuNetUrl()+"?addressId="+properties.getAddressId(), "GET", null);
-        //List<TimerDanmuFileConfig> timerDanmuFileConfigList = JSON.parseArray(jsonStr,TimerDanmuFileConfig.class);
-        //GsonBuilder gsonBuilder = new GsonBuilder();
-        //gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
-        //Gson gson = gsonBuilder.create();
         TimerDanmuFileConfig timerDanmuFileConfig = JSON.parseObject(jsonStr, TimerDanmuFileConfig.class);
         return timerDanmuFileConfig;
     }
@@ -379,24 +346,10 @@ public class RsyncFileService {
      */
     public AdTimerFileResource findAdTimerDanmu () {
         String jsonStr = HttpUtils.httpRequestStr(configUtils.getAdTimerDanmuNetUrl()+"?addressId="+properties.getAddressId(), "GET", null);
-        //GsonBuilder gsonBuilder = new GsonBuilder();
-        //gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
-        //Gson gson = gsonBuilder.create();
         AdTimerFileConfig adTimerFileConfig = JSON.parseObject(jsonStr, AdTimerFileConfig.class);
         AdTimerFileResource adTimerFileResource = adTimerFileConfig.getData();
         return adTimerFileResource;
 
-        /*List<TimerDanmuFileModel> timerDanmuFileModelList =adTimerFileResource.getTimerDanmuFileLogicModels();
-        if(ListUtils.checkListIsNotNull(timerDanmuFileModelList)){
-            for(TimerDanmuFileModel timerDanmuFileModel:timerDanmuFileModelList){
-                String realFilePath = realAdTimerFileSavePath +timerDanmuFileModel.getPath();
-                File file = new File(realFilePath);
-                if(file.exists()){
-                    adTimerMap.put(timerDanmuFileModel.getPartyId(),saveFilePath+"/adTimerDanmu"+timerDanmuFileModel.getPath());
-                }
-            }
-        }
-        return  adTimerMap;*/
     }
 
     public List<TimerDanmuPathModel> findTimerDanmuFile () {
@@ -448,33 +401,4 @@ public class RsyncFileService {
         }
         return null;
     }
-
-
-
-    public void downloadClient(){
-        /*String shellString = "rsync -arvIz --delete --password-file="+configUtils.rsyncPasswordFile()+" rsync_user@"+configUtils.getRsyncIp()+"::"+configUtils.rsyncClientName()+" "+configUtils.programPath();
-        Process process = null;
-        List<String> processList = new ArrayList<String>();
-        try {
-            process = Runtime.getRuntime().exec(shellString);
-            BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = "";
-            while ((line = input.readLine()) != null) {
-                log.info(line);
-            }
-            input.close();
-            int exitValue = process.waitFor();
-            if (0 != exitValue) {
-                log.info("call shell failed. error code is :" + exitValue);
-            }else{
-                log.info("client upload success");
-            }
-        } catch (Exception e) {
-            log.error("",e);
-        }*/
-
-    }
-
-
-
 }

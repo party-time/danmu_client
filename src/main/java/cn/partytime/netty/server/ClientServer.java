@@ -25,7 +25,7 @@ public class ClientServer {
     @Autowired
     private ClientServerInitializer danmuServerInitializer;
 
-    public  void nettyStart(int port) {
+    public  void init(int port) {
         logger.info("ClientSver启动!");
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();

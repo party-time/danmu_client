@@ -25,6 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CommandHandlerService {
 
+    @Autowired
+    private LogLogicService logLogicService;
+
 
     @Autowired
     private ClientCache clientCache;
@@ -38,15 +41,14 @@ public class CommandHandlerService {
 
 
     public void commandHandler(ClientCommandConfig clientCommandConfig){
+        logLogicService.logUploadHandler("接收的命令信息:"+JSON.toJSONString(clientCommandConfig));
         if("command".equals(clientCommandConfig.getType())){
             System.out.print(clientCommandConfig.getData());
             String partyInfoStr = String.valueOf(clientCommandConfig.getData());
             PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
             clientCache.setPartyInfo(partyInfo);
-
             //活动信息给命令广播到其他服务器
             pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
-
             if(partyInfo.getStatus()==3){
                 ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
                 clientCommandClientCommandConfig.setType("clientCommand");
@@ -77,10 +79,9 @@ public class CommandHandlerService {
 
 
     public void execute(String command,ClientCommandConfig clientCommandConfig){
-
         if(CommonUtil.hasDigit(command)){
             if(!chckerIsLocalCommand(command)){
-                System.out.println("不是本机要执行的命令");
+                logLogicService.logUploadHandler("本服务器不处理此命令:"+JSON.toJSONString(clientCommandConfig));
                 //通知下个服务器
                 pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
                 return;
@@ -95,12 +96,9 @@ public class CommandHandlerService {
             Class<CommandExecuteService> clz = CommandExecuteService.class;
             Method method = clz.getMethod(methodName);
             method.invoke(commandExecuteService);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            logLogicService.logUploadHandler("执行脚本异常:"+e.getMessage());
         }
     }
 

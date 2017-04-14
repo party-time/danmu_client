@@ -57,7 +57,7 @@ public final class LocalServerWebSocketClient {
     @Qualifier("localServerWebSocketClientHandler")
     private LocalServerWebSocketClientHandler localServerWebSocketClientHandler;
 
-    public  void initBootstrap() throws Exception {
+    public  void init() throws Exception {
 
 
         DeviceInfo deviceInfo = deviceService.findServiceDevice();
@@ -91,7 +91,7 @@ public final class LocalServerWebSocketClient {
             group.shutdownGracefully();
             Thread.sleep(2000);
             System.out.println("本地客户端重连");
-            initBootstrap();
+            init();
         }
     }
 
