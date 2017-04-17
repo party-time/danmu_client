@@ -47,6 +47,14 @@ public class ConfigUtils {
         return properties.getBasePath()+"/enterX";
     }
 
+
+    public Integer getEnv(){
+        return  properties.getEnv();
+    }
+    public String findMachineNumber(){
+        return properties.getMachineNum();
+    }
+
     public String getRsyncIp(){
         if(0==properties.getEnv()){
             return testRsyncIp;

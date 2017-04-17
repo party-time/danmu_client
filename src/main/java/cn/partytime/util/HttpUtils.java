@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by administrator on 2016/12/8.
@@ -39,6 +40,19 @@ public class HttpUtils {
         return null;
     }
 
+
+    public static String  httpRequestStrEncodeUrl(String requestUrl,String param, String requestMethod, String outputStr){
+        try {
+            param = URLEncoder.encode(param, "utf-8");
+            requestUrl+="&param="+param;
+            // 如有中文一定要加上，在接收方用相应字符转码即可
+        } catch (UnsupportedEncodingException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        return httpRequestStr(requestUrl, requestMethod, outputStr);
+    }
     /**
      * http请求
      *
@@ -51,6 +65,8 @@ public class HttpUtils {
         System.out.println("url:"+requestUrl);
         StringBuffer buffer = new StringBuffer();
         try {
+            //requestUrl = requestUrl.replaceAll(requestUrl, URLEncoder.encode(requestUrl, "utf-8"));
+            //requestUrl = URLEncoder.encode(requestUrl, "utf-8");
             URL url = new URL(requestUrl);
             HttpURLConnection httpUrlConn = (HttpURLConnection) url.openConnection();
 
@@ -59,9 +75,13 @@ public class HttpUtils {
             httpUrlConn.setUseCaches(false);
             // 设置请求方式（GET/POST）
             httpUrlConn.setRequestMethod(requestMethod);
-
+            httpUrlConn.setRequestProperty("Content-type", "text/html");
+            httpUrlConn.setRequestProperty("Accept-Charset", "utf-8");
+            httpUrlConn.setRequestProperty("contentType", "utf-8");
             if ("GET".equalsIgnoreCase(requestMethod))
+
                 httpUrlConn.connect();
+
 
             // 当有数据需要提交时
             if (null != outputStr) {
@@ -94,6 +114,7 @@ public class HttpUtils {
         log.info("getInfo  :" + buffer.toString());
         return buffer.toString();
     }
+
 
     /**
      * 下载网络文件

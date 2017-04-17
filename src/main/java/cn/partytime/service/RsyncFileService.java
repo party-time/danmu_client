@@ -35,6 +35,9 @@ public class RsyncFileService {
     private ConfigUtils configUtils;
 
     @Autowired
+    private LogLogicService logLogicService;
+
+    @Autowired
     private CommandExecuteService commandExecuteService;
 
     public void rsyncFile(){
@@ -46,9 +49,11 @@ public class RsyncFileService {
     }
 
     public void createFlashConfig() {
-
         String paramJsonStr = HttpUtils.httpRequestStr(configUtils.getParamUrl()+"?code="+properties.getRegistCode(),"GET",null);
+        logLogicService.logUploadHandler("配置参数下载内容:"+paramJsonStr);
         String jsonStr = HttpUtils.httpRequestStr(configUtils.getInitUrl()+"?addressId="+properties.getAddressId(), "GET", null);
+        logLogicService.logUploadHandler("配置表生下载内容:"+jsonStr);
+
         DownloadFileConfig downloadFileConfig = JSON.parseObject(jsonStr,DownloadFileConfig.class);
         if (null != downloadFileConfig) {
             List<PartyResourceResult> partyResourceResultList = downloadFileConfig.getData();

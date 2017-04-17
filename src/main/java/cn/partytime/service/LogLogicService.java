@@ -27,8 +27,10 @@ public class LogLogicService {
             @Override
             public void run() {
                 String addressId = configUtils.getAddressId();
-                String url = configUtils.getLogUrl()+"?addressId="+addressId+"&param="+content;
-                HttpUtils.httpRequestStr(url,"GET",null);
+                //String url = configUtils.getLogUrl()+"?addressId="+addressId+"&param=\""+content+"\"";
+                String url = configUtils.getLogUrl()+"?addressId="+addressId;
+                String contentStr="机器编号:"+configUtils.getMachineNum()+"日志内容:"+content;
+                HttpUtils.httpRequestStrEncodeUrl(url,contentStr,"GET",null);
             }
         });
     }
