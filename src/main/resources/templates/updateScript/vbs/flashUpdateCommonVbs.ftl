@@ -1,3 +1,10 @@
+Function execute(updateType)
+    IF doUpdateCheck(flashresultFilePath,updateType)=True Then
+        versionInfo=getFileContent(flashresultFilePath,1)
+        Set updatePlanObject=ParseJson(versionInfo)
+        Call doStart(updatePlanObject)
+    End IF
+End Function
 Function doStart(updatePlanObject)
     version=updatePlanObject.version
     'Call showDailog("operateRequestUrl:" & updatePlanObject.updateUpdatePlanPath)

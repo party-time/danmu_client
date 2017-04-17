@@ -1,11 +1,14 @@
+
+Function execute(updateType)
+    If doUpdateCheck(javaresultFilePath,updateType) =True Then
+        versionInfo=getFileContent(javaresultFilePath,1)
+        Set updatePlanObject=ParseJson(versionInfo)
+        Call doStart(updatePlanObject)
+    End If
+End Function
+
+
 Function doStart(updatePlanObject)
-    version=updatePlanObject.version
-    status=updatePlanObject.status
-    flashcurrentVersion=getFileContent(javacurrentVersionPath,1)
-    If updatePlanObject.status="success" OR  version=flashcurrentVersion Then
-        Call showDailog("the current version is the latest version")
-        wscript.quit
-    end If
     'Send start request command
     url = myRequestUrl("start",updatePlanObject,0)
     Set requestResult=HttpRequest(url)
@@ -58,7 +61,6 @@ Function executeUpdateShell(version)
 End Function
 
 Function SendFailRequestToServer(param,versionObject)
-
     url = myRequestUrl(param,versionObject,0)
     Set requestResult=HttpRequest(url)
     code =requestResult.readystate

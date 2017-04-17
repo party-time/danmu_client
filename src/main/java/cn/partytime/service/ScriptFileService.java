@@ -83,6 +83,15 @@ public class ScriptFileService {
         map.put("javaCommonUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS));
 
         map.put("timerjavaUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS));
+
+        map.put("timerflashUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS));
+
+        map.put("updateCheckVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.UPDATECHECK_VBS));
+
+
+
+
+        map.put("timerjavaUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS));
         map.put("timerflashUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERFLASHUPDATE_VBS));
 
         map.put("checkJavaIsOkUrl","http://localhost:8081/javaIsOk");
@@ -98,6 +107,7 @@ public class ScriptFileService {
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHUPDATECOMMON_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERFLASHUPDATE_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.UPDATECHECK_VBS);
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.JAVASTART_BAT);
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.KILLFLASH_BAT);
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.STARTFLASH_BAT);

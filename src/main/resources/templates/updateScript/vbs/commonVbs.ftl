@@ -15,6 +15,16 @@ flashUpdateShell = "bash " & "${flashUpdateShellPath}"
 flashcurrentVersionPath = "${flashCurrentVersionPath}"
 flashbakVersionPath = "${flashBakVersionPath}"
 
+Function checkFileIsExist(path)
+    'Determine whether the update plan exists
+    If fso.fileExists(path)=False Then
+        Call showDailog("No update plan found, will exit update......")
+        checkFileIsExist = False
+    Else
+        checkFileIsExist = True
+    End If
+End Function
+
 Function showDailog(message)
     flg=false
     if flg=true then
