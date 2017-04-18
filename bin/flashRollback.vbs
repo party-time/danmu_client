@@ -2,7 +2,6 @@ Set ws = CreateObject("Wscript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set html = CreateObject("htmlfile")
 Set http = CreateObject("Msxml2.ServerXMLHTTP")
-Set wShell=CreateObject("Wscript.Shell")
 
 executeglobal fso.opentextfile("D:/enterX/bin/common.vbs", 1).readall
 

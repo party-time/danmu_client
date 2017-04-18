@@ -7,6 +7,7 @@ Set wShell=CreateObject("Wscript.Shell")
 executeglobal fso.opentextfile("${commvbsPath}", 1).readall
 executeglobal fso.opentextfile("${updateCheckVbsPath}", 1).readall
 
+Call doStart();
 Function doStart
     If doUpdateCheck(javaresultFilePath,1)= True Then
         ExecuteShellFunction("${timerjavaUpdateVbsPath}")
