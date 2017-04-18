@@ -27,7 +27,7 @@ public class ServerStartService {
     @Value("${netty.port:8081}")
     private int clientSeverPort;
 
-    @Value("${netty.port:8080}")
+    @Value("${netty.port:2016}")
     private int tmsServerPort;
 
     @Autowired
