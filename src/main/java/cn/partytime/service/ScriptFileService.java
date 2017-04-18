@@ -72,15 +72,18 @@ public class ScriptFileService {
         map.put("rsyncPasswordPath",configUtils.rsyncPasswordFile());
         map.put("serverIp",configUtils.getRsyncIp());
 
-        map.put("javaStartBatPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE,scriptConfigUtils.JAVASTART_BAT));
-        map.put("commvbsPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS));
-        map.put("flashRollBakShellPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHROLLBACK_SH));
-        map.put("flashUpdateShellPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHUPDATE_SH));
-        map.put("flashCommonUpdateVbsPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHUPDATECOMMON_VBS));
+        map.put("javaStartBatPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE,scriptConfigUtils.JAVASTART_BAT));
+        map.put("commvbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS));
+        map.put("flashRollBakShellPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHROLLBACK_SH));
+        map.put("flashUpdateShellPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.FLASHUPDATE_SH));
+        map.put("flashCommonUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.FLASHUPDATECOMMON_VBS));
 
-        map.put("javaRollBakShellPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAROLLBACK_SH));
-        map.put("javaUpdateShellPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAUPDATE_SH));
-        map.put("javaCommonUpdateVbsPath",scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS));
+        map.put("javaRollBakShellPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAROLLBACK_SH));
+        map.put("javaUpdateShellPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.SH_TYPE,scriptConfigUtils.JAVAUPDATE_SH));
+        map.put("javaCommonUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATECOMMON_VBS));
+
+        map.put("timerjavaUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS));
+        map.put("timerflashUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERFLASHUPDATE_VBS));
 
         map.put("checkJavaIsOkUrl","http://localhost:8081/javaIsOk");
         map.put("checkflashIsOkUrl","http://localhost:8081/flashIsOk");
@@ -143,13 +146,13 @@ public class ScriptFileService {
 
     public void createRsyncDownloadShellFile(Map<String, Object> model,String type,String freemakerName,String fileName){
         String freemarkerPath = scriptConfigUtils.findFreemarkerPath(freemakerName,type);
-        String filePath = scriptConfigUtils.fineScriptPath(type,fileName);
+        String filePath = scriptConfigUtils.findScriptPath(type,fileName);
         createFile(model,freemarkerPath,filePath);
     }
 
     public void createShellFile(Map<String, Object> model,String type,String fileName){
         String freemarkerPath = scriptConfigUtils.findFreemarkerPath(fileName,type);
-        String filePath = scriptConfigUtils.fineScriptPath(type,fileName);
+        String filePath = scriptConfigUtils.findScriptPath(type,fileName);
         createFile(model,freemarkerPath,filePath);
     }
 

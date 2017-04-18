@@ -77,7 +77,7 @@ public class ScriptConfigUtils {
     public String findFreemarkerPath(String name,String type){
         return UPDATE_FREEMARKER_PATH+CommonConst.SEPARATOR+type+ CommonConst.SEPARATOR+name+ CommonUtil.convertFirstWordUpperCase(type)+CommonConst.COMMA+FTL_TYPE;
     }
-    public String fineScriptPath(String type,String name){
+    public String findScriptPath(String type,String name){
         return findEecuteScriptDirectory()+CommonConst.SEPARATOR+name+CommonConst.COMMA+type;
     }
 

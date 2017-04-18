@@ -60,57 +60,57 @@ public class CommandExecuteService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
         log.info("execute printScreen logic");
         PrintScreenUtils.moveWindow();
     }
 
     public void executeAppCloseCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLFLASH_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLFLASH_BAT));
     }
 
     public void executeFlashUpdateCallBack() {
-        windowShellService.execExe("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHUPDATE_VBS));
+        windowShellService.execExe("cscript "+scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHUPDATE_VBS));
     }
 
     public void executeFlashRollBackCallBack() {
-        windowShellService.execExe("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHROLLBACK_VBS));
+        windowShellService.execExe("cscript "+scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.FLASHROLLBACK_VBS));
     }
 
     public void executeJavaUpdateCallBack() {
-        windowShellService.execExe("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAUPDATE_VBS));
+        windowShellService.execExe("cscript "+scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAUPDATE_VBS));
     }
 
     public void executeJavaRollBackCallBack() {
-        windowShellService.execExe("cscript "+scriptConfigUtils.fineScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAROLLBACK_VBS));
+        windowShellService.execExe("cscript "+scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.JAVAROLLBACK_VBS));
     }
 
     public void executeVideoDownCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.SPECIALVIDEOS_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.SPECIALVIDEOS_BAT));
     }
 
     public void executeExpressionDownCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.EXPRESSIONS_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.EXPRESSIONS_BAT));
     }
 
     public void executeSpecialImgDownCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.SPECIALIMAGES_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.SPECIALIMAGES_BAT));
     }
 
     public void executeTimerDmDownCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.TIMERDANMU_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.TIMERDANMU_BAT));
     }
 
     public void executeAdDmDownCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.ADTIMERDANMU_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.ADTIMERDANMU_BAT));
     }
 
     public void executeResourceAllDownCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.RESOURCE_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.RESOURCE_BAT));
     }
 
     public void executeUpdateClientDownCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.CLIENTDOWNLOAD_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.CLIENTDOWNLOAD_BAT));
     }
 
     public void executeUpdatePlanCreateCallBack() {
@@ -122,7 +122,7 @@ public class CommandExecuteService {
     }
 
     public void executeTeamViewStartCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTTEAMVIEWER_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTTEAMVIEWER_BAT));
     }
 
     public void executeScreenPicCallBack() {
@@ -130,7 +130,7 @@ public class CommandExecuteService {
     }
 
     public void executeTeamViewCloseCallBack() {
-        windowShellService.execExe(scriptConfigUtils.fineScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLTEAMVIEWER_BAT));
+        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.KILLTEAMVIEWER_BAT));
     }
 
     public void executeScriptCreateCallBack() {
