@@ -60,6 +60,7 @@ public class ProjectorService {
 
     private void projectorHandler(String [] urlArrays,int type) throws URISyntaxException {
         String url = "";
+        String param= "";
         if(urlArrays!=null && urlArrays.length>0){
             for(int i=0; i<urlArrays.length; i++){
                 String tempUrl = urlArrays[i];
@@ -69,25 +70,33 @@ public class ProjectorService {
                 String urlType = parameters.get("param").get(0);
                 if(type==0 && "start".contentEquals(urlType)){
                     url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
+                    param = url.substring(url.lastIndexOf("?")+1);
+                    url = url.substring(0,url.lastIndexOf("?"));
                     logLogicService.logUploadHandler("开启投影仪的url:" + urlArrays[i]);
                 }else if(type==1 && "stop".contentEquals(urlType)){
                     url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
+                    param = url.substring(url.lastIndexOf("?")+1);
+                    url = url.substring(0,url.lastIndexOf("?"));
                     logLogicService.logUploadHandler("开启投影仪的url:" + urlArrays[i]);
-                }else if(type==1 && "change".contentEquals(urlType)){
+                }else if(type==2 && "change".contentEquals(urlType)){
                     url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
+                    param = url.substring(url.lastIndexOf("?")+1);
+                    url = url.substring(0,url.lastIndexOf("?"));
                     logLogicService.logUploadHandler("切白投影仪的url:" + urlArrays[i]);
                 }
 
             }
-            executeProjector(url);
+            System.out.println("=====url:"+url);
+            System.out.println("=====param:"+param);
+            executeProjector(url,param);
         }
     }
 
-    private void executeProjector(final String url) {
+    private void executeProjector(final String url,String param) {
         threadPoolTaskExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                HttpUtils.httpRequestStr(url, "GET", null);
+                HttpUtils.httpRequestStr(url, "GET", param);
             }
         });
     }
