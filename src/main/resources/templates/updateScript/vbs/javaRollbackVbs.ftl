@@ -13,6 +13,7 @@ Function javaRollBack()
 
     versionInfo=getFileContent(javaresultFilePath,1)
     Call showDailog("versionInfo:" & 	versionInfo)
+    logCommit("versionInfo:" & 	versionInfo)
 
     Set updatePlanObject=ParseJson(versionInfo)
     If updatePlanObject="" Then
@@ -24,28 +25,37 @@ Function javaRollBack()
 
     version=getFileContent(javacurrentVersionPath,1)
     Call showDailog("javacurrentVersionPath:" & 	javacurrentVersionPath)
+    logCommit("javacurrentVersionPath:" & 	javacurrentVersionPath)
+
     Call showDailog("current version:" & version)
+    logCommit("current version:" & version)
+
     Call showDailog("javabakVersionPath:" & javabakVersionPath)
+    logCommit("javabakVersionPath:" & javabakVersionPath)
 
     if fso.fileExists(javabakVersionPath)=False Then
         Call showDailog("backup version not found")
+        logCommit("backup version not found")
         wscript.quit
     end If
 
     bakVersion=getFileContent(javabakVersionPath,1)
     if version = bakVersion Then
         Call showDailog("current version is same as backup version")
+        logCommit("current version is same as backup version")
         wscript.quit
     end if
 
     if fso.fileExists(javabakVersionPath)=False Then
         Call showDailog("backup version not found")
+        logCommit("backup version not found")
         wscript.quit
     end If
 
     bakVersion=getFileContent(javabakVersionPath,1)
     if version = bakVersion Then
         Call showDailog("current version is same as backup version")
+        logCommit("current version is same as backup version")
         wscript.quit
     end if
 

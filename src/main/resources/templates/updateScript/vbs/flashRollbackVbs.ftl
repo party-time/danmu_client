@@ -13,28 +13,37 @@ Call javaRollBack
 Function javaRollBack()
     versionInfo=getFileContent(flashresultFilePath,1)
     Call showDailog("versionInfo:" & 	versionInfo)
+    logCommit("versionInfo:" & versionInfo)
 
     Set updatePlanObject=ParseJson(versionInfo)
     If updatePlanObject="" Then
         Call showDailog("update plan is null")
+        logCommit("update plan is null")
         wscript.quit
     End If
 
 
 
     version=getFileContent(flashcurrentVersionPath,1)
-    Call showDailog("flashcurrentVersionPath:" & 	flashcurrentVersionPath)
+    Call showDailog("flashcurrentVersionPath:" & flashcurrentVersionPath)
+    logCommit("flashcurrentVersionPath:" & 	flashcurrentVersionPath)
+
     Call showDailog("current version:" & version)
+    logCommit("current version:" & version)
+
     Call showDailog("flashbakVersionPath:" & flashbakVersionPath)
+    logCommit("flashbakVersionPath:" & flashbakVersionPath)
 
     If fso.fileExists(flashbakVersionPath)=False Then
         Call showDailog("backup version not found")
+        logCommit("backup version not found")
         wscript.quit
     END If
 
     bakVersion=getFileContent(flashbakVersionPath,1)
     if version = bakVersion Then
         Call showDailog("current version is same as backup version")
+        logCommit("current version is same as backup version")
         wscript.quit
     end if
 
@@ -45,8 +54,11 @@ End Function
 Function doRollBackRequest(param,updatePlanObject)
     url = myRequestUrl(param,updatePlanObject,1)
     Call showDailog("url:" & url)
+
     Set requestResult=HttpRequest(url)
     code =requestResult.readystate
+    logCommit("url:" & url & " code:" & code)
+
     If code=4 Then
         Set  resultObject=ParseJson(requestResult.responsetext)
         'MsgBox resultObject.result
@@ -66,8 +78,12 @@ Function doExecute()
     Call killProcess
 
     Call showDailog("flash execute rollback")
+    logCommit("flash execute rollback")
+
     'ws.run flashRollbackShell
+    logCommit("execute shell:" & flashRollbackShell)
     Call executeShellFunction(flashRollbackShell)
+    logCommit("execute shell:" & javaStartBatPath)
     Call executeShellFunction(javaStartBatPath)
 
     WScript.Sleep 20000
@@ -83,17 +99,22 @@ Function doExecute()
                 Set  resultObject=ParseJson(requestResult.responsetext)
                 If resultObject.data="0" OR  resultObject.data="" Then
                     Call showDailog("Flash self-test failed after rollback")
+                    logCommit("Flash self-test failed after rollback")
                 End If
             Else
                 Call showDailog("Flash self-test failed after rollback,Java cannot be accessed")
+                logCommit("Flash self-test failed after rollback,Java cannot be accessed")
             End If
         Else
             Call showDailog("flash does not start after rollback")
+            logCommit("flash does not start after rollback")
         End If
     ElseIf checkJavaIsStart=2 Then
         Call showDailog("Java cannot be accessed after rollback")
+        logCommit("Java cannot be accessed after rollback")
     ElseIf checkJavaIsStart=3 Then
         Call showDailog("Java does not start after rollback")
+        logCommit("Java does not start after rollback")
     End If
 End Function
 

@@ -1,4 +1,5 @@
 Function execute(updateType)
+    logCommit("execute flash update")
     IF doUpdateCheck(flashresultFilePath,updateType,1)=True Then
         versionInfo=getFileContent(flashresultFilePath,1)
         Set updatePlanObject=ParseJson(versionInfo)
@@ -8,38 +9,43 @@ End Function
 Function doStart(updatePlanObject)
     version=updatePlanObject.version
     'Call showDailog("operateRequestUrl:" & updatePlanObject.updateUpdatePlanPath)
-
     status=updatePlanObject.status
     'Call showDailog("update status:" & status)
+     logCommit("update status:" & status)
 
     'Call showDailog("flashcurrentVersionPath:" & flashcurrentVersionPath)
     flashcurrentVersion=getFileContent(flashcurrentVersionPath,1)
+    logCommit("flashcurrentVersionPath:" & flashcurrentVersionPath)
 
     'Call showDailog("current version:" & flashcurrentVersion)
     If updatePlanObject.status="success" OR  version=flashcurrentVersion Then
         Call showDailog("the current version is the latest version")
+        logCommit("the current version is the latest version")
         wscript.quit
     end If
 
     url = myRequestUrl("start",updatePlanObject,1)
+    logCommit("url:" & url)
     Set requestResult=HttpRequest(url)
     code =requestResult.readystate
 
     If code=4 Then
         Call showDailog("server response content:" & requestResult.responsetext)
-
+        logCommit("server response content:" & requestResult.responsetext)
         Set  resultObject=ParseJson(requestResult.responsetext)
         If resultObject.result =200 Then
             requestCode=1
             Call setResultToFile(flashresultFilePath,"start",requestCode,updatePlanObject)
-            Call doUpdateExecute(updatePlanObject)
         END IF
     END IF
+    Call doUpdateExecute(updatePlanObject)
 End Function
 
 Function doUpdateExecute(versionObject)
 
     'Call showDailog("kill java and flash process")
+    logCommit("kill java and flash process")
+
     Call killProcess
     version=versionObject.version
     'Call showDailog("new version:" & version)
@@ -52,9 +58,13 @@ Function doUpdateExecute(versionObject)
         Call checkFlashIsStart(versionObject)
     ElseIf checkJavaIsStart=2 Then
         Call showDailog("Java cannot be accessed after update")
+        logCommit("Java cannot be accessed after update")
+
         Call SendFailRequestToServer("error",versionObject)
     ElseIf checkJavaIsStart=3 Then
         Call showDailog("Java does not start after update")
+        logCommit("Java does not start after update")
+
         Call SendFailRequestToServer("error",versionObject)
     End If
 
@@ -63,6 +73,8 @@ End Function
 Function executeFlashUpdate(version)
 
     Call showDailog("flash update shell execute:" & flashUpdateShell &" "& version)
+    logCommit("Java does not start after update")
+
     Call executeShellFunction(flashUpdateShell &" "& version)
     Call executeShellFunction(javaStartBatPath)
 End Function

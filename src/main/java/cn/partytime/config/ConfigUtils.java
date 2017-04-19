@@ -152,7 +152,7 @@ public class ConfigUtils {
         return getDomain()+tempTimerDanmuNetUrl;
     }
 
-    public String getLogUrl(){
+    public String findLogUrl(){
         return getLogDomain()+logUrlPath;
     }
 

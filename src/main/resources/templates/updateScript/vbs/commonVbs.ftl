@@ -14,6 +14,8 @@ flashRollbackShell = "bash " & "${flashRollBakShellPath}"
 flashUpdateShell = "bash " & "${flashUpdateShellPath}"
 flashcurrentVersionPath = "${flashCurrentVersionPath}"
 flashbakVersionPath = "${flashBakVersionPath}"
+logUrlPath="${logUrlPath}"
+addressId="${addressId}"
 
 Function checkFileIsExist(path)
     'Determine whether the update plan exists
@@ -113,8 +115,8 @@ Function getFileContent(filePath,readOrwrite)
 End Function
 
 Function killProcess()
-    ws.run "taskkill /F /IM java.exe"
-    ws.run "taskkill /F /IM dmMovie.exe"
+    ws.run "taskkill /F /IM java.exe" ,vbhide
+    ws.run "taskkill /F /IM dmMovie.exe",vbhide
 End Function
 
 Function myRequestUrl(param,versionObject,clientType)
@@ -124,3 +126,10 @@ Function myRequestUrl(param,versionObject,clientType)
     url = url & "&type=" & clientType
     myRequestUrl=url
 End Function
+
+Function logCommit(content)
+    url = logUrlPath & "?addressId=" & addressId & "&param= machineNumber is:" & machineNumber & " vbs content:" & content
+    Call showDailog("url:" & url)
+    HttpRequest(url)
+End Function
+

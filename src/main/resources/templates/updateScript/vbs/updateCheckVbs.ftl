@@ -5,6 +5,7 @@ Function doUpdateCheck(filePath,updateType,clientType)
         Set updatePlanObject=ParseJson(versionInfo)
         If updatePlanObject="" Then
             Call showDailog("update plan is null")
+            logCommit("update plan is null")
             doUpdateCheck = FALSE
         ELSE
             updateDate=updatePlanObject.updateDateStr
@@ -19,15 +20,18 @@ Function doUpdateCheck(filePath,updateType,clientType)
             Call showDailog("updateDate:" & updateDate)
             IF updateDate <> nowDateStr AND updateType=1 then
                 Call showDailog("The update time is not today and can not be updated")
+                logCommit("The update time is not today and can not be updated,today is" & nowDateStr )
                 doUpdateCheck = FALSE
             ElseIf updatePlanObject.status="success" OR  version=currentVersion Then
                 Call showDailog("the current version is the latest version")
+                logCommit("the current version is the latest version")
                 doUpdateCheck = FALSE
             ELSE
                 doUpdateCheck = True
             End If
         End If
     Else
+        logCommit(clientType & "updateFile Is not found")
         doUpdateCheck = FALSE
     end IF
 End Function

@@ -97,6 +97,10 @@ public class ScriptFileService {
         map.put("checkJavaIsOkUrl","http://localhost:8081/javaIsOk");
         map.put("checkflashIsOkUrl","http://localhost:8081/flashIsOk");
 
+        map.put("logUrlPath",configUtils.findLogUrl());
+        map.put("addressId",configUtils.getAddressId());
+        map.put("machineNumber",configUtils.getMachineNum());
+
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.START_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.JAVAUPDATE_VBS);
