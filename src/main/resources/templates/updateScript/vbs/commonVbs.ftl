@@ -16,6 +16,7 @@ flashcurrentVersionPath = "${flashCurrentVersionPath}"
 flashbakVersionPath = "${flashBakVersionPath}"
 logUrlPath="${logUrlPath}"
 addressId="${addressId}"
+machineNumber="${machineNumber}"
 
 Function checkFileIsExist(path)
     'Determine whether the update plan exists

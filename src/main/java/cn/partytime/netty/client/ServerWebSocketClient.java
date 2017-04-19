@@ -20,6 +20,7 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.server.ServerInfo;
 import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
 import cn.partytime.service.CommonService;
+import cn.partytime.service.LogLogicService;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -53,6 +54,9 @@ public final class ServerWebSocketClient {
     @Autowired
     private CommonService commonService;
 
+    @Autowired
+    private LogLogicService logLogicService;
+
 
     public  void init() throws Exception {
         commonService.getServerInfo();
@@ -80,8 +84,9 @@ public final class ServerWebSocketClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("远程服务器连接不上，重新接连");
             group.shutdownGracefully();
+            logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
+            Thread.sleep(2000);
             init();
 
         }
