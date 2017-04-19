@@ -1,5 +1,5 @@
 Function execute(updateType)
-    IF doUpdateCheck(flashresultFilePath,updateType)=True Then
+    IF doUpdateCheck(flashresultFilePath,updateType,1)=True Then
         versionInfo=getFileContent(flashresultFilePath,1)
         Set updatePlanObject=ParseJson(versionInfo)
         Call doStart(updatePlanObject)

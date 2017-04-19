@@ -9,9 +9,9 @@ executeglobal fso.opentextfile("${updateCheckVbsPath}", 1).readall
 
 Call doStart()
 Function doStart
-    If doUpdateCheck(javaresultFilePath,1)= True Then
+    If doUpdateCheck(javaresultFilePath,1,0)= True Then
         ExecuteShellFunction("${timerjavaUpdateVbsPath}")
-    ElseIf doUpdateCheck(flashresultFilePath,1)=True Then
+    ElseIf doUpdateCheck(flashresultFilePath,1,1)=True Then
         ExecuteShellFunction("${timerflashUpdateVbsPath}")
     Else
         ws.run "cmd /c ${javaStartBatPath}",vbhide

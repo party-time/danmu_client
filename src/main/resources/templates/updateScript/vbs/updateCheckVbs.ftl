@@ -1,4 +1,4 @@
-Function doUpdateCheck(filePath,updateType)
+Function doUpdateCheck(filePath,updateType,clientType)
     IF checkFileIsExist(filePath) =True Then
         versionInfo=getFileContent(filePath,1)
         Call showDailog("versionInfo:" & versionInfo)
@@ -11,12 +11,16 @@ Function doUpdateCheck(filePath,updateType)
             nowDateStr=format_time(now(),2)
             version=updatePlanObject.version
             status=updatePlanObject.status
-            flashcurrentVersion=getFileContent(javacurrentVersionPath,1)
+            IF clientType=1 Then
+                currentVersion=getFileContent(flashcurrentVersionPath,1)
+            ELSE
+                currentVersion=getFileContent(javacurrentVersionPath,1)
+            End If
             Call showDailog("updateDate:" & updateDate)
             IF updateDate <> nowDateStr AND updateType=1 then
                 Call showDailog("The update time is not today and can not be updated")
                 doUpdateCheck = FALSE
-            ElseIf updatePlanObject.status="success" OR  version=flashcurrentVersion Then
+            ElseIf updatePlanObject.status="success" OR  version=currentVersion Then
                 Call showDailog("the current version is the latest version")
                 doUpdateCheck = FALSE
             ELSE

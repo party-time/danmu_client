@@ -1,6 +1,6 @@
 
 Function execute(updateType)
-    If doUpdateCheck(javaresultFilePath,updateType) =True Then
+    If doUpdateCheck(javaresultFilePath,updateType,0) =True Then
         versionInfo=getFileContent(javaresultFilePath,1)
         Set updatePlanObject=ParseJson(versionInfo)
         Call doStart(updatePlanObject)
