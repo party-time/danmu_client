@@ -93,7 +93,7 @@ public final class LocalServerWebSocketClient {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
-            Thread.sleep(5000);
+            Thread.sleep(15000);
             //System.out.println("本地客户端重连");
             logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
             init();
