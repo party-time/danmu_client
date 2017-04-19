@@ -28,7 +28,7 @@ End Function
 Function showDailog(message)
     flg=false
     if flg=true then
-    wShell.Popup message,3
+    ws.Popup message,3
     end if
 End Function
 
