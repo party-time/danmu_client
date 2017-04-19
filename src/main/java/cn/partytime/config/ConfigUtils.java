@@ -55,6 +55,9 @@ public class ConfigUtils {
         return properties.getMachineNum();
     }
 
+    public String getRegisterCode(){
+        return properties.getRegistCode();
+    }
     public String getRsyncIp(){
         if(0==properties.getEnv()){
             return testRsyncIp;

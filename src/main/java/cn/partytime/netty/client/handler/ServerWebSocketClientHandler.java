@@ -53,6 +53,8 @@ import io.netty.channel.*;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,6 +65,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -148,8 +152,22 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
         }
     }
 
-
-
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        //客户端发生异常。不做下线处理
+        //potocolService.forceLogout(ctx.channel());
+        Channel channel = ctx.channel();
+        if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if (event.state() == IdleState.READER_IDLE) {
+                Map<String,String> map = new HashMap<>();
+                map.put("type","ping");
+                map.put("code",configUtils.getRegisterCode());
+                map.put("clientType","2");
+                channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(map)));
+            }
+        }
+    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {

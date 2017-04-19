@@ -32,6 +32,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,7 @@ public final class ServerWebSocketClient {
                      p.addLast(
                              new HttpClientCodec(),
                              new HttpObjectAggregator(8192),
+                             new IdleStateHandler(10, 10, 0),
                              WebSocketClientCompressionHandler.INSTANCE,
                              serverWebSocketClientHandler);
                  }
