@@ -14,10 +14,10 @@ Function doUpdateCheck(filePath,updateType,clientType)
             status=updatePlanObject.status
             fileName=""
             IF clientType=1 Then
-                fileName="flash_version."& version &".tar"
+                fileName=flashNewClientPath & "/" &"flash_version."& version &".tar"
                 currentVersion=getFileContent(flashcurrentVersionPath,1)
             ELSE
-                fileName="danmu_java_client_version."& version &".jar"
+                fileName=javaNewClientPath & "/" & "danmu_java_client_version."& version &".jar"
                 currentVersion=getFileContent(javacurrentVersionPath,1)
             End If
             IF  checkFileIsExist(fileName) =True Then

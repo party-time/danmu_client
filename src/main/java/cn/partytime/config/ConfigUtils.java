@@ -41,6 +41,7 @@ public class ConfigUtils {
     private String paramUrl=baseJavaClientUrl+"/findFlashConfig";
     private String saveScreenPicUrl=baseJavaClientUrl+"/saveScreen";
 
+
     private String webSocketPath="/ws";
 
     private String filePath(){

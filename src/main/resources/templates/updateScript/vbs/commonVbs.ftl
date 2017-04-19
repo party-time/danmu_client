@@ -17,6 +17,8 @@ flashbakVersionPath = "${flashBakVersionPath}"
 logUrlPath="${logUrlPath}"
 addressId="${addressId}"
 machineNumber="${machineNumber}"
+javaNewClientPath="${javaNewClientPath}"
+flashNewClientPath="${flashNewClientPath}"
 
 Function checkFileIsExist(path)
     'Determine whether the update plan exists

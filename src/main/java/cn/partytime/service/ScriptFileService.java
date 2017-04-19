@@ -100,6 +100,8 @@ public class ScriptFileService {
         map.put("logUrlPath",configUtils.findLogUrl());
         map.put("addressId",configUtils.getAddressId());
         map.put("machineNumber",configUtils.getMachineNum());
+        map.put("javaNewClientPath",configUtils.findJavaNewClientPath());
+        map.put("flashNewClientPath",configUtils.findFlashNewClientPath());
 
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.COMMON_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.START_VBS);
