@@ -21,6 +21,7 @@ import cn.partytime.model.device.DeviceInfo;
 import cn.partytime.netty.client.handler.LocalServerWebSocketClientHandler;
 import cn.partytime.netty.client.handler.ServerWebSocketClientHandler;
 import cn.partytime.service.DeviceService;
+import cn.partytime.service.LogLogicService;
 import cn.partytime.util.CommonUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -52,6 +53,9 @@ public final class LocalServerWebSocketClient {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private LogLogicService logLogicService;
 
     @Autowired
     @Qualifier("localServerWebSocketClientHandler")
@@ -89,8 +93,9 @@ public final class LocalServerWebSocketClient {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
-            Thread.sleep(2000);
-            System.out.println("本地客户端重连");
+            Thread.sleep(5000);
+            //System.out.println("本地客户端重连");
+            logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
             init();
         }
     }

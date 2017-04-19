@@ -86,7 +86,7 @@ public final class ServerWebSocketClient {
         } finally {
             group.shutdownGracefully();
             logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
-            Thread.sleep(2000);
+            Thread.sleep(5000);
             init();
 
         }
