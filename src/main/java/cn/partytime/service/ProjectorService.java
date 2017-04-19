@@ -77,7 +77,7 @@ public class ProjectorService {
                     url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
                     param = url.substring(url.lastIndexOf("?")+1);
                     url = url.substring(0,url.lastIndexOf("?"));
-                    logLogicService.logUploadHandler("开启投影仪的url:" + urlArrays[i]);
+                    logLogicService.logUploadHandler("关闭投影仪的url:" + urlArrays[i]);
                 }else if(type==2 && "change".contentEquals(urlType)){
                     url = tempUrl.substring(0,tempUrl.lastIndexOf("&"));
                     param = url.substring(url.lastIndexOf("?")+1);
