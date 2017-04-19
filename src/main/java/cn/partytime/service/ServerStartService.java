@@ -46,6 +46,9 @@ public class ServerStartService {
     private CommandExecuteService commandExecuteService;
 
     @Autowired
+    private ScriptFileService scriptFileService;
+
+    @Autowired
     private ServerWebSocketClient serverWebSocketClient;
 
     @Resource(name = "threadPoolTaskExecutor")
@@ -147,6 +150,8 @@ public class ServerStartService {
     }
 
     private void initResource(){
+        logLogicService.logUploadHandler("重新生成脚本");
+        scriptFileService.createShell();
         logLogicService.logUploadHandler("启动flash客户端");
         commandExecuteService.executeAppStartCallBack();
     }

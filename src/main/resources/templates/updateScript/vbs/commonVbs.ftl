@@ -133,3 +133,8 @@ Function logCommit(content)
     HttpRequest(url)
 End Function
 
+Function doRetart
+    WScript.Sleep 5000
+    ExecuteShellFunction("shutdown -r -t 0")
+End Function
+

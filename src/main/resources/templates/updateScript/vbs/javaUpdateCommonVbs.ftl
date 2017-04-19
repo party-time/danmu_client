@@ -48,6 +48,7 @@ Function doUpdateExecute(currentVersionObject)
         If code=4 Then
             Call SendSuccessRequestToServer("success",currentVersionObject)
             Call writeContentFile(javacurrentVersionPath,version)
+            Call doRetart()
         Else
             Call showDailog("Java cannot be accessed after update")
             Call SendFailRequestToServer("error",currentVersionObject)
@@ -94,7 +95,10 @@ End Function
 Function rollBack()
 
     Call killProcess
-    ws.run javaRollBackShell
+    'ws.run javaRollBackShell
+
+    Call executeShellFunction(javaRollBackShell)
+    Call executeShellFunction(javaStartBatPath)
 
     WScript.Sleep 10000
     strComputer = "."
@@ -104,15 +108,13 @@ Function rollBack()
         Set requestContent=HttpRequest(checkJavaIsOkUrl)
         code =requestContent.readystate
         If code=4 Then
-
         Else
             Call showDailog("Java cannot be accessed after rollback")
-            wscript.quit
         end If
     Else
         Call showDailog("Java does not start after rollback")
-        wscript.quit
     End If
+    Call doRetart()
 End Function
 
 Function SendSuccessRequestToServer(param,versionObject)
