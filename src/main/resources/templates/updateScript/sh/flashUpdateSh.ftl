@@ -29,6 +29,9 @@ else
             if [ "$fileNameNoSuffix" = "resource" ]; then
                 continue;
             fi
+            if [ "$fileNameNoSuffix" = "config" ]; then
+                continue;
+            fi
             if [ "$fileNameNoSuffix" = "version" ]; then
                 mv $file  $OLD_FLASH_PATH
                 continue;

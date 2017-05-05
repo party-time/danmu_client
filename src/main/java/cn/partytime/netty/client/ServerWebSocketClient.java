@@ -62,9 +62,13 @@ public final class ServerWebSocketClient {
     public  void init() throws Exception {
         commonService.getServerInfo();
         EventLoopGroup group = new NioEventLoopGroup();
+
+        ChannelFuture channelFuture = null;
         try {
+
+            Thread.sleep(5000);
             ServerInfo serverInfo = clientCache.getServerInfo();
-            URI uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
+            URI uri = new URI(configUtils.getWebSocketUrl("192.168.1.14",9090));
             final int port = uri.getPort();
             Bootstrap b = new Bootstrap();
             b.group(group)
@@ -81,16 +85,22 @@ public final class ServerWebSocketClient {
                              serverWebSocketClientHandler);
                  }
              });
-            ChannelFuture channelFuture = b.connect(uri.getHost(), port).sync();
+           channelFuture = b.connect(uri.getHost(), port).sync();
             channelFuture.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
+            //group.shutdownGracefully();
+            if(channelFuture!=null){
+                if(channelFuture.channel()!=null && channelFuture.channel().isOpen()){
+                    channelFuture.channel().close();
+                }
+            }
             group.shutdownGracefully();
-            logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
-            Thread.sleep(15000);
-            init();
 
+            System.out.println("远程服务器连接不上，重新接连");
+            logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
+            init();
         }
     }
 }

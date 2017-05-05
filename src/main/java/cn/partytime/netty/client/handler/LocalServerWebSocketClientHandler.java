@@ -74,23 +74,12 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
 
     private ChannelPromise handshakeFuture;
 
-
-    @Autowired
-    private CommandExecuteService commandExecuteService;
-
     @Autowired
     private CommandHandlerService commandHandlerService;
 
-    @Autowired
-    private ClientCache clientCache;
 
     @Autowired
     private DeviceService deviceService;
-
-
-    public ChannelFuture handshakeFuture() {
-        return handshakeFuture;
-    }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
@@ -101,13 +90,8 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
     public void channelActive(ChannelHandlerContext ctx) {
         URI uri = null;
         try {
-
             DeviceInfo deviceInfo = deviceService.findServiceDevice();
-
             uri = new URI("ws://"+deviceInfo.getIp()+":"+deviceInfo.getPort()+"/ws");
-            String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
-            final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
-            final int port = uri.getPort();
             handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
             handshaker.handshake(ctx.channel());
         } catch (URISyntaxException e) {
@@ -148,10 +132,5 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        /*System.out.print("与服务器断开。。。。");
-        if (!handshakeFuture.isDone()) {
-            handshakeFuture.setFailure(cause);
-        }
-        ct``x.close();*/
     }
 }

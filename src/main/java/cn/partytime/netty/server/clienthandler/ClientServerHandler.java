@@ -61,9 +61,6 @@ public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSock
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (7)
         Channel channel = ctx.channel();
         logger.info("客户端:" + channel.id() + "异常");
-        // 当出现异常就关闭连接
-        //cause.printStackTrace();
-        //potocolService.forceLogout(channel);
     }
 
     /**

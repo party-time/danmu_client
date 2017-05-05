@@ -49,9 +49,6 @@ public final class LocalServerWebSocketClient {
     private ClientCache clientCache;
 
     @Autowired
-    private ConfigUtils configUtils;
-
-    @Autowired
     private DeviceService deviceService;
 
     @Autowired
@@ -63,13 +60,11 @@ public final class LocalServerWebSocketClient {
 
     public  void init() throws Exception {
 
-
+        ChannelFuture channelFuture = null;
         DeviceInfo deviceInfo = deviceService.findServiceDevice();
-
         String url = "ws://"+deviceInfo.getIp()+":"+deviceInfo.getPort()+"/ws";
         URI uri = new URI(url);
         String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
-        //final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
         final int port = uri.getPort();
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -87,29 +82,20 @@ public final class LocalServerWebSocketClient {
                              localServerWebSocketClientHandler);
                  }
              });
-            ChannelFuture channelFuture = b.connect(uri.getHost(), port).sync();
+            channelFuture = b.connect(uri.getHost(), port).sync();
             channelFuture.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            group.shutdownGracefully();
-            Thread.sleep(15000);
-            //System.out.println("本地客户端重连");
-            logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
-            init();
-        }
-    }
 
-    private String serverIp(){
-        String ip = CommonUtil.getIpAddress();
-        ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap = clientCache.findConcurrentHashMap();
-        if (deviceInfoConcurrentHashMap != null && deviceInfoConcurrentHashMap.size() > 0) {
-            for (ConcurrentHashMap.Entry<String, DeviceInfo> entry : deviceInfoConcurrentHashMap.entrySet()) {
-                if ( !ip.equals(entry.getValue().getIp()) && entry.getValue().getType()==1) {
-                    return entry.getValue().getIp();
+            if(channelFuture!=null){
+                if(channelFuture.channel()!=null && channelFuture.channel().isOpen()){
+                    channelFuture.channel().close();
                 }
             }
+            group.shutdownGracefully();
+            logLogicService.logUploadHandler("本地服务器连接不上，重新接连");
+            init();
         }
-        return "";
     }
 }

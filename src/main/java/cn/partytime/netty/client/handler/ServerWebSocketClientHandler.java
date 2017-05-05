@@ -82,7 +82,6 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Autowired
     private ClientCache clientCache;
 
-
     @Autowired
     private CommandHandlerService commandHandlerService;
 
@@ -110,9 +109,6 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
         try {
             ServerInfo serverInfo = clientCache.getServerInfo();
             uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
-            //String scheme = uri.getScheme() == null? "ws" : uri.getScheme();
-            //final String host = uri.getHost() == null? "127.0.0.1" : uri.getHost();
-            //final int port = uri.getPort();
             handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
             handshaker.handshake(ctx.channel());
         } catch (URISyntaxException e) {
@@ -155,7 +151,6 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         //客户端发生异常。不做下线处理
-        //potocolService.forceLogout(ctx.channel());
         Channel channel = ctx.channel();
         if (IdleStateEvent.class.isAssignableFrom(evt.getClass())) {
             IdleStateEvent event = (IdleStateEvent) evt;
@@ -172,10 +167,5 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        /*System.out.print("与服务器断开。。。。");
-        if (!handshakeFuture.isDone()) {
-            handshakeFuture.setFailure(cause);
-        }
-        ct``x.close();*/
     }
 }
