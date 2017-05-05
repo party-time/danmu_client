@@ -17,6 +17,9 @@ else
         if [ "$fileNameNoSuffix" = "resource" ]; then
             continue;
         fi
+        if [ "$fileNameNoSuffix" = "config" ]; then
+            continue;
+        fi
         rm -r $file
     done
 
