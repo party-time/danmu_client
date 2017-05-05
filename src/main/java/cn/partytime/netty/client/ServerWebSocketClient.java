@@ -68,7 +68,7 @@ public final class ServerWebSocketClient {
 
             Thread.sleep(5000);
             ServerInfo serverInfo = clientCache.getServerInfo();
-            URI uri = new URI(configUtils.getWebSocketUrl("192.168.1.14",9090));
+            URI uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
             final int port = uri.getPort();
             Bootstrap b = new Bootstrap();
             b.group(group)
