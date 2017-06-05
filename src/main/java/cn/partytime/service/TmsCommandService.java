@@ -5,7 +5,9 @@ import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.common.RestResultModel;
+import cn.partytime.util.CommandConst;
 import cn.partytime.util.CommonConst;
+import cn.partytime.util.DateUtils;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +44,7 @@ public class TmsCommandService {
     private CommandHandlerService commandHandlerService;
 
 
-    private final String PROJECTOR_START="projector-start";
-    private final String PROJECTOR_CLOSE="projector-close";
-    private final String DANMU_START_PREFIX="danmu-start";
-    private final String MOVIE_START="movie-start";
-    private final String MOVIE_CLOSE="movie-close";
-    private final String AD_START_PREFIX="ad-start";
-    private final String AD_CLOSE="ad-close";
+
 
 
     /**
@@ -57,12 +53,12 @@ public class TmsCommandService {
      */
     public void projectorHandler(String command){
         switch (command){
-            case PROJECTOR_START:
+            case CommandConst.PROJECTOR_START:
                 //投影仪开启
                 logLogicService.logUploadHandler("投影仪开启");
                 projectorService.projectorHandler(0);
                 return;
-            case PROJECTOR_CLOSE:
+            case CommandConst.PROJECTOR_CLOSE:
                 //投影仪关闭
                 logLogicService.logUploadHandler("投影仪关闭");
                 projectorService.projectorHandler(1);
@@ -79,19 +75,19 @@ public class TmsCommandService {
     public void movieHandler(String command){
         String url="";
         switch (command){
-            case MOVIE_START:
+            case CommandConst.MOVIE_START:
                 logLogicService.logUploadHandler("电影开始");
-                url = configUtils.getPartyRequestUrl(MOVIE_START,command);
+                url = configUtils.getPartyRequestUrl(CommandConst.MOVIE_START,command);
                 if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
-                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId();
+                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ DateUtils.getCurrentDate().getTime();
                     httpRequestHandler(url);
                 }
                 return;
-            case MOVIE_CLOSE:
+            case CommandConst.MOVIE_CLOSE:
                 logLogicService.logUploadHandler("电影关闭");
-                url = configUtils.getPartyRequestUrl(MOVIE_CLOSE,command);
+                url = configUtils.getPartyRequestUrl(CommandConst.MOVIE_CLOSE,command);
                 if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
-                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId();
+                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ DateUtils.getCurrentDate().getTime();
                     String resultStr = httpRequestHandler(url);
                     if(!StringUtils.isEmpty(resultStr)){
                         RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
@@ -110,8 +106,8 @@ public class TmsCommandService {
                 }
                 return;
             default:
-                if(command.startsWith(DANMU_START_PREFIX)){
-                    url = configUtils.getPartyRequestUrl(DANMU_START_PREFIX,command);
+                if(command.startsWith(CommandConst.DANMU_START_PREFIX)){
+                    url = configUtils.getPartyRequestUrl(CommandConst.DANMU_START_PREFIX,command)+CommonConst.SEPARATOR+ DateUtils.getCurrentDate().getTime();
                     httpRequestHandler(url);
                     logLogicService.logUploadHandler("电影开始");
                 }
@@ -125,17 +121,17 @@ public class TmsCommandService {
     public void adHandler(String command){
         String url="";
         switch (command){
-            case AD_CLOSE:
+            case CommandConst.AD_CLOSE:
                 logLogicService.logUploadHandler("广告关闭");
-                url = configUtils.getPromotionalFilmUrl(AD_CLOSE,"1");
+                url = configUtils.getPromotionalFilmUrl(CommandConst.AD_CLOSE,"1");
                 httpRequestHandler(url);
                 //sendAdCommandToServer("promotionalFilm",command,1);
                 return;
             default:
-                if(command.startsWith(AD_START_PREFIX)){
+                if(command.startsWith(CommandConst.AD_START_PREFIX)){
                     logLogicService.logUploadHandler("广告开始");
                     //sendAdCommandToServer("promotionalFilm",command,0);
-                    url = configUtils.getPromotionalFilmUrl(AD_START_PREFIX,"0");
+                    url = configUtils.getPromotionalFilmUrl(CommandConst.AD_START_PREFIX,"0");
                     url = url +CommonConst.SEPARATOR+command;
                     httpRequestHandler(url);
                 }

@@ -153,7 +153,7 @@ public class ServerStartService {
         logLogicService.logUploadHandler("重新生成脚本");
         scriptFileService.createShell();
         logLogicService.logUploadHandler("启动flash客户端");
-        commandExecuteService.executeAppStartCallBack();
+        //commandExecuteService.executeAppStartCallBack();
     }
 
 }

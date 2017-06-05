@@ -6,6 +6,7 @@ import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.client.ClientModel;
 import cn.partytime.model.client.PartyInfo;
+import cn.partytime.util.CommandConst;
 import cn.partytime.util.CommonUtil;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,6 +40,9 @@ public class CommandHandlerService {
 
     @Autowired
     private CommandExecuteService commandExecuteService;
+
+    @Autowired
+    private TmsCommandService tmsCommandService;
 
 
     public void commandHandler(ClientCommandConfig clientCommandConfig){
@@ -63,17 +68,29 @@ public class CommandHandlerService {
             String clientCommandData = String.valueOf(clientCommandConfig.getData());
             ClientCommand clientCommand = JSON.parseObject(clientCommandData,ClientCommand.class);
             String type = clientCommand.getName();
-            new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    //直接脚本
-                    execute(type,clientCommandConfig);
-                    //执行回调
-                    if(!StringUtils.isEmpty(clientCommand.getBcallBack())){
-                        HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
+
+            if(type.startsWith(CommandConst.DANMU_START_PREFIX) || CommandConst.MOVIE_START.equals(type) || CommandConst.MOVIE_CLOSE.equals(type)){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tmsCommandService.movieHandler(type);
                     }
-                }
-            }).start();
+                }).start();
+            }else{
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        //直接脚本
+                        execute(type,clientCommandConfig);
+                        //执行回调
+                        if(!StringUtils.isEmpty(clientCommand.getBcallBack())){
+                            HttpUtils.httpRequestStr(clientCommand.getBcallBack(),"GET",null);
+                        }
+                    }
+                }).start();
+            }
+
+
         }
     }
 
