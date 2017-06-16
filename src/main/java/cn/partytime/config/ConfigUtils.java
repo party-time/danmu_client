@@ -24,7 +24,7 @@ public class ConfigUtils {
 
     private String baseTestUrl = "http://test.party-time.cn";
     private String baseUrl = "http://www.party-time.cn";
-    private String localUrl="http://127.0.0.1";
+    private String localUrl="http://localhost";
     private String logTestUrl="http://testlog.party-time.cn";
     private String logUrl="http://log.party-time.cn";
     private String logUrlPath="/log/java";
@@ -204,6 +204,10 @@ public class ConfigUtils {
 
     public String getDistributeServerUrl(){
         return getDomain()+"/distribute/client/login/"+properties.getRegistCode();
+    }
+
+    public String getProjectorRequestUrl(String command,String status){
+        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+command+CommonConst.SEPARATOR+properties.getRegistCode()+CommonConst.SEPARATOR+status;
     }
 
     public String getPartyRequestUrl(String type,String command){

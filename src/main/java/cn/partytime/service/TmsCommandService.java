@@ -52,16 +52,23 @@ public class TmsCommandService {
      * @param command
      */
     public void projectorHandler(String command){
+        String url ="";
         switch (command){
             case CommandConst.PROJECTOR_START:
                 //投影仪开启
                 logLogicService.logUploadHandler("投影仪开启");
                 projectorService.projectorHandler(0);
+                //http请求
+                url = configUtils.getProjectorRequestUrl(command,"0");
+                httpRequestHandler(url);
                 return;
             case CommandConst.PROJECTOR_CLOSE:
                 //投影仪关闭
                 logLogicService.logUploadHandler("投影仪关闭");
                 projectorService.projectorHandler(1);
+                //http请求
+                url = configUtils.getProjectorRequestUrl(command,"1");
+                httpRequestHandler(url);
                 return;
             default:
                 return;
