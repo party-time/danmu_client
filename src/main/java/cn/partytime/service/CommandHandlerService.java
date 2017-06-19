@@ -56,7 +56,9 @@ public class CommandHandlerService {
             String partyInfoStr = String.valueOf(clientCommandConfig.getData());
             PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
 
-
+            clientCache.setPartyInfo(partyInfo);
+            //活动信息给命令广播到其他服务器
+            pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
             if(partyInfo.getStatus()==3){
                 clientCache.setPartyInfo(null);
                 /*ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
@@ -67,12 +69,8 @@ public class CommandHandlerService {
                 clientCommandClientCommandConfig.setData(clientCommand);*/
 
                 commandExecuteService.executeAppRestartCallBack();
-            }else{
-
-                clientCache.setPartyInfo(partyInfo);
             }
-            //活动信息给命令广播到其他服务器
-            pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
+
 
         }else if("clientCommand".equals(clientCommandConfig.getType())){
             String clientCommandData = String.valueOf(clientCommandConfig.getData());

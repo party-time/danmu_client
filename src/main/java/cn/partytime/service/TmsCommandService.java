@@ -98,7 +98,7 @@ public class TmsCommandService {
             case CommandConst.MOVIE_START:
                 logLogicService.logUploadHandler("电影开始");
                 url = configUtils.getPartyRequestUrl(CommandConst.MOVIE_START,command);
-                if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
+                if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId()) && clientCache.getPartyInfo().getStatus()!=3){
                     url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ DateUtils.getCurrentDate().getTime();
                     HttpUtils.repeatRequest(url,"GET",null);
                 }

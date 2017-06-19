@@ -137,7 +137,7 @@ Function logCommit(content)
 End Function
 
 Function doRetart
-    WScript.Sleep 5000
+    WScript.Sleep 20000
     ExecuteShellFunction("shutdown -r -t 0")
 End Function
 
