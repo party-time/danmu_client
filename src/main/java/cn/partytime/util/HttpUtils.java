@@ -16,12 +16,32 @@ import java.net.URLEncoder;
 @Slf4j
 public class HttpUtils {
 
-
+    /**private String httpRequestHandler(String url){
+        int count = 0;
+        while (count<3){
+            String versionStr = HttpUtils.httpRequestStr(url,"GET",null);;
+            try {
+                if(!StringUtils.isEmpty(versionStr)){
+                    return versionStr;
+                }
+            }catch (Exception e){
+                System.out.print("获取数据异常");
+            }
+            count++;
+            System.out.println("请求失败，等待"+count+"秒，再次发起请求");
+            try {
+                Thread.sleep(count*2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }*/
 
     public static String repeatRequest(String requestUrl, String requestMethod, String outputStr){
         int count = 0;
         while (count<3){
-            String str = HttpUtils.httpRequestStr(requestUrl,"GET",null);;
+            String str = HttpUtils.httpRequestStr(requestUrl,requestMethod,null);;
             try {
                 if(!StringUtils.isEmpty(str)){
                     return str;

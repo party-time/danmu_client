@@ -1,6 +1,7 @@
 package cn.partytime.service;
 
 import cn.partytime.config.ClientCache;
+import cn.partytime.config.ConfigUtils;
 import cn.partytime.model.Properties;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
@@ -44,6 +45,9 @@ public class CommandHandlerService {
     @Autowired
     private TmsCommandService tmsCommandService;
 
+    @Autowired
+    private ConfigUtils configUtils;
+
 
     public void commandHandler(ClientCommandConfig clientCommandConfig){
         logLogicService.logUploadHandler("接收的命令信息:"+JSON.toJSONString(clientCommandConfig));
@@ -51,25 +55,33 @@ public class CommandHandlerService {
             System.out.print(clientCommandConfig.getData());
             String partyInfoStr = String.valueOf(clientCommandConfig.getData());
             PartyInfo partyInfo =  JSON.parseObject(partyInfoStr,PartyInfo.class);
-            clientCache.setPartyInfo(partyInfo);
-            //活动信息给命令广播到其他服务器
-            pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
+
+
             if(partyInfo.getStatus()==3){
-                ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
+                clientCache.setPartyInfo(partyInfo);
+                /*ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
                 clientCommandClientCommandConfig.setType("clientCommand");
                 ClientCommand clientCommand = new ClientCommand();
                 clientCommand.setBcallBack(null);
                 clientCommand.setName("appRestart");
-                clientCommandClientCommandConfig.setData(clientCommand);
+                clientCommandClientCommandConfig.setData(clientCommand);*/
+
                 commandExecuteService.executeAppRestartCallBack();
+            }else{
+                clientCache.setPartyInfo(null);
             }
+            //活动信息给命令广播到其他服务器
+            pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
 
         }else if("clientCommand".equals(clientCommandConfig.getType())){
             String clientCommandData = String.valueOf(clientCommandConfig.getData());
             ClientCommand clientCommand = JSON.parseObject(clientCommandData,ClientCommand.class);
             String type = clientCommand.getName();
 
-            if(type.startsWith(CommandConst.DANMU_START_PREFIX) || CommandConst.MOVIE_START.equals(type) || CommandConst.MOVIE_CLOSE.equals(type)){
+            if(type.startsWith(CommandConst.PROJECTOR_PREFIX)){
+                String url = configUtils.getProjectorRequestUrl(type);
+                HttpUtils.repeatRequest(url,"GET",null);
+            }else if(type.startsWith(CommandConst.DANMU_START_PREFIX) || CommandConst.MOVIE_START.equals(type) || CommandConst.MOVIE_CLOSE.equals(type)){
                 new Thread(new Runnable() {
                     @Override
                     public void run() {

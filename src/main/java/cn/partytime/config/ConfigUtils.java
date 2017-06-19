@@ -206,8 +206,8 @@ public class ConfigUtils {
         return getDomain()+"/distribute/client/login/"+properties.getRegistCode();
     }
 
-    public String getProjectorRequestUrl(String command,String status){
-        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+command+CommonConst.SEPARATOR+properties.getRegistCode()+CommonConst.SEPARATOR+status;
+    public String getProjectorRequestUrl(String command){
+        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+command+CommonConst.SEPARATOR+properties.getRegistCode();
     }
 
     public String getPartyRequestUrl(String type,String command){
