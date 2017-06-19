@@ -58,7 +58,7 @@ public class CommandHandlerService {
 
 
             if(partyInfo.getStatus()==3){
-                clientCache.setPartyInfo(partyInfo);
+                clientCache.setPartyInfo(null);
                 /*ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
                 clientCommandClientCommandConfig.setType("clientCommand");
                 ClientCommand clientCommand = new ClientCommand();
@@ -68,7 +68,8 @@ public class CommandHandlerService {
 
                 commandExecuteService.executeAppRestartCallBack();
             }else{
-                clientCache.setPartyInfo(null);
+
+                clientCache.setPartyInfo(partyInfo);
             }
             //活动信息给命令广播到其他服务器
             pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
