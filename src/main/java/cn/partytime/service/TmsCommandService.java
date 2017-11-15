@@ -55,22 +55,26 @@ public class TmsCommandService {
         String url ="";
         switch (command){
             case CommandConst.PROJECTOR_START:
-                //投影仪开启
+                /*//投影仪开启
                 logLogicService.logUploadHandler("投影仪开启");
                 projectorService.projectorHandler(0);
                 //http请求
                 url = configUtils.getProjectorRequestUrl(command);
                 HttpUtils.repeatRequest(url,"GET",null);
-                sendProjectorCommandToOtherServer(command);
+                projectorService.sendProjectorCommandToOtherServer(command);*/
+                logLogicService.logUploadHandler("投影仪开启");
+                projectorService.projectSendCommand(command,0);
                 return;
             case CommandConst.PROJECTOR_CLOSE:
                 //投影仪关闭
-                logLogicService.logUploadHandler("投影仪关闭");
-                projectorService.projectorHandler(1);
+
+                /*projectorService.projectorHandler(1);
                 //http请求
                 url = configUtils.getProjectorRequestUrl(command);
                 HttpUtils.repeatRequest(url,"GET",null);
-                sendProjectorCommandToOtherServer(command);
+                projectorService.sendProjectorCommandToOtherServer(command);*/
+                logLogicService.logUploadHandler("投影仪关闭");
+                projectorService.projectSendCommand(command,1);
                 return;
             default:
                 return;
@@ -78,15 +82,6 @@ public class TmsCommandService {
     }
 
 
-    public void sendProjectorCommandToOtherServer(String command){
-        ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
-        clientCommandClientCommandConfig.setType("clientCommand");
-        ClientCommand clientCommand = new ClientCommand();
-        clientCommand.setBcallBack(null);
-        clientCommand.setName(command);
-        clientCommandClientCommandConfig.setData(clientCommand);
-        commandHandlerService.pubCommandToOtherServer(JSON.toJSONString(clientCommandClientCommandConfig));
-    }
 
     /**
      * 电影相关的指令处理

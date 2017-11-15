@@ -2,6 +2,7 @@ package cn.partytime.service;
 
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.ScriptConfigUtils;
+import cn.partytime.util.CommandConst;
 import cn.partytime.util.PrintScreenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +39,15 @@ public class CommandExecuteService {
     private ProjectorService projectorService;
 
     public void executeProjectStartCallBack() {
-        projectorService.projectorHandler(0);
+        //projectorService.projectorHandler(0);
+        logLogicService.logUploadHandler("投影仪开启");
+        projectorService.projectSendCommand(CommandConst.PROJECTOR_START,0);
     }
 
     public void executeProjectCloseCallBack() {
-        projectorService.projectorHandler(1);
+        //projectorService.projectorHandler(1);
+        logLogicService.logUploadHandler("投影仪关闭");
+        projectorService.projectSendCommand(CommandConst.PROJECTOR_CLOSE,1);
     }
 
     public void executeProjectChangeCallBack() {

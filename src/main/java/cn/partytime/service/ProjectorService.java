@@ -2,8 +2,12 @@ package cn.partytime.service;
 
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.model.client.ClientCommand;
+import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.device.DeviceInfo;
+import cn.partytime.util.CommandConst;
 import cn.partytime.util.HttpUtils;
+import com.alibaba.fastjson.JSON;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -36,6 +40,12 @@ public class ProjectorService {
 
     @Resource(name = "threadPoolTaskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    @Autowired
+    private CommandHandlerService commandHandlerService;
+
+    @Autowired
+    private ConfigUtils configUtils;
 
     /**
      * 投影仪开启和关闭
@@ -100,4 +110,29 @@ public class ProjectorService {
             }
         });
     }
+
+    /**
+     *
+     * @param command
+     * @param type 0开启，1：关闭； 2：切白
+     */
+    public void projectSendCommand(String command,int type){
+        logLogicService.logUploadHandler("投影仪关闭");
+        projectorHandler(type);
+        //http请求
+        String url = configUtils.getProjectorRequestUrl(command);
+        HttpUtils.repeatRequest(url,"GET",null);
+        sendProjectorCommandToOtherServer(command);
+    }
+
+    public void sendProjectorCommandToOtherServer(String command){
+        ClientCommandConfig<ClientCommand> clientCommandClientCommandConfig = new ClientCommandConfig<ClientCommand>();
+        clientCommandClientCommandConfig.setType("clientCommand");
+        ClientCommand clientCommand = new ClientCommand();
+        clientCommand.setBcallBack(null);
+        clientCommand.setName(command);
+        clientCommandClientCommandConfig.setData(clientCommand);
+        commandHandlerService.pubCommandToOtherServer(JSON.toJSONString(clientCommandClientCommandConfig));
+    }
+
 }
