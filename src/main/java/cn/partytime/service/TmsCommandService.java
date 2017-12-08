@@ -63,6 +63,7 @@ public class TmsCommandService {
                 HttpUtils.repeatRequest(url,"GET",null);
                 projectorService.sendProjectorCommandToOtherServer(command);*/
                 logLogicService.logUploadHandler("投影仪开启");
+                ;
                 projectorService.projectSendCommand(command,0);
                 return;
             case CommandConst.PROJECTOR_CLOSE:

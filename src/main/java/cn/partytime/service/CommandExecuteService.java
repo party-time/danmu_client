@@ -38,13 +38,13 @@ public class CommandExecuteService {
     @Autowired
     private ProjectorService projectorService;
 
-    public void executeProjectStartCallBack() {
+    public void executeProjectorStartCallBack() {
         //projectorService.projectorHandler(0);
         logLogicService.logUploadHandler("投影仪开启");
         projectorService.projectSendCommand(CommandConst.PROJECTOR_START,0);
     }
 
-    public void executeProjectCloseCallBack() {
+    public void executeProjectorCloseCallBack() {
         //projectorService.projectorHandler(1);
         logLogicService.logUploadHandler("投影仪关闭");
         projectorService.projectSendCommand(CommandConst.PROJECTOR_CLOSE,1);

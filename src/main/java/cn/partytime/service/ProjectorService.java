@@ -117,11 +117,16 @@ public class ProjectorService {
      * @param type 0开启，1：关闭； 2：切白
      */
     public void projectSendCommand(String command,int type){
-        logLogicService.logUploadHandler("投影仪关闭");
+        //logLogicService.logUploadHandler("投影仪关闭");
         projectorHandler(type);
         //http请求
         String url = configUtils.getProjectorRequestUrl(command);
         HttpUtils.repeatRequest(url,"GET",null);
+
+        if(command.contains("-")){
+            String[] commadArray = command.split("-");
+            command = commadArray[0]+commadArray[1].substring(0, 1).toUpperCase() + commadArray[1].substring(1);
+        }
         sendProjectorCommandToOtherServer(command);
     }
 

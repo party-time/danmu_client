@@ -30,6 +30,7 @@ public class LogLogicService {
                 //String url = configUtils.getLogUrl()+"?addressId="+addressId+"&param=\""+content+"\"";
                 String url = configUtils.findLogUrl()+"?addressId="+addressId;
                 String contentStr="机器编号:"+configUtils.getMachineNum()+"日志内容:"+content;
+                System.out.println(contentStr);
                 HttpUtils.httpRequestStrEncodeUrl(url,contentStr,"GET",null);
             }
         });

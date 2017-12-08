@@ -41,17 +41,17 @@ public class HttpUtils {
     public static String repeatRequest(String requestUrl, String requestMethod, String outputStr){
         int count = 0;
         while (count<3){
-            String str = HttpUtils.httpRequestStr(requestUrl,requestMethod,null);;
             try {
-                if(!StringUtils.isEmpty(str)){
-                    return str;
+                String str = HttpUtils.httpRequestStr(requestUrl,requestMethod,null);;
+                try {
+                    if(!StringUtils.isEmpty(str)){
+                        return str;
+                    }
+                }catch (Exception e){
+                    System.out.print("获取数据异常");
                 }
-            }catch (Exception e){
-                System.out.print("获取数据异常");
-            }
-            count++;
-            System.out.print("请求失败，等待"+count+"秒，再次发起请求");
-            try {
+                count++;
+                System.out.print("请求失败，等待"+count+"秒，再次发起请求");
                 Thread.sleep(count*2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
