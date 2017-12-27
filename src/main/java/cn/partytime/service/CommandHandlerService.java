@@ -78,8 +78,10 @@ public class CommandHandlerService {
             String type = clientCommand.getName();
 
             if(type.startsWith(CommandConst.PROJECTOR_PREFIX)){
-                String url = configUtils.getProjectorRequestUrl(type);
-                HttpUtils.repeatRequest(url,"GET",null);
+                //String url = configUtils.getProjectorRequestUrl(type);
+                //HttpUtils.repeatRequest(url,"GET",null);
+                //直接脚本
+                executeReflectMethod(type);
             }else if(type.startsWith(CommandConst.DANMU_START_PREFIX) || CommandConst.MOVIE_START.equals(type) || CommandConst.MOVIE_CLOSE.equals(type)){
                 new Thread(new Runnable() {
                     @Override
@@ -117,6 +119,10 @@ public class CommandHandlerService {
         }else{
             pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));
         }
+        executeReflectMethod(command);
+    }
+
+    public void  executeReflectMethod(String command){
         command = command.replaceAll("\\d+", "");
         String commandStr = command.substring(0, 1).toUpperCase() + command.substring(1);
         String methodName="execute"+commandStr+"CallBack";

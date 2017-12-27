@@ -10,10 +10,17 @@ import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,6 +50,10 @@ public class ProjectorService {
 
     @Autowired
     private CommandHandlerService commandHandlerService;
+
+    //场地
+    @Value("${addressId}")
+    private String addressId;
 
     @Autowired
     private ConfigUtils configUtils;
@@ -111,6 +122,112 @@ public class ProjectorService {
         });
     }
 
+    private void executePJLINKCommand(int type){
+        List<DeviceInfo> deviceInfoList = deviceService.findDeviceInfoList(0);
+        for (DeviceInfo deviceInfo : deviceInfoList) {
+            String ip = deviceInfo.getUrl();
+            if(!StringUtils.isEmpty(ip)){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        logLogicService.logUploadHandler("地址:"+ip+"投影操作:"+(type==0?"关闭":"开启"));
+                        executeSendPJlinkCommand(ip,type,0);
+                    }
+                }).start();
+            }
+        }
+    }
+
+    private String parseResponse(String response)
+    {
+        if (response != null)
+        {
+            if (response.contains(" ERRA"))
+            {
+                response = "Authentication error.";
+            }
+            else if (response.endsWith("ERR1"))
+            {
+                response = "Unknown Command.";
+            }
+            else if (response.endsWith("ERR2"))
+            {
+                response = "Wrong Parameter.";
+            }
+            else if (response.endsWith("ERR3"))
+            {
+                response = "Device is not responding.";
+            }
+            else if (response.endsWith("ERR4"))
+            {
+                response = "Device has internal error.";
+            }
+            else
+            {
+                response = response.substring(7);
+            }
+        }
+
+        return response;
+    }
+
+    private void executeSendPJlinkCommand(String ip,int type,int count){
+        if(count==4){
+            String url= configUtils.getJavaClientAlarmUlr()+"/"+"projector"+"/"+configUtils.getAddressId();
+            threadPoolTaskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    HttpUtils.httpRequestStr(url, "GET", null);
+                }
+            });
+            logLogicService.logUploadHandler("投影仪:"+ip+",socket 进行重新连接超过"+4+"次,结束");
+            return;
+        }
+        count++;
+        OutputStreamWriter osw =null;
+        BufferedReader br=null;
+        Socket socket = null;
+        try {
+            socket = new Socket(ip, 4352);
+            String authPass = "";
+            String command = "%1POWR "+type+"\r";
+            osw = new OutputStreamWriter(socket.getOutputStream());
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            logLogicService.logUploadHandler("发送命令:"+command);
+            osw.write(command);
+            osw.flush();
+            String response = parseResponse(br.readLine());
+            logLogicService.logUploadHandler("接收投影返回的值: " + response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logLogicService.logUploadHandler("投影仪:"+ip+",socket 连接异常");
+            logLogicService.logUploadHandler("投影仪:"+ip+",socket 进行重新连接"+(count)+"次");
+            executeSendPJlinkCommand(ip,type,count);
+        }finally
+        {
+            if (osw != null) {
+                try {
+                    osw.close();
+                } catch (IOException e) {
+                }
+            }
+
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                }
+            }
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    logLogicService.logUploadHandler("投影仪:"+ip+",socket 连接异常");
+                }
+            }
+        }
+    }
+
     /**
      *
      * @param command
@@ -118,7 +235,15 @@ public class ProjectorService {
      */
     public void projectSendCommand(String command,int type){
         //logLogicService.logUploadHandler("投影仪关闭");
-        projectorHandler(type);
+
+        if("584a1a9a0cf2fdb8406efdce".equals(addressId)){
+            projectorHandler(type);
+        }else{
+            //0关闭，1:开启
+            executePJLINKCommand(type==0?1:0);
+        }
+
+
         //http请求
         String url = configUtils.getProjectorRequestUrl(command);
         HttpUtils.repeatRequest(url,"GET",null);

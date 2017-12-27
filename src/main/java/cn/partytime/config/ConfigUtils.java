@@ -40,7 +40,7 @@ public class ConfigUtils {
     private String updatePlanPath=baseJavaClientUrl+"/updateUpdatePlan";
     private String paramUrl=baseJavaClientUrl+"/findFlashConfig";
     private String saveScreenPicUrl=baseJavaClientUrl+"/saveScreen";
-
+    private String javaClientAlarmUrl=baseJavaClientUrl+"/alarm";
 
     private String webSocketPath="/ws";
 
@@ -69,6 +69,10 @@ public class ConfigUtils {
 
     public String getMachineNum(){
         return properties.getMachineNum();
+    }
+
+    public String getJavaClientAlarmUlr(){
+        return getDomain()+javaClientAlarmUrl;
     }
 
     public String rsyncPasswordFile(){
