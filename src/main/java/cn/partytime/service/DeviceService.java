@@ -95,7 +95,7 @@ public class DeviceService {
         List<DeviceInfo> deviceInfoList = findDeviceInfoList(1);
         if(ListUtils.checkListIsNotNull(deviceInfoList)){
             for(DeviceInfo deviceInfo:deviceInfoList){
-                if(!localIp.equals(deviceInfo.getIp())){
+                if(!localIp.equals(deviceInfo.getIp()) && deviceInfo.getNumber()==1){
                     return deviceInfo;
                 }
             }
