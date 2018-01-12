@@ -1,6 +1,7 @@
 package cn.partytime.netty.server.tmsHandler;
 
 import cn.partytime.config.ClientCache;
+import cn.partytime.model.Properties;
 import cn.partytime.model.client.ClientModel;
 import cn.partytime.service.LogLogicService;
 import cn.partytime.service.TmsCommandService;
@@ -35,32 +36,37 @@ public class TmsServerHandler extends ChannelInboundHandlerAdapter {
     @Autowired
     private ClientCache clientCache;
 
+    @Autowired
+    private Properties properties;
+
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         String command = (String)msg;
         logLogicService.logUploadHandler("接收的命令:"+command);
-        command = replaceBlank(command)+"-aa";
-
-        logLogicService.logUploadHandler("转发接收的命令:"+command);
-
-        ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findChannelTmsClientModelConcurrentHashMap();
-        if (channelClientModelConcurrentHashMap != null && channelClientModelConcurrentHashMap.size() > 0) {
-            for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : channelClientModelConcurrentHashMap.entrySet()) {
-                Channel channel = entry.getKey();
-                //channel.writeAndFlush(command);
-                ByteBuf message;
-                byte[] req = command.getBytes();
-                message = Unpooled.buffer(req.length);
-                message.writeBytes(req);
-                channel.writeAndFlush(message);
+        if("3".equals(properties.getMachineNum())) {
+            command = replaceBlank(command)+"-aa";
+            logLogicService.logUploadHandler("转发接收的命令:"+command);
+            ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findChannelTmsClientModelConcurrentHashMap();
+            if (channelClientModelConcurrentHashMap != null && channelClientModelConcurrentHashMap.size() > 0) {
+                for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : channelClientModelConcurrentHashMap.entrySet()) {
+                    Channel channel = entry.getKey();
+                    //channel.writeAndFlush(command);
+                    ByteBuf message;
+                    byte[] req = command.getBytes();
+                    message = Unpooled.buffer(req.length);
+                    message.writeBytes(req);
+                    channel.writeAndFlush(message);
+                }
             }
+        }else{
+            tmsCommandService.projectorHandler(command);
+            tmsCommandService.movieHandler(command);
+            tmsCommandService.adHandler(command);
         }
-        //logLogicService.logUploadHandler("接收的命令:"+command);
-        //tmsCommandService.projectorHandler(command);
-        //tmsCommandService.movieHandler(command);
-        //tmsCommandService.adHandler(command);
+
+
 
         /*System.out.println("The time server receive order ："+ body+" ; the counter is :"+ ++counter);
         String currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body)?
