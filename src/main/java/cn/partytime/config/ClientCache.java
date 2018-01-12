@@ -26,7 +26,21 @@ public class ClientCache {
 
     private ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap = new ConcurrentHashMap<String, DeviceInfo>();
 
+    private ConcurrentHashMap<Channel,ClientModel> channelTmsClientModelConcurrentHashMap = new ConcurrentHashMap<>();
+
     private ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = new ConcurrentHashMap<>();
+
+    public ConcurrentHashMap findChannelTmsClientModelConcurrentHashMap(){
+        return channelTmsClientModelConcurrentHashMap;
+    }
+
+    public void addChannelTmsClientModelConcurrentHashMap(Channel channel,ClientModel clientModel){
+        channelTmsClientModelConcurrentHashMap.put(channel,clientModel);
+    }
+
+    public void removeChannelTmsClientModelConcurrentHashMap(Channel channel){
+        channelTmsClientModelConcurrentHashMap.remove(channel);
+    }
 
 
     public ConcurrentHashMap findClientModelConcurrentHashMap(){

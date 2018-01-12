@@ -1,14 +1,18 @@
 package cn.partytime.netty.server.tmsHandler;
 
+import cn.partytime.config.ClientCache;
+import cn.partytime.model.client.ClientModel;
 import cn.partytime.service.LogLogicService;
 import cn.partytime.service.TmsCommandService;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.*;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,16 +32,35 @@ public class TmsServerHandler extends ChannelInboundHandlerAdapter {
     private LogLogicService logLogicService;
 
 
+    @Autowired
+    private ClientCache clientCache;
+
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         String command = (String)msg;
-        command = replaceBlank(command);
         logLogicService.logUploadHandler("接收的命令:"+command);
-        tmsCommandService.projectorHandler(command);
-        tmsCommandService.movieHandler(command);
-        tmsCommandService.adHandler(command);
+        command = replaceBlank(command)+"-aa";
+
+        logLogicService.logUploadHandler("转发接收的命令:"+command);
+
+        ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findChannelTmsClientModelConcurrentHashMap();
+        if (channelClientModelConcurrentHashMap != null && channelClientModelConcurrentHashMap.size() > 0) {
+            for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : channelClientModelConcurrentHashMap.entrySet()) {
+                Channel channel = entry.getKey();
+                //channel.writeAndFlush(command);
+                ByteBuf message;
+                byte[] req = command.getBytes();
+                message = Unpooled.buffer(req.length);
+                message.writeBytes(req);
+                channel.writeAndFlush(message);
+            }
+        }
+        //logLogicService.logUploadHandler("接收的命令:"+command);
+        //tmsCommandService.projectorHandler(command);
+        //tmsCommandService.movieHandler(command);
+        //tmsCommandService.adHandler(command);
 
         /*System.out.println("The time server receive order ："+ body+" ; the counter is :"+ ++counter);
         String currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body)?

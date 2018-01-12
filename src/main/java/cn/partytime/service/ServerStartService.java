@@ -4,6 +4,7 @@ import cn.partytime.init.MainService;
 import cn.partytime.model.Properties;
 import cn.partytime.netty.client.LocalServerWebSocketClient;
 import cn.partytime.netty.client.ServerWebSocketClient;
+import cn.partytime.netty.client.TmsTransClient;
 import cn.partytime.netty.server.ClientServer;
 import cn.partytime.netty.server.TmsServer;
 import org.slf4j.Logger;
@@ -60,6 +61,9 @@ public class ServerStartService {
     @Autowired
     private LogLogicService logLogicService;
 
+    @Autowired
+    private TmsTransClient tmsTransClient;
+
     public void projectInit(){
         //启动netty服务
         startNettyServer();
@@ -72,8 +76,29 @@ public class ServerStartService {
         }else{
             startClientConnectLocalServer();
         }
+
+        if("3".equals(properties.getMachineNum())) {
+            setartTmsTransClientServer();
+        }
+
         //加载本地资源
-        initResource();
+        //initResource();
+    }
+
+    private void setartTmsTransClientServer(){
+        logLogicService.logUploadHandler("向控制机器发送tms指令的服务");
+        threadPoolTaskExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    deviceService.findDeviceInfo();
+                    tmsTransClient.init();
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                    logLogicService.logUploadHandler("向控制机器发送tms指令的服务client异常:"+e.getMessage());
+                }
+            }
+        });
     }
 
     /**
