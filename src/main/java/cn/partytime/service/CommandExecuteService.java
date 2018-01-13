@@ -2,6 +2,7 @@ package cn.partytime.service;
 
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.ScriptConfigUtils;
+import cn.partytime.model.Properties;
 import cn.partytime.util.CommandConst;
 import cn.partytime.util.PrintScreenUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CommandExecuteService {
 
+    @Autowired
+    private Properties properties;
 
     @Autowired
     private LogLogicService logLogicService;
@@ -60,14 +63,16 @@ public class CommandExecuteService {
     }
 
     public void executeAppStartCallBack() {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(!"3".equals(properties.getMachineNum())) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
+            log.info("execute printScreen logic");
+            PrintScreenUtils.moveWindow();
         }
-        windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
-        log.info("execute printScreen logic");
-        PrintScreenUtils.moveWindow();
     }
 
     public void executeAppCloseCallBack() {

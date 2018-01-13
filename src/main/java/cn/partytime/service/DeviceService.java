@@ -60,6 +60,7 @@ public class DeviceService {
             }
         }else{
             String url =configUtils.findDeviceInfoUrl();
+            System.out.println("java config url:"+url);
             String deviceStr = HttpUtils.httpRequestStr(url,"GET",null);
             deviceConfig = JSON.parseObject(deviceStr,DeviceConfig.class);
             if(deviceConfig!=null){

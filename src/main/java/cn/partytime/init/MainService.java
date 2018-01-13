@@ -25,8 +25,8 @@ import java.net.URISyntaxException;
 
 @Service
 public class MainService {
-    @Autowired
 
+    @Autowired
     private ServerStartService serverStartService;
     /**
      * 启动系统加载项目

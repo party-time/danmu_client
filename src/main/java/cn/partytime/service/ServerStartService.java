@@ -82,7 +82,7 @@ public class ServerStartService {
         }
 
         //加载本地资源
-        //initResource();
+        initResource();
     }
 
     private void setartTmsTransClientServer(){
@@ -177,8 +177,10 @@ public class ServerStartService {
     private void initResource(){
         logLogicService.logUploadHandler("重新生成脚本");
         scriptFileService.createShell();
-        logLogicService.logUploadHandler("启动flash客户端");
-        commandExecuteService.executeAppStartCallBack();
+        if(!"3".equals(properties.getMachineNum())) {
+            logLogicService.logUploadHandler("启动flash客户端");
+            commandExecuteService.executeAppStartCallBack();
+        }
     }
 
 }
