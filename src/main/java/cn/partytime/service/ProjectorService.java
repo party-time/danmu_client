@@ -2,6 +2,7 @@ package cn.partytime.service;
 
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.device.DeviceInfo;
@@ -51,12 +52,22 @@ public class ProjectorService {
     @Autowired
     private CommandHandlerService commandHandlerService;
 
+    @Autowired
+    private WindowShellService windowShellService;
+
+    @Autowired
+    private CommandExecuteService commandExecuteService;
+
+
     //场地
     @Value("${addressId}")
     private String addressId;
 
     @Autowired
     private ConfigUtils configUtils;
+
+    @Autowired
+    private ScriptConfigUtils scriptConfigUtils;
 
     /**
      * 投影仪开启和关闭
@@ -122,9 +133,11 @@ public class ProjectorService {
         });
     }
 
-    private void executePJLINKCommand(int type){
+    public void
+    executePJLINKCommand(int type){
         List<DeviceInfo> deviceInfoList = deviceService.findDeviceInfoList(0);
         for (DeviceInfo deviceInfo : deviceInfoList) {
+
             String ip = deviceInfo.getUrl();
             if(!StringUtils.isEmpty(ip)){
                 new Thread(new Runnable() {
@@ -241,8 +254,19 @@ public class ProjectorService {
         }else{
             //0关闭，1:开启
             executePJLINKCommand(type==0?1:0);
-        }
+            if(type==0){
+                //windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
+                try {
+                    newPjLinkStartOperate();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }else if(type==1){
+                //executePJLINKCommand(0);
+                windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.PJLINKSTOP_VBS));
+            }
 
+        }
 
         //http请求
         String url = configUtils.getProjectorRequestUrl(command);
@@ -265,4 +289,17 @@ public class ProjectorService {
         commandHandlerService.pubCommandToOtherServer(JSON.toJSONString(clientCommandClientCommandConfig));
     }
 
+
+    public void newPjLinkStartOperate() throws InterruptedException {
+
+        commandExecuteService.executeAppCloseCallBack();
+
+        Thread.sleep(2000);
+        //开启本地投影软件
+        windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
+
+        //Thread.sleep(2000);
+
+        //commandExecuteService.executeAppStartCallBack();
+    }
 }

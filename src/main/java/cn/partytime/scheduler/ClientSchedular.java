@@ -1,15 +1,16 @@
 package cn.partytime.scheduler;
 
 
+import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.model.UpdatePlanConfig;
 import cn.partytime.model.VersionConfig;
 import cn.partytime.model.VersionInfo;
 
-import cn.partytime.service.RsyncFileService;
-import cn.partytime.service.ClientUpdateService;
+import cn.partytime.service.*;
 import cn.partytime.util.ListUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,32 @@ import java.util.List;
 @EnableScheduling
 public class ClientSchedular {
 
+
+    @Autowired
+    private ProjectorService projectorService;
+
+    @Autowired
+    private WindowShellService windowShellService;
+
     @Autowired
     private RsyncFileService rsyncFileService;
 
     @Autowired
     private ClientUpdateService clientUpdateService;
+
+    @Autowired
+    private ScriptConfigUtils scriptConfigUtils;
+
+    //场地
+    @Value("${addressId}")
+    private String addressId;
+
+    //场地
+    @Value("${projectorStatus:0}")
+    private String projectorStatus;
+
+    @Autowired
+    private LogLogicService logLogicService;
 
     @Scheduled(cron = "0 5 3 * * ?")
     private void cronRsyncFile(){
@@ -48,6 +70,24 @@ public class ClientSchedular {
     public void repeatFailedRequest(){
         log.info("http request fail remedy");
         clientUpdateService.repeatRequest();
+    }
+
+    @Scheduled(cron = "0 0 8 * * ?")
+    private void projectorStart(){
+        logLogicService.logUploadHandler("8点开始执行开启投影的定时任务"+" projectorStatus状态是:"+projectorStatus);
+        if(!"584a1a9a0cf2fdb8406efdce".equals(addressId) && "1".equals(projectorStatus)){
+            try {
+                //除了鑫源厅意外，其他的厅都走这个定时任务
+                //发送socket链接
+                projectorService.executePJLINKCommand(1);
+                //启动本地启动脚本
+                projectorService.newPjLinkStartOperate();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else{
+            logLogicService.logUploadHandler("projectorStatus状态是:"+projectorStatus);
+        }
     }
 
 }

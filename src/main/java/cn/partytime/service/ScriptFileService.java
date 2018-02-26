@@ -84,7 +84,10 @@ public class ScriptFileService {
 
         map.put("timerjavaUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS));
 
-        map.put("timerflashUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS));
+        map.put("timerjavaUpdateVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS));
+
+        map.put("PJLinkStopVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.PJLINKSTART_VBS));
+        map.put("PJLinkStopVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.PJLINKSTOP_VBS));
 
         map.put("updateCheckVbsPath",scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE,scriptConfigUtils.UPDATECHECK_VBS));
 
@@ -114,6 +117,9 @@ public class ScriptFileService {
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERFLASHUPDATE_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.TIMERJAVAUPDATE_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.UPDATECHECK_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.PJLINKSTART_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.PJLINKSTOP_VBS);
+
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.JAVASTART_BAT);
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.KILLFLASH_BAT);
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.STARTFLASH_BAT);

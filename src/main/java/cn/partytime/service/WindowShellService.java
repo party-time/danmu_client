@@ -68,6 +68,19 @@ public class WindowShellService {
         return sb.toString();
     }
 
+    public String execExeVBS(String shellString) {
+        logLogicService.logUploadHandler("执行脚本:"+shellString);
+        Process process = null;
+        StringBuffer sb = new StringBuffer();
+        try {
+            Runtime.getRuntime().exec("cscript "+shellString);
+        } catch (Exception e) {
+            //log.error("", e);
+            logLogicService.logUploadHandler("执行脚本异常:"+e.getMessage());
+        }
+        return sb.toString();
+    }
+
     public void printScreenPic(){
         PrintScreenUtils.screenShotAsFile(configUtils.screenSavePath(),configUtils.getScreenSaveFile());
         HttpUtils.postFile(configUtils.screenSavePath()+"/"+configUtils.getScreenSaveFile(), configUtils.getSaveScreenPicUrl());

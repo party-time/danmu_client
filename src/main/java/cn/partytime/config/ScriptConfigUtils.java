@@ -27,6 +27,9 @@ public class ScriptConfigUtils {
     public final String TIMERFLASHUPDATE_VBS="timerflashUpdate";
     public final String TIMERJAVAUPDATE_VBS="timerjavaUpdate";
     public final String UPDATECHECK_VBS="updateCheck";
+    public final String PJLINKSTART_VBS="PJLinkStart";
+    public final String PJLINKSTOP_VBS="PJLinkStop";
+
     public final String JAVASTART_BAT="javaStart";
     public final String KILLFLASH_BAT="killFlash";
     public final String STARTFLASH_BAT="startFlash";
