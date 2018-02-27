@@ -133,8 +133,7 @@ public class ProjectorService {
         });
     }
 
-    public void
-    executePJLINKCommand(int type){
+    public void executePJLINKCommand(int type){
         List<DeviceInfo> deviceInfoList = deviceService.findDeviceInfoList(0);
         for (DeviceInfo deviceInfo : deviceInfoList) {
 
@@ -256,11 +255,12 @@ public class ProjectorService {
             executePJLINKCommand(type==0?1:0);
             if(type==0){
                 //windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
-                try {
+                //注释掉：发送投影开启的命令，只有socket发送通知
+                /*try {
                     newPjLinkStartOperate();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             }else if(type==1){
                 //executePJLINKCommand(0);
                 windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.PJLINKSTOP_VBS));
