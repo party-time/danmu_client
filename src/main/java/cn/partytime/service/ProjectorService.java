@@ -241,8 +241,14 @@ public class ProjectorService {
     }
 
 
+    /**
+     * 重新开启投影（和8点定时任务同样的操作，手工处罚的）
+     * @param command
+     * @param type
+     */
     public void projectNewStartCommand(String command,int type){
-        if("584a1a9a0cf2fdb8406efdce".equals(addressId)){
+        //除了鑫源厅以外的厅
+        if(!"584a1a9a0cf2fdb8406efdce".equals(addressId)){
             //0关闭，1:开启
             executePJLINKCommand(type==0?1:0);
 
