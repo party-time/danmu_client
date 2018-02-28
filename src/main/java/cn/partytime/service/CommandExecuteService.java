@@ -53,6 +53,11 @@ public class CommandExecuteService {
         projectorService.projectSendCommand(CommandConst.PROJECTOR_CLOSE,1);
     }
 
+    public void executeProjectorNewStartCallBack() {
+        logLogicService.logUploadHandler("投影仪开启");
+        projectorService.projectNewStartCommand(CommandConst.PROJECTOR_START,0);
+    }
+
     public void executeProjectChangeCallBack() {
         projectorService.projectorHandler(2);
     }

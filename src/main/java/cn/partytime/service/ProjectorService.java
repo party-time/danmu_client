@@ -240,6 +240,23 @@ public class ProjectorService {
         }
     }
 
+
+    public void projectNewStartCommand(String command,int type){
+        if("584a1a9a0cf2fdb8406efdce".equals(addressId)){
+            //0关闭，1:开启
+            executePJLINKCommand(type==0?1:0);
+
+            if(type==0){
+                //windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
+                //注释掉：发送投影开启的命令，只有socket发送通知
+                try {
+                    newPjLinkStartOperate();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     /**
      *
      * @param command
