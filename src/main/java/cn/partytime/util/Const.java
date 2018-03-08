@@ -25,6 +25,11 @@ public class Const {
     public static Integer RESOURCE_H5_BACKGROUND = 4;
 
     /**
+     * 常驻表情
+     */
+    public static Integer RESOURCE_EXPRESSIONS_CONSTANT = 6;
+
+    /**
      * H5图片后缀名
      */
     public static String H5_HEAD_NAME = "hb_";

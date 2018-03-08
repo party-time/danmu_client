@@ -53,11 +53,9 @@ public class RsyncFileService {
         logLogicService.logUploadHandler("配置参数下载内容:"+paramJsonStr);
         String jsonStr = HttpUtils.httpRequestStr(configUtils.getInitUrl()+"?addressId="+properties.getAddressId(), "GET", null);
         logLogicService.logUploadHandler("配置表生下载内容:"+jsonStr);
-
         DownloadFileConfig downloadFileConfig = JSON.parseObject(jsonStr,DownloadFileConfig.class);
         if (null != downloadFileConfig) {
             List<PartyResourceResult> partyResourceResultList = downloadFileConfig.getData();
-
             //获取定时弹幕
             List<TimerDanmuPathModel>  timerDanmuPathModels  = findTimerDanmuFile();
             //获取广告弹幕
@@ -74,7 +72,6 @@ public class RsyncFileService {
                 }
             }
 
-
             if (null != partyResourceResultList) {
                 Map<String, Object> resourceFileMap = new HashMap<String, Object>();
                 List<PartyResourceModel> partyResourceModelList = new ArrayList<>();
@@ -90,7 +87,7 @@ public class RsyncFileService {
                             File file = new File(configUtils.rsyncSaveFilePath()+"/upload"+resourceFile.getFileUrl());
                             if( file.exists()){
                                 resourceFile.setLocalFilePath(configUtils.saveFilePath+"/upload"+resourceFile.getFileUrl());
-                                if (Const.RESOURCE_EXPRESSIONS == resourceFile.getFileType()) {
+                                if (Const.RESOURCE_EXPRESSIONS == resourceFile.getFileType() || Const.RESOURCE_EXPRESSIONS_CONSTANT == resourceFile.getFileType()) {
                                     bigExpressionList.add(resourceFile);
                                 } else if (Const.RESOURCE_SPECIAL_IMAGES == resourceFile.getFileType()) {
                                     specialImageList.add(resourceFile);
@@ -129,7 +126,7 @@ public class RsyncFileService {
                         File file = new File(configUtils.rsyncSaveFilePath()+"/upload"+resourceFile.getFileUrl());
                         if( file.exists()){
                             resourceFile.setLocalFilePath(configUtils.saveFilePath+"/upload"+resourceFile.getFileUrl());
-                            if (Const.RESOURCE_EXPRESSIONS == resourceFile.getFileType()) {
+                            if (Const.RESOURCE_EXPRESSIONS == resourceFile.getFileType() || Const.RESOURCE_EXPRESSIONS_CONSTANT == resourceFile.getFileType()) {
                                 adExpressionList.add(resourceFile);
                             } else if (Const.RESOURCE_SPECIAL_IMAGES == resourceFile.getFileType()) {
                                 specialImageList.add(resourceFile);
@@ -178,7 +175,7 @@ public class RsyncFileService {
         }
         File file = new File(configUtils.findFlashProgramPath() + File.separator + "config");
         JSONObject jsonObject = jsonObject = new JSONObject(true);
-
+        jsonObject.put("result",200);
         //放入服务器端自定义配置表
         if( null != paramMap){
             Iterator<String> iter = paramMap.keySet().iterator();

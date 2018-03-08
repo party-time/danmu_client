@@ -5,12 +5,12 @@ import com.sun.jna.platform.win32.WinDef;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 
 /**
  * Created by administrator on 2016/12/9.
