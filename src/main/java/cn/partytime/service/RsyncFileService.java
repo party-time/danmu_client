@@ -119,22 +119,24 @@ public class RsyncFileService {
                     }
                 }
                 resourceFileMap.put("partyResourceModelList", partyResourceModelList);
-                List<ResourceFile> resourceFiles = adTimerFileResource.getResourceFileList();
+
                 List<ResourceFile> adExpressionList = new ArrayList<>();
                 List<ResourceFile> specialImageList = new ArrayList<>();
                 List<ResourceFile> specialVideoList = new ArrayList<>();
-
-                if(ListUtils.checkListIsNotNull(resourceFiles)){
-                    for (ResourceFile resourceFile : resourceFiles) {
-                        File file = new File(configUtils.rsyncSaveFilePath()+"/upload"+resourceFile.getFileUrl());
-                        if( file.exists()){
-                            resourceFile.setLocalFilePath(configUtils.saveFilePath+"/upload"+resourceFile.getFileUrl());
-                            if (Const.RESOURCE_EXPRESSIONS == resourceFile.getFileType() || Const.RESOURCE_EXPRESSIONS_CONSTANT == resourceFile.getFileType()) {
-                                adExpressionList.add(resourceFile);
-                            } else if (Const.RESOURCE_SPECIAL_IMAGES == resourceFile.getFileType()) {
-                                specialImageList.add(resourceFile);
-                            } else if (Const.RESOURCE_SPECIAL_VIDEOS == resourceFile.getFileType()) {
-                                specialVideoList.add(resourceFile);
+                if(adTimerFileResource!=null){
+                    List<ResourceFile> resourceFiles = adTimerFileResource.getResourceFileList();
+                    if(ListUtils.checkListIsNotNull(resourceFiles)){
+                        for (ResourceFile resourceFile : resourceFiles) {
+                            File file = new File(configUtils.rsyncSaveFilePath()+"/upload"+resourceFile.getFileUrl());
+                            if( file.exists()){
+                                resourceFile.setLocalFilePath(configUtils.saveFilePath+"/upload"+resourceFile.getFileUrl());
+                                if (Const.RESOURCE_EXPRESSIONS == resourceFile.getFileType() || Const.RESOURCE_EXPRESSIONS_CONSTANT == resourceFile.getFileType()) {
+                                    adExpressionList.add(resourceFile);
+                                } else if (Const.RESOURCE_SPECIAL_IMAGES == resourceFile.getFileType()) {
+                                    specialImageList.add(resourceFile);
+                                } else if (Const.RESOURCE_SPECIAL_VIDEOS == resourceFile.getFileType()) {
+                                    specialVideoList.add(resourceFile);
+                                }
                             }
                         }
                     }
