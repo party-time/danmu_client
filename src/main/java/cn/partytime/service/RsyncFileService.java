@@ -60,17 +60,20 @@ public class RsyncFileService {
             List<TimerDanmuPathModel>  timerDanmuPathModels  = findTimerDanmuFile();
             //获取广告弹幕
             AdTimerFileResource adTimerFileResource = findAdTimerDanmu();
-            List<TimerDanmuFileModel> timerDanmuFileModelList =adTimerFileResource.getTimerDanmuFileLogicModels();
             Map<String,String> adTimerMap = new HashMap<String,String>();
-            if(ListUtils.checkListIsNotNull(timerDanmuFileModelList)){
-                for(TimerDanmuFileModel timerDanmuFileModel:timerDanmuFileModelList){
-                    String realFilePath = configUtils.realSaveAdtimerFilePath() +timerDanmuFileModel.getPath();
-                    File file = new File(realFilePath);
-                    if(file.exists()){
-                        adTimerMap.put(timerDanmuFileModel.getPartyId(),configUtils.saveFilePath+"/adTimerDanmu"+timerDanmuFileModel.getPath());
+            if(adTimerFileResource!=null){
+                List<TimerDanmuFileModel> timerDanmuFileModelList =adTimerFileResource.getTimerDanmuFileLogicModels();
+                if(ListUtils.checkListIsNotNull(timerDanmuFileModelList)){
+                    for(TimerDanmuFileModel timerDanmuFileModel:timerDanmuFileModelList){
+                        String realFilePath = configUtils.realSaveAdtimerFilePath() +timerDanmuFileModel.getPath();
+                        File file = new File(realFilePath);
+                        if(file.exists()){
+                            adTimerMap.put(timerDanmuFileModel.getPartyId(),configUtils.saveFilePath+"/adTimerDanmu"+timerDanmuFileModel.getPath());
+                        }
                     }
                 }
             }
+
 
             if (null != partyResourceResultList) {
                 Map<String, Object> resourceFileMap = new HashMap<String, Object>();
