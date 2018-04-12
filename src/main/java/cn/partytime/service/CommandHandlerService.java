@@ -9,6 +9,7 @@ import cn.partytime.model.client.ClientModel;
 import cn.partytime.model.client.PartyInfo;
 import cn.partytime.util.CommandConst;
 import cn.partytime.util.CommonUtil;
+import cn.partytime.util.DateUtils;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.Channel;
@@ -86,7 +87,7 @@ public class CommandHandlerService {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        tmsCommandService.movieHandler(type);
+                        tmsCommandService.movieHandler(type, DateUtils.getCurrentDate());
                     }
                 }).start();
             }else{

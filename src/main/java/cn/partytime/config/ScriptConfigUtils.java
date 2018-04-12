@@ -29,6 +29,7 @@ public class ScriptConfigUtils {
     public final String UPDATECHECK_VBS="updateCheck";
     public final String PJLINKSTART_VBS="PJLinkStart";
     public final String PJLINKSTOP_VBS="PJLinkStop";
+    public final String OPENBROWNS_VBS="openBrowns";
 
     public final String JAVASTART_BAT="javaStart";
     public final String KILLFLASH_BAT="killFlash";

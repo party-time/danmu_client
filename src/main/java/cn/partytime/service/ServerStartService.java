@@ -1,5 +1,6 @@
 package cn.partytime.service;
 
+import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.init.MainService;
 import cn.partytime.model.Properties;
 import cn.partytime.netty.client.LocalServerWebSocketClient;
@@ -64,6 +65,21 @@ public class ServerStartService {
     @Autowired
     private TmsTransClient tmsTransClient;
 
+
+    //场地
+    @Value("${autoMovieStart:0}")
+    private Integer autoMovieStart;
+
+    @Autowired
+    private MovieService movieService;
+
+    @Autowired
+    private ScriptConfigUtils scriptConfigUtils;
+
+    @Autowired
+    private WindowShellService windowShellService;
+
+
     public void projectInit(){
         //启动netty服务
         startNettyServer();
@@ -83,6 +99,14 @@ public class ServerStartService {
 
         //加载本地资源
         initResource();
+
+
+
+        if(autoMovieStart==1){
+            movieService.updateMovieCache();;
+            windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.OPENBROWNS_VBS));
+        }
+
     }
 
     private void setartTmsTransClientServer(){

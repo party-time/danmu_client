@@ -7,6 +7,7 @@ import cn.partytime.model.server.ServerInfo;
 import io.netty.channel.Channel;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,6 +22,8 @@ public class ClientCache {
     public  String clientStatus = "";
 
     public PartyInfo partyInfo;
+
+
 
     private ServerInfo serverInfo;
 
@@ -94,4 +97,5 @@ public class ClientCache {
     public void setDeviceInfoConcurrentHashMap(ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap) {
         this.deviceInfoConcurrentHashMap = deviceInfoConcurrentHashMap;
     }
+
 }

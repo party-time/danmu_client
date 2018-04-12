@@ -226,4 +226,16 @@ public class ConfigUtils {
         return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+"findDeviceInfo"+CommonConst.SEPARATOR+properties.getAddressId();
     }
 
+    public String findAddressInfo(){
+        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+"findAddressInfo"+CommonConst.SEPARATOR+properties.getAddressId();
+    }
+
+    public String updateAdTime(Integer time){
+        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+"setAdTime"+CommonConst.SEPARATOR+properties.getAddressId()+CommonConst.SEPARATOR+time;
+    }
+
+    public String findCurrentMovie(String addressId){
+        return getDomain()+baseJavaClientUrl+CommonConst.SEPARATOR+"findCurrentMovie"+CommonConst.SEPARATOR+properties.getAddressId();
+    }
+
 }

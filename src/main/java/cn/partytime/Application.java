@@ -18,7 +18,7 @@ public class Application {
     public static void main(String[] args) {
 
         SpringApplication app = new SpringApplication(Application.class);
-        app.setWebEnvironment(false);
+        //app.setWebEnvironment(false);
         app.run(args);
     }
 }

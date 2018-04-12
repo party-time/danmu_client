@@ -5,6 +5,7 @@ import cn.partytime.model.Properties;
 import cn.partytime.model.client.ClientModel;
 import cn.partytime.service.LogLogicService;
 import cn.partytime.service.TmsCommandService;
+import cn.partytime.util.DateUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -61,8 +62,9 @@ public class TmsServerHandler extends ChannelInboundHandlerAdapter {
                 }
             }
         }else{
+            command = replaceBlank(command);
             tmsCommandService.projectorHandler(command);
-            tmsCommandService.movieHandler(command);
+            tmsCommandService.movieHandler(command, DateUtils.getCurrentDate());
             tmsCommandService.adHandler(command);
         }
 

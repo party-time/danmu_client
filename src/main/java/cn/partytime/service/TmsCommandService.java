@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -88,23 +89,24 @@ public class TmsCommandService {
      * 电影相关的指令处理
      * @param command
      */
-    public void movieHandler(String command){
+    public String  movieHandler(String command,Date currentDate){
         String url="";
+        String resultStr = "";
         switch (command){
             case CommandConst.MOVIE_START:
                 logLogicService.logUploadHandler("电影开始");
                 url = configUtils.getPartyRequestUrl(CommandConst.MOVIE_START,command);
                 if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId()) && clientCache.getPartyInfo().getStatus()!=3){
-                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ DateUtils.getCurrentDate().getTime();
-                    HttpUtils.repeatRequest(url,"GET",null);
+                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ currentDate.getTime();
+                    resultStr =HttpUtils.repeatRequest(url,"GET",null);
                 }
-                return;
+                return resultStr;
             case CommandConst.MOVIE_CLOSE:
                 logLogicService.logUploadHandler("电影关闭");
                 url = configUtils.getPartyRequestUrl(CommandConst.MOVIE_CLOSE,command);
                 if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
-                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ DateUtils.getCurrentDate().getTime();
-                    String resultStr = HttpUtils.repeatRequest(url,"GET",null);
+                    url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ currentDate.getTime();
+                    resultStr = HttpUtils.repeatRequest(url,"GET",null);
                     if(!StringUtils.isEmpty(resultStr)){
                         RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
                         if(restResultModel.getResult()==200){
@@ -120,14 +122,14 @@ public class TmsCommandService {
                         }
                     }
                 }
-                return;
+                return resultStr;
             default:
                 if(command.startsWith(CommandConst.DANMU_START_PREFIX)){
-                    url = configUtils.getPartyRequestUrl(CommandConst.DANMU_START_PREFIX,command)+CommonConst.SEPARATOR+ DateUtils.getCurrentDate().getTime();
-                    HttpUtils.repeatRequest(url,"GET",null);
+                    url = configUtils.getPartyRequestUrl(CommandConst.DANMU_START_PREFIX,command)+CommonConst.SEPARATOR+ currentDate.getTime();
+                    resultStr = HttpUtils.repeatRequest(url,"GET",null);
                     logLogicService.logUploadHandler("电影开始");
                 }
-                return;
+                return resultStr;
         }
     }
 

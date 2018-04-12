@@ -45,6 +45,11 @@ public class DateUtils {
         return hour;
     }
 
+    public static long subSecond(Date minDate,Date maxDate){
+        long between=(maxDate.getTime()-minDate.getTime())/1000;
+        return between;
+    }
+
     /**
      * 把毫秒转化成日期
      * @param dateFormat(日期格式，例如：MM/ dd/yyyy HH:mm:ss)

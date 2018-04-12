@@ -79,7 +79,7 @@ public class RsyncFileService {
                 Map<String, Object> resourceFileMap = new HashMap<String, Object>();
                 List<PartyResourceModel> partyResourceModelList = new ArrayList<>();
                 for (PartyResourceResult partyResourceResult : partyResourceResultList) {
-                    String partyId = partyResourceResult.getParty().getId();
+                    String partyId = partyResourceResult.getParty().getPartyId();
                     List<ResourceFile> resourceFileList = partyResourceResult.getResourceFileList();
                     if (null != resourceFileList) {
                         List<ResourceFile> bigExpressionList = new ArrayList<>();
@@ -109,7 +109,7 @@ public class RsyncFileService {
 
                         if( null != timerDanmuPathModels) {
                             for (TimerDanmuPathModel timerDanmuPathModel : timerDanmuPathModels) {
-                                if (partyResourceModel.getParty().getId().equals(timerDanmuPathModel.getPartyId())) {
+                                if (partyResourceModel.getParty().getPartyId().equals(timerDanmuPathModel.getPartyId())) {
                                     partyResourceModel.setPathList(timerDanmuPathModel.getPathList());
                                 }
 
@@ -198,7 +198,7 @@ public class RsyncFileService {
             for(PartyResourceModel partyResourceModel : partyResourceModelList){
                 PartyJson partyJson = new PartyJson();
                 partyJson.setName(partyResourceModel.getParty().getName());
-                partyJson.setPartyId(partyResourceModel.getParty().getId());
+                partyJson.setPartyId(partyResourceModel.getParty().getPartyId());
                 partyJson.setMovieAlias(partyResourceModel.getParty().getMovieAlias());
                 List<ResourceFile> expressionList = partyResourceModel.getBigExpressionList();
 

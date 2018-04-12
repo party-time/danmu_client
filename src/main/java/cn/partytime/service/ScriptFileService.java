@@ -119,6 +119,7 @@ public class ScriptFileService {
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.UPDATECHECK_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.PJLINKSTART_VBS);
         createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.PJLINKSTOP_VBS);
+        createShellFile(map,scriptConfigUtils.VBS_TYPE,scriptConfigUtils.OPENBROWNS_VBS);
 
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.JAVASTART_BAT);
         createShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.KILLFLASH_BAT);
@@ -194,6 +195,7 @@ public class ScriptFileService {
         File file = new File(filePath);
 
         try {
+            System.out.println(file.getAbsolutePath());
             fos = new FileOutputStream(file);
             fos.write(content.getBytes());
         } catch (FileNotFoundException e) {

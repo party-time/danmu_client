@@ -13,6 +13,8 @@ public class Party  {
 
     private String id;
 
+    private String partyId;
+
     private String name;
 
     private Integer type;
@@ -68,12 +70,21 @@ public class Party  {
         return null;
     }
 
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPartyId() {
+        return id;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 
     public String getName() {
