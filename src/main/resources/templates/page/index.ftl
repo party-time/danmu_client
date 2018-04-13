@@ -13,6 +13,7 @@
 				}
 				if (!isNumber(minute)){
 					alert('分钟必须为数字');
+                    $("#minute").val('0');
 					return ;
 				}
 			});
@@ -25,11 +26,13 @@
 				}
 				if(second>59 || second<0){
 					alert('秒请设置在0-59');
+                    $("#second").val('0');
 					return;
 				}
 				
 				if (!isNumber(second)){
 					$("#second").focus();
+                    $("#second").val('0');
 					return ;
 				}
 			});
@@ -40,10 +43,12 @@
 				var second = $("#second").val();
 				if (!isNumber(minute)){
 					alert('分钟必须为数字');
+                    $("#second").val('0');
 					return ;
 				}
 				if (!isNumber(second)){
 					alert('秒必须为数字');
+                    $("#second").val('0');
 					return ;
 				}
                 if(second>59 || second<0){
@@ -196,9 +201,9 @@
 				<#else>
 					<option value="${party.movieAlias}">${party.name}</option>
 				</#if>
-				<input type="button" value="电影开始" class="movieStart" name="movieStart" id="movieStart"/>
 			</#list>
 			</select>
+             <input type="button" value="电影开始" class="movieStart" name="movieStart" id="movieStart"/>
 		<#else>
 			<div class="noMovie">
 				你好,目前没有电影!!!!
