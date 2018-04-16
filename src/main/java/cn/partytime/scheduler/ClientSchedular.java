@@ -10,6 +10,7 @@ import cn.partytime.model.*;
 import cn.partytime.model.common.RestResultModel;
 import cn.partytime.service.*;
 import cn.partytime.util.DateUtils;
+import cn.partytime.util.FileUtils;
 import cn.partytime.util.HttpUtils;
 import cn.partytime.util.ListUtils;
 import com.alibaba.fastjson.JSON;
@@ -21,8 +22,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/3/3 0003.
@@ -59,6 +64,8 @@ public class ClientSchedular {
     private String projectorStatus;
 
 
+    @Value("${basePath}")
+    private String basePath;
 
     @Value("${machineNum}")
     private String machineNum;
@@ -140,6 +147,40 @@ public class ClientSchedular {
         }else{
             logLogicService.logUploadHandler("projectorStatus状态是:"+projectorStatus);
         }
+    }
+
+
+    @Scheduled(cron = "0 0 2 * * ?")
+    private void deleteJavaLog() throws ParseException {
+        String logPath = basePath + File.separator + "log"+File.separator+"danmu_client";
+        File file = new File(logPath);
+        File flist[] = file.listFiles();
+        if (flist == null || flist.length == 0) {
+            return;
+        }
+
+        Map<String,String> map = new HashMap<>();
+        String currentDateStr = DateUtils.dateToString(new Date(),"yyyy-MM-dd");
+        System.out.println(currentDateStr);
+        map.put(currentDateStr,currentDateStr);
+
+        Date beforeDate = DateUtils.DateMinusSomeDay(new Date(),1);
+        String beforeDateStr = DateUtils.dateToString(beforeDate,"yyyy-MM-dd");
+        System.out.println(beforeDateStr);
+        map.put(beforeDateStr,beforeDateStr);
+
+        for (File f : flist) {
+            if (f.isDirectory()) {
+                //这里将列出所有的文件夹
+                System.out.println("Dir==>" + f.getName());
+                String name = f.getName();
+                if(!map.containsKey(name)){
+                    //System.out.println("Dir==>" + f.getName());
+                    FileUtils.deleteDir(f);
+                }
+            }
+        }
+
     }
 
 }

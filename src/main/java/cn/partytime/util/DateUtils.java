@@ -1,5 +1,8 @@
 package cn.partytime.util;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -51,6 +54,24 @@ public class DateUtils {
     }
 
     /**
+     * 在当前日期基础上减去某些天
+     * @param beginDate
+     * @param day
+     * @return
+     * @throws ParseException
+     */
+    public static Date DateMinusSomeDay(Date beginDate, int day) throws ParseException {
+        SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar date = Calendar.getInstance();
+        date.setTime(beginDate);
+        date.set(Calendar.DATE, date.get(Calendar.DATE) - 1);
+        Date endDate = dft.parse(dft.format(date.getTime()));
+        return endDate;
+    }
+
+
+
+    /**
      * 把毫秒转化成日期
      * @param dateFormat(日期格式，例如：MM/ dd/yyyy HH:mm:ss)
      * @param millSec(毫秒数)
@@ -89,4 +110,6 @@ public class DateUtils {
         }
         return date;
     }
+
+
 }

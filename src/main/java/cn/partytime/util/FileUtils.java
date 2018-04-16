@@ -80,4 +80,14 @@ public class FileUtils {
             }
         }
     }
+
+    public static void deleteDir(File dir){
+        if(dir.isDirectory()){
+            File[] files = dir.listFiles();
+            for(int i=0; i<files.length; i++) {
+                deleteDir(files[i]);
+            }
+        }
+        dir.delete();
+    }
 }
