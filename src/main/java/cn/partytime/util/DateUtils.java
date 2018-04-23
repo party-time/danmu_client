@@ -111,5 +111,12 @@ public class DateUtils {
         return date;
     }
 
+    public static Date transferLongToDate(Long millis) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(millis);
+        Date date = cal.getTime();
+        return date;
+    }
 
 }

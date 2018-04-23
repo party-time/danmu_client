@@ -4,10 +4,7 @@ import cn.partytime.config.ClientCache;
 import cn.partytime.config.ClientPartyCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.json.PartyResourceResult;
-import cn.partytime.model.ConfigModel;
-import cn.partytime.model.DanmuAddressModel;
-import cn.partytime.model.DownloadFileConfig;
-import cn.partytime.model.Party;
+import cn.partytime.model.*;
 import cn.partytime.model.common.RestResultModel;
 import cn.partytime.model.result.Result;
 import cn.partytime.model.result.ResultEnum;
@@ -49,12 +46,21 @@ public class IndexController {
     @Autowired
     private ClientPartyCache clientPartyCache;
 
+    //场地
+    @Value("${addressId}")
+    private String addressId;
+
+
     @RequestMapping("/")
     public String index(Map<String,Object> model,HttpServletResponse response,@CookieValue(value = "command",required=false) String command){
 
         Integer time = clientPartyCache.getAdTime();
 
+        Long danmuStartDate = clientPartyCache.getDanmuStartDate();
+
         String content = FileUtils.txt2String(configUtils.findFlashProgramPath() + File.separator + "config");
+
+        boolean isNetException = false;
         List<Party> partyList = new ArrayList<Party>();
         if(!StringUtils.isEmpty(content)) {
             ConfigModel configModel = JSON.parseObject(content, ConfigModel.class);
@@ -68,6 +74,8 @@ public class IndexController {
                 }
                 model.put("partyList", tempPartyList);
             }
+        }else{
+            isNetException = true;
         }
 
 
@@ -90,9 +98,33 @@ public class IndexController {
                         }
                     }
                 }
+            }else{
+                time = 0;
+                isNetException = true;
             }
         }
 
+        if(danmuStartDate==null){
+            //从服务器获取弹幕开始时间
+            System.out.println("从缓存中取出的电影开始时间为0");
+            String url = configUtils.findCurrentMovie(addressId);
+            String resultStr  = HttpUtils.httpRequestStr(url,"GET",null);
+            if(!StringUtils.isEmpty(resultStr)){
+                RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
+                if(restResultModel.getResult()==200){
+                    String movieScheduleModelStr = String.valueOf(restResultModel.getData());
+                    MovieScheduleModel movieScheduleModel = JSON.parseObject(movieScheduleModelStr,MovieScheduleModel.class);
+                    if(movieScheduleModel!=null){
+                        if(movieScheduleModel.getClientStartTime()!=null){
+                            clientPartyCache.setDanmuStartDate(movieScheduleModel.getClientStartTime());
+                        }
+                    }
+                }
+            }else{
+                isNetException = true;
+            }
+        }
+        model.put("isNetException",isNetException);
         model.put("command", command==null?"":command);
         model.put("minute", String.valueOf(time / 60));
         model.put("second", String.valueOf(time - (time / 60)*60));
@@ -149,6 +181,8 @@ public class IndexController {
 
         Date date  = DateUtils.getCurrentDate();
         String result = tmsCommandService.movieHandler(command,date);
+
+        log.info("弹幕开始时间：{}",DateUtils.dateToString(date,"yyyy-MM-dd hh:mm:ss"));
         if(StringUtils.isEmpty(result)){
             return new Result(503,null);
         }
@@ -158,6 +192,26 @@ public class IndexController {
                 clientPartyCache.setDanmuStartDate(date.getTime());
                 clientPartyCache.setAdTime(time);
                 clientPartyCache.setBooleanMovieStart(false);
+            }else if(restResultModel.getResult()==201){
+                ;
+                Date danmuStart =  DateUtils.transferLongToDate(clientPartyCache.getDanmuStartDate());
+                long seconds = DateUtils.subSecond(danmuStart,new Date());
+                long subSecond = 600 - seconds;
+
+                if(subSecond > 0){
+                    StringBuffer messsage = new StringBuffer("请");
+                    long minute = subSecond / 60;
+                    long second = 0;
+                    if(minute>0){
+                        messsage.append(minute+"分");
+                        second =subSecond - minute * 60;
+                        messsage.append(second+"秒");
+                    }else{
+                        messsage.append(subSecond+"秒");
+                    }
+                    messsage.append("后重新尝试!");
+                    return new Result(201,messsage.toString(),null);
+                }
             }else{
                 return new Result(504,null);
             }

@@ -5,11 +5,11 @@ package cn.partytime.model.result;
  */
 public enum ResultEnum {
 
-    OK("OK", 200),
+    OK("发送成功", 200),
     ERROR_TIME_IS_NOT_NULL("请设置广告时间", 501),
     AD_TIME_SET_ERROR_NULL("请重新设置广告时间", 502),
-    MOVIE_START_ERROR_NULL("请重新点击开始", 503),
-    MOVIE_REPEAT_START_ERROR_NULL("请重新点击开始", 504);
+    MOVIE_START_ERROR_NULL("网络异常，请重试", 503),
+    MOVIE_REPEAT_START_ERROR_NULL("网络异常，请重试", 504);
 
     private String message;
     private int code;

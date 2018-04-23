@@ -88,9 +88,10 @@ public class ClientSchedular {
         clientUpdateService.createUpdatePlanHandler();
     }
 
-    @Scheduled(cron = "0/1 * * * * ?")
+    //@Scheduled(cron = "0/1 * * * * ?")
+    @Scheduled(fixedRate  = 500)
     public void autoMovieStart() {
-        synchronized (ClientSchedular.class){
+        //synchronized (ClientSchedular.class){
             if(!"1".equals(machineNum) || autoMovieStart!=1){
                 log.info("不是1号机器，不执行此定时任务");
                 return;
@@ -107,19 +108,30 @@ public class ClientSchedular {
                 return;
             }
             Date currentDate = DateUtils.getCurrentDate();
-            long subTime = (currentDate.getTime() - danmuStartDate)/1000;
-            if (subTime > time && subTime - time < 10 && !clientPartyCache.isBooleanMovieStart()) {
-                String resultStr =  tmsCommandService.movieHandler("movie-start", DateUtils.getCurrentDate());
+            long subTime = (currentDate.getTime() - danmuStartDate);
+            if (subTime > time * 1000 && subTime - time*1000 < 10 * 1000 && !clientPartyCache.isBooleanMovieStart()) {
+                log.info("发送电影开始");
+
+                String resultStr =  tmsCommandService.movieHandler("movie-start", currentDate);
                 if(!StringUtils.isEmpty(resultStr)){
-                    RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
-                    if(restResultModel.getResult()==200){
-                        clientPartyCache.setBooleanMovieStart(true);
-                    }
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
+                            if(restResultModel.getResult()==200){
+
+                                log.info("电影开始时间：{}",DateUtils.dateToString(currentDate,"yyyy-MM-dd hh:mm:ss"));
+                                clientPartyCache.setBooleanMovieStart(true);
+                            }
+                        }
+                    }).start();
+
                 }
             }else{
                 clientPartyCache.setBooleanMovieStart(false);
             }
-        }
+       // }
     }
 
     @Scheduled(cron = "0 */5 * * * ?")
