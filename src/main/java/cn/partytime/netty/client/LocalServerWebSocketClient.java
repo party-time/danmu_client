@@ -59,7 +59,7 @@ public final class LocalServerWebSocketClient {
     private LocalServerWebSocketClientHandler localServerWebSocketClientHandler;
 
     public  void init() throws Exception {
-
+        Thread.sleep(1000);
         ChannelFuture channelFuture = null;
         DeviceInfo deviceInfo = deviceService.findServiceDevice();
         String url = "ws://"+deviceInfo.getIp()+":"+deviceInfo.getPort()+"/ws";

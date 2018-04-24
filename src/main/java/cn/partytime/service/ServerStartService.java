@@ -87,9 +87,16 @@ public class ServerStartService {
 
         //启动client1连接远程server
         logLogicService.logUploadHandler("本机编号:"+properties.getMachineNum());
-        if("1".equals(properties.getMachineNum())) {
+        /*if("1".equals(properties.getMachineNum())) {
             startClientConnectRemoteServer();
         }else{
+            startClientConnectLocalServer();
+        }*/
+
+        //远程连接服务器
+        startClientConnectRemoteServer();
+
+        if(!"1".equals(properties.getMachineNum())){
             startClientConnectLocalServer();
         }
 

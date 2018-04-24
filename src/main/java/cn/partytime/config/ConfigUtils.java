@@ -203,7 +203,7 @@ public class ConfigUtils {
 
     public String getWebSocketUrl(String ip,int port){
         //return getRsyncIp()+webSocketPath+"?code="+properties.getRegistCode()+"&clientType=3";
-        return "http://"+ip+":"+port+"?code="+properties.getRegistCode()+"&clientType=2";
+        return "http://"+ip+":"+port+"?code="+properties.getRegistCode()+"&clientType=2&machineNo="+properties.getMachineNum();
     }
 
     public String getDistributeServerUrl(){
