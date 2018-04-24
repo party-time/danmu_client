@@ -76,6 +76,9 @@ public class ClientSchedular {
     @Autowired
     private TmsCommandService tmsCommandService;
 
+    @Autowired
+    private CommandExecuteService commandExecuteService;
+
     @Scheduled(cron = "0 5 3 * * ?")
     private void cronRsyncFile(){
         //flash资源下载
@@ -88,7 +91,18 @@ public class ClientSchedular {
         clientUpdateService.createUpdatePlanHandler();
     }
 
-    //@Scheduled(cron = "0/1 * * * * ?")
+    @Scheduled(cron = "0 30 4 * * ?")
+    private void executeUpdateJava(){
+        commandExecuteService.executeJavaUpdateCallBack();
+    }
+
+    @Scheduled(cron = "0 0 5 * * ?")
+    private void executeUpdateFlash(){
+        commandExecuteService.executeFlashUpdateCallBack();
+    }
+
+
+
     @Scheduled(fixedRate  = 500)
     public void autoMovieStart() {
         //synchronized (ClientSchedular.class){
