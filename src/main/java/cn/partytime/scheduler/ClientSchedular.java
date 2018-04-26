@@ -158,9 +158,9 @@ public class ClientSchedular {
     private void projectorStart(){
         logLogicService.logUploadHandler("8点开始执行开启投影的定时任务"+" projectorStatus状态是:"+projectorStatus);
         //if(!"584a1a9a0cf2fdb8406efdce".equals(addressId) && "1".equals(projectorStatus)){
-        if("1".equals(projectorStatus)){
+        if("1".equals(projectorStatus) && !"584a1a9a0cf2fdb8406efdce".equals(addressId)){
             try {
-                //除了鑫源厅意外，其他的厅都走这个定时任务
+                //除了鑫源厅以外，其他的厅都走这个定时任务
                 //发送socket链接
                 projectorService.executePJLINKCommand(1);
                 //(杭州厅)启动本地启动脚本
