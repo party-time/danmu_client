@@ -67,8 +67,8 @@ public class ServerStartService {
 
 
     //场地
-    @Value("${autoMovieStart:0}")
-    private Integer autoMovieStart;
+    @Value("${autoOpenPage:0}")
+    private Integer autoOpenPage;
 
     @Autowired
     private MovieService movieService;
@@ -107,12 +107,10 @@ public class ServerStartService {
         //加载本地资源
         initResource();
 
-
-
-        //if(autoMovieStart==1){
-        movieService.updateMovieCache();;
-        windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.OPENBROWNS_VBS));
-        //}
+        if(autoOpenPage==1){
+            movieService.updateMovieCache();;
+            windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.OPENBROWNS_VBS));
+        }
 
     }
 
