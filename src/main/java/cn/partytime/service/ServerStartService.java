@@ -109,10 +109,10 @@ public class ServerStartService {
 
 
 
-        if(autoMovieStart==1){
-            movieService.updateMovieCache();;
-            windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.OPENBROWNS_VBS));
-        }
+        //if(autoMovieStart==1){
+        movieService.updateMovieCache();;
+        windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.OPENBROWNS_VBS));
+        //}
 
     }
 
