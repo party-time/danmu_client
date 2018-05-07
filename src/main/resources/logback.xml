@@ -22,7 +22,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${LOG_PATH}/${APP_NAME}/%d{yyyy-MM-dd}/${INFO_TYPE}/${APP_NAME}-${INFO_TYPE}-%d{yyyy-MM-dd_HH}-%i.log</FileNamePattern>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>50MB</MaxFileSize>
+                <MaxFileSize>5MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -41,7 +41,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${LOG_PATH}/${APP_NAME}/%d{yyyy-MM-dd}/${ERROR_TYPE}/${APP_NAME}-${ERROR_TYPE}-%d{yyyy-MM-dd_HH}-%i.log</FileNamePattern>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>50MB</MaxFileSize>
+                <MaxFileSize>5MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">

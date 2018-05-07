@@ -45,8 +45,8 @@ public class TmsServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         String command = (String)msg;
-        logLogicService.logUploadHandler("接收的命令:"+command);
         if("3".equals(properties.getMachineNum())) {
+            logLogicService.logUploadHandler("接收3号机器的命令:"+command);
             command = replaceBlank(command)+"-aa";
             logLogicService.logUploadHandler("转发接收的命令:"+command);
             ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = clientCache.findChannelTmsClientModelConcurrentHashMap();
@@ -62,6 +62,7 @@ public class TmsServerHandler extends ChannelInboundHandlerAdapter {
                 }
             }
         }else{
+            logLogicService.logUploadHandler("接收Tms的命令:"+command);
             command = replaceBlank(command);
             tmsCommandService.projectorHandler(command);
             tmsCommandService.movieHandler(command, DateUtils.getCurrentDate());

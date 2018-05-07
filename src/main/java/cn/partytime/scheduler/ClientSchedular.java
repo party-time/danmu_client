@@ -81,23 +81,30 @@ public class ClientSchedular {
 
     @Scheduled(cron = "0 5 3 * * ?")
     private void cronRsyncFile(){
+
         //flash资源下载
+        logLogicService.logUploadHandler("下载资源");
         rsyncFileService.rsyncFile();
         //flash配置表生成
+        logLogicService.logUploadHandler("生成配置表");
         rsyncFileService.createFlashConfig();
         //客户端版本下载
+        logLogicService.logUploadHandler("下载客户端");
         rsyncFileService.downloadClient();
         //下载更新计划
+        logLogicService.logUploadHandler("生成更新计划");
         clientUpdateService.createUpdatePlanHandler();
     }
 
     @Scheduled(cron = "0 30 4 * * ?")
     private void executeUpdateJava(){
+        logLogicService.logUploadHandler("4:30执行java客户端更新");
         commandExecuteService.executeJavaUpdateCallBack();
     }
 
     @Scheduled(cron = "0 0 5 * * ?")
     private void executeUpdateFlash(){
+        logLogicService.logUploadHandler("5:00执行flash客户端更新");
         commandExecuteService.executeFlashUpdateCallBack();
     }
 
@@ -114,11 +121,11 @@ public class ClientSchedular {
             Integer time = clientPartyCache.getAdTime();
 
             if(time==null){
-                log.info("广告时间为0，定时任务终止");
+                logLogicService.logUploadHandler("广告时间为0，定时任务终止");
                 return;
             }
             if(danmuStartDate==null){
-                log.info("开始时间为0，定时任务终止");
+                logLogicService.logUploadHandler("开始时间为0，定时任务终止");
                 return;
             }
             Date currentDate = DateUtils.getCurrentDate();
@@ -134,8 +141,8 @@ public class ClientSchedular {
                         public void run() {
                             RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
                             if(restResultModel.getResult()==200){
-
-                                log.info("电影开始时间：{}",DateUtils.dateToString(currentDate,"yyyy-MM-dd hh:mm:ss"));
+                                logLogicService.logUploadHandler("电影开始时间："+DateUtils.dateToString(currentDate,"yyyy-MM-dd hh:mm:ss"));
+                                //log.info("电影开始时间：{}",DateUtils.dateToString(currentDate,"yyyy-MM-dd hh:mm:ss"));
                                 clientPartyCache.setBooleanMovieStart(true);
                             }
                         }
@@ -178,6 +185,7 @@ public class ClientSchedular {
 
     @Scheduled(cron = "0 0 2 * * ?")
     private void deleteJavaLog() throws ParseException {
+        logLogicService.logUploadHandler("删除本地日志，只保留当天和前一天的");
         String logPath = basePath + File.separator + "log"+File.separator+"danmu_client";
         File file = new File(logPath);
         File flist[] = file.listFiles();
