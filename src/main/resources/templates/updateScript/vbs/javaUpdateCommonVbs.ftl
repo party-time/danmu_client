@@ -48,7 +48,7 @@ Function doUpdateExecute(currentVersionObject)
         If code=4 Then
             Call SendSuccessRequestToServer("success",currentVersionObject)
             Call writeContentFile(javacurrentVersionPath,version)
-            Call doRetart()
+            'Call doRetart()
         Else
             Call showDailog("Java cannot be accessed after update")
             Call SendFailRequestToServer("error",currentVersionObject)
@@ -114,7 +114,7 @@ Function rollBack()
     Else
         Call showDailog("Java does not start after rollback")
     End If
-    Call doRetart()
+    'Call doRetart()
 End Function
 
 Function SendSuccessRequestToServer(param,versionObject)
