@@ -98,6 +98,7 @@ public class TmsCommandService {
                 url = configUtils.getPartyRequestUrl(CommandConst.MOVIE_START,command);
                 if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId()) && clientCache.getPartyInfo().getStatus()!=3){
                     url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ currentDate.getTime();
+                    logLogicService.logUploadHandler("向服务器请求的url:"+url);
                     resultStr =HttpUtils.repeatRequest(url,"GET",null);
                 }
                 return resultStr;
@@ -106,6 +107,7 @@ public class TmsCommandService {
                 url = configUtils.getPartyRequestUrl(CommandConst.MOVIE_CLOSE,command);
                 if(clientCache.getPartyInfo()!=null && !StringUtils.isEmpty(clientCache.getPartyInfo().getPartyId())){
                     url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ currentDate.getTime();
+                    logLogicService.logUploadHandler("向服务器请求的url:"+url);
                     resultStr = HttpUtils.repeatRequest(url,"GET",null);
                     if(!StringUtils.isEmpty(resultStr)){
                         RestResultModel restResultModel = JSON.parseObject(resultStr,RestResultModel.class);
@@ -125,9 +127,10 @@ public class TmsCommandService {
                 return resultStr;
             default:
                 if(command.startsWith(CommandConst.DANMU_START_PREFIX)){
-                    url = configUtils.getPartyRequestUrl(CommandConst.DANMU_START_PREFIX,command)+CommonConst.SEPARATOR+ currentDate.getTime();
-                    resultStr = HttpUtils.repeatRequest(url,"GET",null);
                     logLogicService.logUploadHandler("电影开始");
+                    url = configUtils.getPartyRequestUrl(CommandConst.DANMU_START_PREFIX,command)+CommonConst.SEPARATOR+ currentDate.getTime();
+                    logLogicService.logUploadHandler("向服务器请求的url:"+url);
+                    resultStr = HttpUtils.repeatRequest(url,"GET",null);
                 }
                 return resultStr;
         }

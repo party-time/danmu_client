@@ -42,16 +42,16 @@ public class HttpUtils {
         int count = 0;
         while (count<3){
             try {
-                String str = HttpUtils.httpRequestStr(requestUrl,requestMethod,null);;
+                String str = HttpUtils.httpRequestStr(requestUrl,requestMethod,null);
                 try {
                     if(!StringUtils.isEmpty(str)){
                         return str;
                     }
                 }catch (Exception e){
-                    System.out.print("获取数据异常");
+                    log.info("获取数据异常");
                 }
                 count++;
-                System.out.print("请求失败，等待"+count+"秒，再次发起请求");
+                log.info("请求失败，等待"+count+"秒，再次发起请求");
                 Thread.sleep(count*2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
