@@ -10,6 +10,7 @@ import cn.partytime.util.CommandConst;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -33,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Administrator on 2017/3/27 0027.
  */
-
+@Slf4j
 @Service
 public class ProjectorService {
 
@@ -118,8 +119,8 @@ public class ProjectorService {
                 }
 
             }
-            System.out.println("=====url:"+url);
-            System.out.println("=====param:"+param);
+            log.info("=====url:"+url);
+            log.info("=====param:"+param);
             executeProjector(url,param);
         }
     }

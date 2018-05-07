@@ -33,12 +33,14 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
 
+@Slf4j
 @Component
 public final class ServerWebSocketClient {
 
@@ -98,7 +100,7 @@ public final class ServerWebSocketClient {
             }
             group.shutdownGracefully();
 
-            System.out.println("远程服务器连接不上，重新接连");
+            log.info("远程服务器连接不上，重新接连");
             logLogicService.logUploadHandler("远程服务器连接不上，重新接连");
             init();
         }

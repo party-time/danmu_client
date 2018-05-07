@@ -56,6 +56,7 @@ import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -69,7 +70,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+@Slf4j
 @Component
 @Qualifier("serverWebSocketClientHandler")
 @ChannelHandler.Sharable
@@ -118,7 +119,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        System.out.println("WebSocket Client disconnected!");
+        log.info("WebSocket Client disconnected!");
     }
 
     @Override
@@ -126,7 +127,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
         Channel ch = ctx.channel();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (FullHttpResponse) msg);
-            System.out.println("WebSocket Client connected!");
+            log.info("WebSocket Client connected!");
             handshakeFuture.setSuccess();
             return;
         }
@@ -140,7 +141,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            System.out.println("WebSocket Client received message: " + textFrame.text());
+            log.info("WebSocket Client received message: " + textFrame.text());
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
 

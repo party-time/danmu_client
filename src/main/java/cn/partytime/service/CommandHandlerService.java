@@ -14,6 +14,7 @@ import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -26,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Administrator on 2017/4/14 0014.
  */
+
+@Slf4j
 @Service
 public class CommandHandlerService {
 
@@ -51,6 +54,7 @@ public class CommandHandlerService {
 
 
     public void commandHandler(ClientCommandConfig clientCommandConfig){
+        log.info("接收的命令信息:"+JSON.toJSONString(clientCommandConfig));
         logLogicService.logUploadHandler("接收的命令信息:"+JSON.toJSONString(clientCommandConfig));
         if("command".equals(clientCommandConfig.getType())){
             System.out.print(clientCommandConfig.getData());
@@ -112,6 +116,7 @@ public class CommandHandlerService {
     public void execute(String command,ClientCommandConfig clientCommandConfig){
         if(CommonUtil.hasDigit(command)){
             if(!chckerIsLocalCommand(command)){
+                log.info("本服务器不处理此命令:"+JSON.toJSONString(clientCommandConfig));
                 logLogicService.logUploadHandler("本服务器不处理此命令:"+JSON.toJSONString(clientCommandConfig));
                 //通知下个服务器
                 pubCommandToOtherServer(JSON.toJSONString(clientCommandConfig));

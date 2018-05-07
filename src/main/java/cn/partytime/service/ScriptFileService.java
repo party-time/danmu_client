@@ -195,7 +195,7 @@ public class ScriptFileService {
         File file = new File(filePath);
 
         try {
-            System.out.println(file.getAbsolutePath());
+            log.info(file.getAbsolutePath());
             fos = new FileOutputStream(file);
             fos.write(content.getBytes());
         } catch (FileNotFoundException e) {

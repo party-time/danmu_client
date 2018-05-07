@@ -8,8 +8,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -17,14 +16,14 @@ import org.springframework.stereotype.Component;
 /**
  * Created by task on 2016/6/15.
  */
+
+@Slf4j
 @Component
 @Qualifier("clientServerHandler")
 @ChannelHandler.Sharable
 public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
-
-    private static final Logger logger = LoggerFactory.getLogger(ClientServerHandler.class);
-
-
+    
+    
     @Autowired
     private ClientCache clientCache;
 
@@ -33,13 +32,13 @@ public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSock
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
 
         Channel channel = ctx.channel();
-        logger.info("客户端:" + channel.id() + " 加入");
+        log.info("客户端:" + channel.id() + " 加入");
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        logger.info("客户端:" + channel.id() + " 离开");
+        log.info("客户端:" + channel.id() + " 离开");
         //potocolService.forceLogout(channel);
         clientCache.removeClientModelConcurrentHashMap(channel);
     }
@@ -53,14 +52,14 @@ public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSock
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        logger.info("客户端:" + channel.id() + "掉线");
+        log.info("客户端:" + channel.id() + "掉线");
 
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (7)
         Channel channel = ctx.channel();
-        logger.info("客户端:" + channel.id() + "异常");
+        log.info("客户端:" + channel.id() + "异常");
     }
 
     /**
@@ -79,12 +78,12 @@ public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSock
             IdleStateEvent event = (IdleStateEvent) evt;
             if (event.state() == IdleState.READER_IDLE) {
                 /*DanmuClientModel danmuClientModel = danmuChannelRepository.get(channel);
-                logger.info("长时间没有获取到客户端{}的内容踢下线",JSON.toJSONString(danmuClientModel));
+                log.info("长时间没有获取到客户端{}的内容踢下线",JSON.toJSONString(danmuClientModel));
                 if (danmuClientModel.getClientType() == 0) {
                     potocolService.forceLogout(channel);
                 }*/
             } else if (event.state() == IdleState.WRITER_IDLE) {
-                logger.info("write idle");
+                //log.info("write idle");
             }
         }
     }
@@ -95,7 +94,7 @@ public class ClientServerHandler extends SimpleChannelInboundHandler<TextWebSock
         Channel channel = ctx.channel();
         String accecptStr = textWebSocketFrame.text();
         //ProtocolModel protocolModel = JSON.parseObject(accecptStr, ProtocolModel.class);
-        logger.info("收到的消息:{}",accecptStr);
+        log.info("收到的消息:{}",accecptStr);
         //协议处理
        // potocolService.potocolHandler(protocolModel, channel);
     }

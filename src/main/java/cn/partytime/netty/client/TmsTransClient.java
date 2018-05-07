@@ -17,6 +17,7 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ import java.net.URI;
  * Created by admin on 2018/1/12.
  */
 
+@Slf4j
 @Component
 public class TmsTransClient {
 
@@ -58,7 +60,7 @@ public class TmsTransClient {
             channelFuture.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
-            System.out.println("接收TMS指令的服务异常，重新启动");
+            log.info("接收TMS指令的服务异常，重新启动");
             logLogicService.logUploadHandler("接收TMS指令的服务异常，重新启动");
             init();
         }

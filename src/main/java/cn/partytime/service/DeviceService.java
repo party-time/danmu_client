@@ -9,6 +9,7 @@ import cn.partytime.util.FileUtils;
 import cn.partytime.util.HttpUtils;
 import cn.partytime.util.ListUtils;
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Administrator on 2017/3/27 0027.
  */
-
+@Slf4j
 @Service
 public class DeviceService {
 
@@ -47,7 +48,7 @@ public class DeviceService {
 
         if(file.exists()){
             String deviceStr = FileUtils.txt2String(filePath);
-            System.out.println("get local server Info:"+deviceStr);
+            log.info("get local server Info:"+deviceStr);
             if(!StringUtils.isEmpty(deviceStr)){
                 deviceInfoList = JSON.parseArray(deviceStr,DeviceInfo.class);
             }else {
@@ -60,7 +61,7 @@ public class DeviceService {
             }
         }else{
             String url =configUtils.findDeviceInfoUrl();
-            System.out.println("java config url:"+url);
+            log.info("java config url:"+url);
             String deviceStr = HttpUtils.httpRequestStr(url,"GET",null);
             deviceConfig = JSON.parseObject(deviceStr,DeviceConfig.class);
             if(deviceConfig!=null){

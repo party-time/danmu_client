@@ -28,6 +28,7 @@ import java.util.List;
  * Created by admin on 2018/4/11.
  */
 
+@Slf4j
 @Service
 public class MovieService {
 
@@ -47,7 +48,7 @@ public class MovieService {
         Integer time = clientPartyCache.getAdTime();
         if(time == null){
             //从服务器端获取广告时间
-            System.out.println("从缓存中取出广告开始时间为0");
+            log.info("从缓存中取出广告开始时间为0");
             String url = configUtils.findAddressInfo();
             String result  = HttpUtils.httpRequestStr(url,"GET",null);
             if(!StringUtils.isEmpty(result)){
@@ -66,7 +67,7 @@ public class MovieService {
 
         if(danmuStartDate==null){
             //从服务器获取弹幕开始时间
-            System.out.println("从缓存中取出的电影开始时间为0");
+            log.info("从缓存中取出的电影开始时间为0");
             String url = configUtils.findCurrentMovie(addressId);
             String resultStr  = HttpUtils.httpRequestStr(url,"GET",null);
             if(!StringUtils.isEmpty(resultStr)){

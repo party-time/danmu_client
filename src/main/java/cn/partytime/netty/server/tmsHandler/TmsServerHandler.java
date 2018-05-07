@@ -70,7 +70,7 @@ public class TmsServerHandler extends ChannelInboundHandlerAdapter {
 
 
 
-        /*System.out.println("The time server receive order ："+ body+" ; the counter is :"+ ++counter);
+        /*log.info("The time server receive order ："+ body+" ; the counter is :"+ ++counter);
         String currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body)?
                 new Date(System.currentTimeMillis()).toString():"BAD ORDER";
         currentTime = currentTime +System.getProperty("line.separator");

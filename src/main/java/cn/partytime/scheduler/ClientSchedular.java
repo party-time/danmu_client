@@ -114,11 +114,11 @@ public class ClientSchedular {
             Integer time = clientPartyCache.getAdTime();
 
             if(time==null){
-                System.out.println("广告时间为0，定时任务终止");
+                log.info("广告时间为0，定时任务终止");
                 return;
             }
             if(danmuStartDate==null){
-                System.out.println("开始时间为0，定时任务终止");
+                log.info("开始时间为0，定时任务终止");
                 return;
             }
             Date currentDate = DateUtils.getCurrentDate();
@@ -187,21 +187,21 @@ public class ClientSchedular {
 
         Map<String,String> map = new HashMap<>();
         String currentDateStr = DateUtils.dateToString(new Date(),"yyyy-MM-dd");
-        System.out.println(currentDateStr);
+        log.info(currentDateStr);
         map.put(currentDateStr,currentDateStr);
 
         Date beforeDate = DateUtils.DateMinusSomeDay(new Date(),1);
         String beforeDateStr = DateUtils.dateToString(beforeDate,"yyyy-MM-dd");
-        System.out.println(beforeDateStr);
+        log.info(beforeDateStr);
         map.put(beforeDateStr,beforeDateStr);
 
         for (File f : flist) {
             if (f.isDirectory()) {
                 //这里将列出所有的文件夹
-                System.out.println("Dir==>" + f.getName());
+                log.info("Dir==>" + f.getName());
                 String name = f.getName();
                 if(!map.containsKey(name)){
-                    //System.out.println("Dir==>" + f.getName());
+                    //log.info("Dir==>" + f.getName());
                     FileUtils.deleteDir(f);
                 }
             }

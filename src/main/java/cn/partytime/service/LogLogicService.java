@@ -2,6 +2,7 @@ package cn.partytime.service;
 
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.util.HttpUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import javax.annotation.Resource;
  * Created by Administrator on 2017/3/27 0027.
  */
 
+@Slf4j
 @Service
 public class LogLogicService {
 
@@ -30,7 +32,7 @@ public class LogLogicService {
                 //String url = configUtils.getLogUrl()+"?addressId="+addressId+"&param=\""+content+"\"";
                 String url = configUtils.findLogUrl()+"?addressId="+addressId;
                 String contentStr="机器编号:"+configUtils.getMachineNum()+"日志内容:"+content;
-                System.out.println(contentStr);
+                log.info(contentStr);
                 HttpUtils.httpRequestStrEncodeUrl(url,contentStr,"GET",null);
             }
         });

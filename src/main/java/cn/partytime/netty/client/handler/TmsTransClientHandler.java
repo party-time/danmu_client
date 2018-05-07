@@ -4,6 +4,7 @@ import cn.partytime.config.ClientCache;
 import cn.partytime.model.client.ClientModel;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
+import lombok.extern.slf4j.Slf4j;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
  * Created by admin on 2018/1/12.
  */
 
+@Slf4j
 @Component
 @Qualifier("tmsTransClientHandler")
 @ChannelHandler.Sharable
@@ -32,8 +34,8 @@ public class TmsTransClientHandler  extends ChannelInboundHandlerAdapter {
         Channel channel = ctx.channel();
         ClientModel clientModel = new ClientModel();
         clientCache.addChannelTmsClientModelConcurrentHashMap(channel,clientModel);
-        System.out.println("客户端:" + channel.id() + " 加入");
-        System.out.println("转发TMS指令的服务连接1号机器成功连接成功");
+        log.info("客户端:" + channel.id() + " 加入");
+        log.info("转发TMS指令的服务连接1号机器成功连接成功");
         super.channelActive(ctx);
     }
 
@@ -43,7 +45,7 @@ public class TmsTransClientHandler  extends ChannelInboundHandlerAdapter {
         Channel channel = ctx.channel();
         ClientModel clientModel = new ClientModel();
         clientCache.removeChannelTmsClientModelConcurrentHashMap(channel);
-        System.out.println("转发TMS指令的服务连接1号机器断开连接");
+        log.info("转发TMS指令的服务连接1号机器断开连接");
         ctx.fireChannelInactive();
     }
 

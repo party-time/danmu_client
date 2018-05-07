@@ -28,7 +28,7 @@ public class HttpUtils {
                 System.out.print("获取数据异常");
             }
             count++;
-            System.out.println("请求失败，等待"+count+"秒，再次发起请求");
+            log.info("请求失败，等待"+count+"秒，再次发起请求");
             try {
                 Thread.sleep(count*2000);
             } catch (InterruptedException e) {
@@ -82,7 +82,7 @@ public class HttpUtils {
      * @return
      */
     public static String httpRequestStr(String requestUrl, String requestMethod, String outputStr) {
-        System.out.println("url:"+requestUrl);
+        log.info("url:"+requestUrl);
         StringBuffer buffer = new StringBuffer();
         try {
             //requestUrl = requestUrl.replaceAll(requestUrl, URLEncoder.encode(requestUrl, "utf-8"));

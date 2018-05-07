@@ -54,6 +54,7 @@ import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ConcurrentHashMap;
-
+@Slf4j
 @Component
 @Qualifier("localServerWebSocketClientHandler")
 @ChannelHandler.Sharable
@@ -101,7 +102,7 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        System.out.println("WebSocket Client disconnected!");
+        log.info("WebSocket Client disconnected!");
     }
 
     @Override
@@ -109,7 +110,7 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
         Channel ch = ctx.channel();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (FullHttpResponse) msg);
-            System.out.println("WebSocket Client connected!");
+            log.info("WebSocket Client connected!");
             handshakeFuture.setSuccess();
             return;
         }
@@ -122,7 +123,7 @@ public class LocalServerWebSocketClientHandler extends SimpleChannelInboundHandl
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            System.out.println("WebSocket Client received message: " + textFrame.text());
+            log.info("WebSocket Client received message: " + textFrame.text());
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
             commandHandlerService.commandHandler(clientCommandConfig);

@@ -106,7 +106,7 @@ public class IndexController {
 
         if(danmuStartDate==null){
             //从服务器获取弹幕开始时间
-            System.out.println("从缓存中取出的电影开始时间为0");
+            log.info("从缓存中取出的电影开始时间为0");
             String url = configUtils.findCurrentMovie(addressId);
             String resultStr  = HttpUtils.httpRequestStr(url,"GET",null);
             if(!StringUtils.isEmpty(resultStr)){
