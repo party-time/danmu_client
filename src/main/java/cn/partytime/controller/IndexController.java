@@ -178,10 +178,10 @@ public class IndexController {
             //同时向服务器发出告警
             return new Result(501,null);
         }
+        clientPartyCache.setAdTime(time);
 
         Date date  = DateUtils.getCurrentDate();
         String result = tmsCommandService.movieHandler(command,date);
-
         log.info("弹幕开始时间：{}",DateUtils.dateToString(date,"yyyy-MM-dd hh:mm:ss"));
         if(StringUtils.isEmpty(result)){
             return new Result(503,null);
@@ -190,7 +190,6 @@ public class IndexController {
         if(restResultModel!=null){
             if(restResultModel.getResult()==200){
                 clientPartyCache.setDanmuStartDate(date.getTime());
-                clientPartyCache.setAdTime(time);
                 clientPartyCache.setBooleanMovieStart(false);
             }else if(restResultModel.getResult()==201){
                 ;
