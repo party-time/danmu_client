@@ -159,6 +159,11 @@ public class ScriptFileService {
         map.put("resourceType",scriptConfigUtils.CLIENTDOWNLOAD_BAT);
         createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.CLIENTDOWNLOAD_BAT);
 
+        map.put("rsyncScriptPath",configUtils.findDataPath());
+        map.put("resourceType",scriptConfigUtils.DATA_BAT);
+        createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.DATA_BAT);
+
+
         map.put("rsyncScriptPath",configUtils.cmdRsyncFilePath);
         map.put("resourceType",scriptConfigUtils.RESOURCE_BAT);
         createRsyncDownloadShellFile(map,scriptConfigUtils.BAT_TYPE,scriptConfigUtils.RSYNCRESOURCEDOWN_BAT,scriptConfigUtils.RESOURCE_BAT);

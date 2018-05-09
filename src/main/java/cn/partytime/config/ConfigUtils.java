@@ -182,6 +182,9 @@ public class ConfigUtils {
     public String findUpdateClientDownPath(){
         return  "/enterX/newClient";
     }
+    public String findDataPath(){
+        return  "/enterX/data";
+    }
 
 
     public String getAddressId(){

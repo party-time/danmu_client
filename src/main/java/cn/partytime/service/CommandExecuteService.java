@@ -153,7 +153,8 @@ public class CommandExecuteService {
         scriptFileService.createShell();
     }
 
-
-
-
+    public void executeDataDownCallBack(){
+        //下载数据文件
+        windowShellService.execShell(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.DATA_BAT));
+    }
 }

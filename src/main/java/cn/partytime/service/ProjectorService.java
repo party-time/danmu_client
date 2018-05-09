@@ -202,15 +202,23 @@ public class ProjectorService {
         Socket socket = null;
         try {
             socket = new Socket(ip, 4352);
-            String authPass = "";
-            String command = "%1POWR "+type+"\r";
-            osw = new OutputStreamWriter(socket.getOutputStream());
-            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            logLogicService.logUploadHandler("发送命令:"+command);
-            osw.write(command);
-            osw.flush();
-            String response = parseResponse(br.readLine());
-            logLogicService.logUploadHandler("接收投影返回的值: " + response);
+            for(int i=0;i<5; i++){
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                String authPass = "";
+                String command = "%1POWR "+type+"\r";
+                osw = new OutputStreamWriter(socket.getOutputStream());
+                br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                logLogicService.logUploadHandler("发送命令:"+command);
+                osw.write(command);
+                osw.flush();
+                String response = parseResponse(br.readLine());
+                logLogicService.logUploadHandler("接收投影返回的值: " + response);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             logLogicService.logUploadHandler("投影仪:"+ip+",socket 连接异常");

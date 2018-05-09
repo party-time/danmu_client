@@ -50,6 +50,8 @@ public class ScriptConfigUtils {
     public final String ADTIMERDANMU_BAT="adTimerDanmu";
     public final String CLIENTDOWNLOAD_BAT="clientdownload";
     public final String RESOURCE_BAT="resource";
+    public final String DATA_BAT="data";
+
 
     public final String RSYNCRESOURCEDOWN_BAT="rsyncResourceDown";
     private final String UPDATE_FREEMARKER_PATH="updateScript";

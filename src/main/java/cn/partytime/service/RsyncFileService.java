@@ -48,6 +48,10 @@ public class RsyncFileService {
         commandExecuteService.executeUpdateClientDownCallBack();
     }
 
+    public void downloadData(){
+        commandExecuteService.executeDataDownCallBack();
+    }
+
     public void createFlashConfig() {
         String paramJsonStr = HttpUtils.httpRequestStr(configUtils.getParamUrl()+"?code="+properties.getRegistCode(),"GET",null);
         logLogicService.logUploadHandler("配置参数下载内容:"+paramJsonStr);

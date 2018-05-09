@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.text.ParseException;
 import java.util.Date;
@@ -79,6 +80,12 @@ public class ClientSchedular {
     @Autowired
     private CommandExecuteService commandExecuteService;
 
+    @Autowired
+    private WindowShellService windowShellService;
+
+    @Autowired
+    private ScriptConfigUtils scriptConfigUtils;
+
     @Scheduled(cron = "0 5 3 * * ?")
     private void cronRsyncFile(){
 
@@ -94,6 +101,10 @@ public class ClientSchedular {
         //下载更新计划
         logLogicService.logUploadHandler("生成更新计划");
         clientUpdateService.createUpdatePlanHandler();
+
+        logLogicService.logUploadHandler("下载数据文件");
+        rsyncFileService.downloadData();
+
     }
 
     @Scheduled(cron = "0 30 4 * * ?")
