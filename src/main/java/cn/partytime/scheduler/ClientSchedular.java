@@ -223,36 +223,34 @@ public class ClientSchedular {
     }
 
 
-    @Scheduled(cron = "0/1 * * * * ?")
+    @Scheduled(cron = "0 0 16 * * ?")
     private void deleteJavaLog() throws ParseException {
-        if(isDecideTogo(logDeleteTime)){
-            logLogicService.logUploadHandler("删除本地日志，只保留当天和前一天的");
-            String logPath = basePath + File.separator + "log"+File.separator+"danmu_client";
-            File file = new File(logPath);
-            File flist[] = file.listFiles();
-            if (flist == null || flist.length == 0) {
-                return;
-            }
+        logLogicService.logUploadHandler("删除本地日志，只保留当天和前一天的");
+        String logPath = basePath + File.separator + "log"+File.separator+"danmu_client";
+        File file = new File(logPath);
+        File flist[] = file.listFiles();
+        if (flist == null || flist.length == 0) {
+            return;
+        }
 
-            Map<String,String> map = new HashMap<>();
-            String currentDateStr = DateUtils.dateToString(new Date(),"yyyy-MM-dd");
-            log.info(currentDateStr);
-            map.put(currentDateStr,currentDateStr);
+        Map<String,String> map = new HashMap<>();
+        String currentDateStr = DateUtils.dateToString(new Date(),"yyyy-MM-dd");
+        log.info(currentDateStr);
+        map.put(currentDateStr,currentDateStr);
 
-            Date beforeDate = DateUtils.DateMinusSomeDay(new Date(),1);
-            String beforeDateStr = DateUtils.dateToString(beforeDate,"yyyy-MM-dd");
-            log.info(beforeDateStr);
-            map.put(beforeDateStr,beforeDateStr);
+        Date beforeDate = DateUtils.DateMinusSomeDay(new Date(),1);
+        String beforeDateStr = DateUtils.dateToString(beforeDate,"yyyy-MM-dd");
+        log.info(beforeDateStr);
+        map.put(beforeDateStr,beforeDateStr);
 
-            for (File f : flist) {
-                if (f.isDirectory()) {
-                    //这里将列出所有的文件夹
-                    log.info("Dir==>" + f.getName());
-                    String name = f.getName();
-                    if(!map.containsKey(name)){
-                        //log.info("Dir==>" + f.getName());
-                        FileUtils.deleteDir(f);
-                    }
+        for (File f : flist) {
+            if (f.isDirectory()) {
+                //这里将列出所有的文件夹
+                log.info("Dir==>" + f.getName());
+                String name = f.getName();
+                if(!map.containsKey(name)){
+                    //log.info("Dir==>" + f.getName());
+                    FileUtils.deleteDir(f);
                 }
             }
         }
