@@ -25,10 +25,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/3/3 0003.
@@ -71,6 +68,27 @@ public class ClientSchedular {
     @Value("${machineNum}")
     private String machineNum;
 
+
+
+    @Value("${resouceDownTime:3:05：00}")
+    private String resouceDownTime;
+
+
+    @Value("${logDeleteTime:2:00:00}")
+    private String logDeleteTime;
+
+
+    @Value("${javaclientUpateTime:4:30:00}")
+    private String javaclientUpateTime;
+
+
+    @Value("${flashclientUpateTime:5:00:00}")
+    private String flashclientUpateTime;
+
+
+
+
+
     @Autowired
     private LogLogicService logLogicService;
 
@@ -86,37 +104,48 @@ public class ClientSchedular {
     @Autowired
     private ScriptConfigUtils scriptConfigUtils;
 
-    @Scheduled(cron = "0 5 3 * * ?")
+    //@Scheduled(cron = "0 5 3 * * ?")
+    @Scheduled(cron = "0/1 * * * * ?")
     private void cronRsyncFile(){
+        if(isDecideTogo(resouceDownTime)){
 
-        //flash资源下载
-        logLogicService.logUploadHandler("下载资源");
-        rsyncFileService.rsyncFile();
-        //flash配置表生成
-        logLogicService.logUploadHandler("生成配置表");
-        rsyncFileService.createFlashConfig();
-        //客户端版本下载
-        logLogicService.logUploadHandler("下载客户端");
-        rsyncFileService.downloadClient();
-        //下载更新计划
-        logLogicService.logUploadHandler("生成更新计划");
-        clientUpdateService.createUpdatePlanHandler();
+            //flash资源下载
+            logLogicService.logUploadHandler("下载资源");
+            rsyncFileService.rsyncFile();
 
-        logLogicService.logUploadHandler("下载数据文件");
-        rsyncFileService.downloadData();
+            //flash配置表生成
+            logLogicService.logUploadHandler("生成配置表");
+            rsyncFileService.createFlashConfig();
 
+            //客户端版本下载
+            logLogicService.logUploadHandler("下载客户端");
+            rsyncFileService.downloadClient();
+
+            //下载更新计划
+            logLogicService.logUploadHandler("生成更新计划");
+            clientUpdateService.createUpdatePlanHandler();
+
+            logLogicService.logUploadHandler("下载数据文件");
+            rsyncFileService.downloadData();
+        }
     }
 
-    @Scheduled(cron = "0 30 4 * * ?")
+
+
+    @Scheduled(cron = "0/1 * * * * ?")
     private void executeUpdateJava(){
-        logLogicService.logUploadHandler("4:30执行java客户端更新");
-        commandExecuteService.executeJavaUpdateCallBack();
+        if(isDecideTogo(javaclientUpateTime)){
+            logLogicService.logUploadHandler(javaclientUpateTime+"执行java客户端更新");
+            commandExecuteService.executeJavaUpdateCallBack();
+        }
     }
 
-    @Scheduled(cron = "0 0 5 * * ?")
+    @Scheduled(cron = "0/1 * * * * ?")
     private void executeUpdateFlash(){
-        logLogicService.logUploadHandler("5:00执行flash客户端更新");
-        commandExecuteService.executeFlashUpdateCallBack();
+        if(isDecideTogo(flashclientUpateTime)){
+            logLogicService.logUploadHandler(flashclientUpateTime+"执行flash客户端更新");
+            commandExecuteService.executeFlashUpdateCallBack();
+        }
     }
 
 
@@ -194,38 +223,64 @@ public class ClientSchedular {
     }
 
 
-    @Scheduled(cron = "0 0 2 * * ?")
+    @Scheduled(cron = "0/1 * * * * ?")
     private void deleteJavaLog() throws ParseException {
-        logLogicService.logUploadHandler("删除本地日志，只保留当天和前一天的");
-        String logPath = basePath + File.separator + "log"+File.separator+"danmu_client";
-        File file = new File(logPath);
-        File flist[] = file.listFiles();
-        if (flist == null || flist.length == 0) {
-            return;
-        }
+        if(isDecideTogo(logDeleteTime)){
+            logLogicService.logUploadHandler("删除本地日志，只保留当天和前一天的");
+            String logPath = basePath + File.separator + "log"+File.separator+"danmu_client";
+            File file = new File(logPath);
+            File flist[] = file.listFiles();
+            if (flist == null || flist.length == 0) {
+                return;
+            }
 
-        Map<String,String> map = new HashMap<>();
-        String currentDateStr = DateUtils.dateToString(new Date(),"yyyy-MM-dd");
-        log.info(currentDateStr);
-        map.put(currentDateStr,currentDateStr);
+            Map<String,String> map = new HashMap<>();
+            String currentDateStr = DateUtils.dateToString(new Date(),"yyyy-MM-dd");
+            log.info(currentDateStr);
+            map.put(currentDateStr,currentDateStr);
 
-        Date beforeDate = DateUtils.DateMinusSomeDay(new Date(),1);
-        String beforeDateStr = DateUtils.dateToString(beforeDate,"yyyy-MM-dd");
-        log.info(beforeDateStr);
-        map.put(beforeDateStr,beforeDateStr);
+            Date beforeDate = DateUtils.DateMinusSomeDay(new Date(),1);
+            String beforeDateStr = DateUtils.dateToString(beforeDate,"yyyy-MM-dd");
+            log.info(beforeDateStr);
+            map.put(beforeDateStr,beforeDateStr);
 
-        for (File f : flist) {
-            if (f.isDirectory()) {
-                //这里将列出所有的文件夹
-                log.info("Dir==>" + f.getName());
-                String name = f.getName();
-                if(!map.containsKey(name)){
-                    //log.info("Dir==>" + f.getName());
-                    FileUtils.deleteDir(f);
+            for (File f : flist) {
+                if (f.isDirectory()) {
+                    //这里将列出所有的文件夹
+                    log.info("Dir==>" + f.getName());
+                    String name = f.getName();
+                    if(!map.containsKey(name)){
+                        //log.info("Dir==>" + f.getName());
+                        FileUtils.deleteDir(f);
+                    }
                 }
             }
         }
+    }
 
+
+
+    private static boolean isDecideTogo(String time){
+        try{
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            int second = c.get(Calendar.SECOND);
+
+            String timeArray[] = time.split(":");
+            int startHour = Integer.parseInt(timeArray[0]);
+            int startMinute = Integer.parseInt(timeArray[1]);
+            int startsecond = Integer.parseInt(timeArray[2]);
+            log.info("hour:"+startHour+"   minute:"+startMinute+"   second:"+startsecond);
+            if(hour==startHour && minute== startMinute && second== startsecond){
+                log.info("{}时{}分{}秒执行定时任务",startHour,startMinute,startsecond);
+                return  true;
+            }
+        }catch (Exception e){
+            return false;
+        }
+
+        return false;
     }
 
 }

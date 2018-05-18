@@ -76,6 +76,9 @@ Function executeFlashUpdate(version)
     logCommit("Java does not start after update")
 
     Call executeShellFunction(flashUpdateShell &" "& version)
+
+    WScript.Sleep 3000
+
     Call executeShellFunction(javaStartBatPath)
 End Function
 
@@ -139,6 +142,9 @@ Function rollBack()
     Call showDailog("flash execute rollback")
     'ws.run flashRollbackShell
     Call executeShellFunction(flashRollbackShell)
+
+    WScript.Sleep 3000
+
     Call executeShellFunction(javaStartBatPath)
     WScript.Sleep 20000
     If checkJavaIsStart=1 Then

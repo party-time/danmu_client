@@ -63,6 +63,9 @@ Function executeUpdateShell(version)
     'ws.run javaUpdateShell & " " &version
     logCommit(javaUpdateShell & " " &version)
     Call ExecuteShellFunction(javaUpdateShell & " " &version)
+
+    WScript.Sleep 3000
+
     Call executeShellFunction(javaStartBatPath)
 End Function
 
@@ -98,6 +101,9 @@ Function rollBack()
     'ws.run javaRollBackShell
 
     Call executeShellFunction(javaRollBackShell)
+
+    WScript.Sleep 3000
+
     Call executeShellFunction(javaStartBatPath)
 
     WScript.Sleep 10000
