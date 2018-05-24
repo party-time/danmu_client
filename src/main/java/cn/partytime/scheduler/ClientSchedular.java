@@ -70,7 +70,7 @@ public class ClientSchedular {
 
 
 
-    @Value("${resouceDownTime:3:05：00}")
+    @Value("${resouceDownTime:3:05:00}")
     private String resouceDownTime;
 
 
@@ -161,11 +161,11 @@ public class ClientSchedular {
             Integer time = clientPartyCache.getAdTime();
 
             if(time==null){
-                logLogicService.logUploadHandler("广告时间为0，定时任务终止");
+                log.info("广告时间为0，定时任务终止");
                 return;
             }
             if(danmuStartDate==null){
-                logLogicService.logUploadHandler("开始时间为0，定时任务终止");
+                log.info("开始时间为0，定时任务终止");
                 return;
             }
             Date currentDate = DateUtils.getCurrentDate();

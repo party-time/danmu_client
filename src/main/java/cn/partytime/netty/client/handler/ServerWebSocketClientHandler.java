@@ -76,10 +76,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @ChannelHandler.Sharable
 public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
-
-    @Autowired
-    private ConfigUtils configUtils;
-
     @Autowired
     private ClientCache clientCache;
 
@@ -93,6 +89,8 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
     private ChannelPromise handshakeFuture;
 
+    @Autowired
+    private ConfigUtils configUtils;
 
 
     public ChannelFuture handshakeFuture() {
@@ -145,7 +143,11 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
 
-            commandHandlerService.commandHandler(clientCommandConfig);
+
+            if("1".equals(configUtils.getMachineNum())){
+                commandHandlerService.commandHandler(clientCommandConfig);
+            }
+
         }
     }
 

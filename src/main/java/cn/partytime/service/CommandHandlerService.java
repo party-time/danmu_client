@@ -54,6 +54,7 @@ public class CommandHandlerService {
 
 
     public void commandHandler(ClientCommandConfig clientCommandConfig){
+
         log.info("接收的命令信息:"+JSON.toJSONString(clientCommandConfig));
         logLogicService.logUploadHandler("接收的命令信息:"+JSON.toJSONString(clientCommandConfig));
         if("command".equals(clientCommandConfig.getType())){
@@ -88,12 +89,14 @@ public class CommandHandlerService {
                 //直接脚本
                 executeReflectMethod(type);
             }else if(type.startsWith(CommandConst.DANMU_START_PREFIX) || CommandConst.MOVIE_START.equals(type) || CommandConst.MOVIE_CLOSE.equals(type)){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tmsCommandService.movieHandler(type, DateUtils.getCurrentDate());
-                    }
-                }).start();
+                if("1".equals(configUtils.getMachineNum())){
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tmsCommandService.movieHandler(type, DateUtils.getCurrentDate());
+                        }
+                    }).start();
+                }
             }else{
                 new Thread(new Runnable(){
                     @Override
