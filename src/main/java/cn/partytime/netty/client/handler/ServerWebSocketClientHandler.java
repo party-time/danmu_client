@@ -46,6 +46,7 @@ import cn.partytime.model.client.PartyInfo;
 import cn.partytime.model.server.ServerInfo;
 import cn.partytime.service.CommandExecuteService;
 import cn.partytime.service.CommandHandlerService;
+import cn.partytime.service.MessageSendToCollectorServer;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import freemarker.template.utility.StringUtil;
@@ -93,6 +94,10 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     private ConfigUtils configUtils;
 
 
+    @Autowired
+    private MessageSendToCollectorServer messageSendToCollectorServer;
+
+
     public ChannelFuture handshakeFuture() {
         return handshakeFuture;
     }
@@ -114,6 +119,13 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             ClientModel clientModel = new ClientModel();
             handshaker.handshake(channel);
             clientCache.setServerClientChannelConcurrentHashMap(channel,clientModel);
+
+            Map<String,Object> map = new HashMap<>();
+            map.put("data",true);
+            map.put("type","startStageAndFull");
+            map.put("clientType","2");
+            map.put("code",configUtils.getRegisterCode());
+            messageSendToCollectorServer.sendMessageToCollectorServer(map);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
