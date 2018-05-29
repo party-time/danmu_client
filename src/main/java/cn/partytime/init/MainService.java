@@ -28,11 +28,16 @@ public class MainService {
 
     @Autowired
     private ServerStartService serverStartService;
+
+    @Autowired
+    private RsyncFileService rsyncFileService;
     /**
      * 启动系统加载项目
      */
     @PostConstruct
     public void init() {
-        serverStartService.projectInit();
+        rsyncFileService.createFlashConfig();
+        //serverStartService.projectInit();
+
     }
 }
