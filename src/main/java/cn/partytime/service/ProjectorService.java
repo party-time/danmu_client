@@ -185,7 +185,7 @@ public class ProjectorService {
     }
 
     private void executeSendPJlinkCommand(String ip,int type,int count){
-        if(count==4){
+        /*if(count==4){
             String url= configUtils.getJavaClientAlarmUlr()+"/"+"projector"+"/"+configUtils.getAddressId();
             threadPoolTaskExecutor.execute(new Runnable() {
                 @Override
@@ -195,55 +195,61 @@ public class ProjectorService {
             });
             logLogicService.logUploadHandler("投影仪:"+ip+",socket 进行重新连接超过"+4+"次,结束");
             return;
+        }*/
+        //count++;
+        if(!"1".equals(configUtils.getMachineNum())){
+            return;
         }
-        count++;
-        OutputStreamWriter osw =null;
-        BufferedReader br=null;
-        Socket socket = null;
-        try {
-            socket = new Socket(ip, 4352);
-            for(int i=0;i<5; i++){
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        for(int i=0; i<2; i++){
+            logLogicService.logUploadHandler("与投影仪:"+ip+"进行第"+(i+1)+"次建连");
+            OutputStreamWriter osw =null;
+            BufferedReader br=null;
+            Socket socket = null;
+            try {
+                socket = new Socket(ip, 4352);
+                for(int j=0; j<5; j++){
+                    logLogicService.logUploadHandler("与投影仪:"+ip+"进行第"+(i+1)+"次建连,第"+(j+1)+"次发送指令");
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    String authPass = "";
+                    String command = "%1POWR "+type+"\r";
+                    osw = new OutputStreamWriter(socket.getOutputStream());
+                    br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    logLogicService.logUploadHandler("发送命令:"+command);
+                    osw.write(command);
+                    osw.flush();
+                    String response = parseResponse(br.readLine());
+                    logLogicService.logUploadHandler("接收投影返回的值: " + response);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                logLogicService.logUploadHandler("与投影仪:"+ip+"进行第"+(i+1)+"次建联异常");
+                //logLogicService.logUploadHandler("投影仪:"+ip+",socket 进行重新连接"+(count)+"次");
+                //executeSendPJlinkCommand(ip,type,count);
+            }finally
+            {
+                if (osw != null) {
+                    try {
+                        osw.close();
+                    } catch (IOException e) {
+                    }
                 }
 
-                String authPass = "";
-                String command = "%1POWR "+type+"\r";
-                osw = new OutputStreamWriter(socket.getOutputStream());
-                br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                logLogicService.logUploadHandler("发送命令:"+command);
-                osw.write(command);
-                osw.flush();
-                String response = parseResponse(br.readLine());
-                logLogicService.logUploadHandler("接收投影返回的值: " + response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            logLogicService.logUploadHandler("投影仪:"+ip+",socket 连接异常");
-            logLogicService.logUploadHandler("投影仪:"+ip+",socket 进行重新连接"+(count)+"次");
-            executeSendPJlinkCommand(ip,type,count);
-        }finally
-        {
-            if (osw != null) {
-                try {
-                    osw.close();
-                } catch (IOException e) {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                    }
                 }
-            }
-
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                }
-            }
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    logLogicService.logUploadHandler("投影仪:"+ip+",socket 连接异常");
+                if (socket != null) {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        logLogicService.logUploadHandler("投影仪:"+ip+",socket 连接异常");
+                    }
                 }
             }
         }

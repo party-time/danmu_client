@@ -100,6 +100,7 @@ public class TmsCommandService {
                     url = url+ CommonConst.SEPARATOR+clientCache.getPartyInfo().getPartyId()+CommonConst.SEPARATOR+ currentDate.getTime();
                     logLogicService.logUploadHandler("向服务器请求的url:"+url);
                     resultStr =HttpUtils.repeatRequest(url,"GET",null);
+                    logLogicService.logUploadHandler("服务器返回的内容:"+resultStr);
                 }
                 return resultStr;
             case CommandConst.MOVIE_CLOSE:
@@ -124,13 +125,15 @@ public class TmsCommandService {
                         }
                     }
                 }
+                logLogicService.logUploadHandler("服务器返回的内容:"+resultStr);
                 return resultStr;
             default:
                 if(command.startsWith(CommandConst.DANMU_START_PREFIX)){
-                    logLogicService.logUploadHandler("电影开始");
+                    logLogicService.logUploadHandler("弹幕开始");
                     url = configUtils.getPartyRequestUrl(CommandConst.DANMU_START_PREFIX,command)+CommonConst.SEPARATOR+ currentDate.getTime();
                     logLogicService.logUploadHandler("向服务器请求的url:"+url);
                     resultStr = HttpUtils.repeatRequest(url,"GET",null);
+                    logLogicService.logUploadHandler("服务器返回的内容:"+resultStr);
                 }
                 return resultStr;
         }
