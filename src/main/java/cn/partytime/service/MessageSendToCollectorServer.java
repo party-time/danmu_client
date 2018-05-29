@@ -25,7 +25,7 @@ public class MessageSendToCollectorServer {
      * 客户端发送消息给服务器
      * @param map
      */
-    public void sendMessageToCollectorServer(Map<String,String> map){
+    public void sendMessageToCollectorServer(Map<String,Object> map){
         ConcurrentHashMap<Channel,ClientModel> concurrentHashMap = clientCache.findServerClientChannelConcurrentHashMap();
         if (concurrentHashMap != null && concurrentHashMap.size() > 0) {
             for (ConcurrentHashMap.Entry<Channel, ClientModel> entry : concurrentHashMap.entrySet()) {

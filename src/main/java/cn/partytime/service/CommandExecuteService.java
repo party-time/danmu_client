@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2017/4/1 0001.
  */
@@ -40,6 +43,12 @@ public class CommandExecuteService {
 
     @Autowired
     private ProjectorService projectorService;
+
+    @Autowired
+    private MessageSendToCollectorServer messageSendToCollectorServer;
+
+    @Autowired
+    private ConfigUtils configUtils;
 
     public void executeProjectorStartCallBack() {
         //projectorService.projectorHandler(0);
@@ -77,6 +86,13 @@ public class CommandExecuteService {
             windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
             log.info("execute printScreen logic");
             PrintScreenUtils.moveWindow();
+            Map<String,Object> map = new HashMap<>();
+            map.put("data",true);
+            map.put("type","startStageAndFull");
+            map.put("clientType","2");
+            map.put("code",configUtils.getRegisterCode());
+            messageSendToCollectorServer.sendMessageToCollectorServer(map);
+
         }
     }
 
