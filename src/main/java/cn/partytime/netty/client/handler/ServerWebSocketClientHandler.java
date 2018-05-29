@@ -109,7 +109,11 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             ServerInfo serverInfo = clientCache.getServerInfo();
             uri = new URI(configUtils.getWebSocketUrl(serverInfo.getIp(),serverInfo.getPort()));
             handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
-            handshaker.handshake(ctx.channel());
+
+            Channel channel = ctx.channel();
+            ClientModel clientModel = new ClientModel();
+            handshaker.handshake(channel);
+            clientCache.setServerClientChannelConcurrentHashMap(channel,clientModel);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -118,6 +122,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         log.info("WebSocket Client disconnected!");
+        clientCache.removeClientChannelConcurrentHashMap(ctx.channel());
     }
 
     @Override
