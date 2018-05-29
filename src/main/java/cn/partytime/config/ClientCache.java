@@ -23,14 +23,17 @@ public class ClientCache {
 
     public PartyInfo partyInfo;
 
-
-
     private ServerInfo serverInfo;
 
     private ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap = new ConcurrentHashMap<String, DeviceInfo>();
 
+    //clientChannel
+    private ConcurrentHashMap<Channel,ClientModel> serverClientChannelConcurrentHashMap = new ConcurrentHashMap<>();
+
+    //转发tms 指定server
     private ConcurrentHashMap<Channel,ClientModel> channelTmsClientModelConcurrentHashMap = new ConcurrentHashMap<>();
 
+    //接收http请求
     private ConcurrentHashMap<Channel,ClientModel> channelClientModelConcurrentHashMap = new ConcurrentHashMap<>();
 
     public ConcurrentHashMap findChannelTmsClientModelConcurrentHashMap(){
@@ -97,5 +100,19 @@ public class ClientCache {
     public void setDeviceInfoConcurrentHashMap(ConcurrentHashMap<String, DeviceInfo> deviceInfoConcurrentHashMap) {
         this.deviceInfoConcurrentHashMap = deviceInfoConcurrentHashMap;
     }
+
+    public void setServerClientChannelConcurrentHashMap(Channel channel,ClientModel clientModel){
+        serverClientChannelConcurrentHashMap.put(channel,clientModel);
+    }
+
+    public ConcurrentHashMap findServerClientChannelConcurrentHashMap(){
+        return serverClientChannelConcurrentHashMap;
+    }
+
+    public void  removeClientChannelConcurrentHashMap(Channel channel){
+        serverClientChannelConcurrentHashMap.remove(channel);
+    }
+
+
 
 }
