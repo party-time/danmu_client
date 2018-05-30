@@ -5,6 +5,8 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.*;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,6 +20,7 @@ import java.io.IOException;
  * Created by administrator on 2016/12/9.
  */
 @Slf4j
+@Service
 public class PrintScreenUtils {
 
     @Autowired

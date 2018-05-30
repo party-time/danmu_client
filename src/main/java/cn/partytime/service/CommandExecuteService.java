@@ -49,6 +49,9 @@ public class CommandExecuteService {
     @Autowired
     private ConfigUtils configUtils;
 
+    @Autowired
+    private PrintScreenUtils printScreenUtils;
+
 
 
 
@@ -90,7 +93,9 @@ public class CommandExecuteService {
             }
             windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
             log.info("execute printScreen logic");
-            PrintScreenUtils.moveWindow();
+            printScreenUtils.moveWindow();
+
+            flashBussinessHandlerService.flashFullHandler();
         }
     }
 
