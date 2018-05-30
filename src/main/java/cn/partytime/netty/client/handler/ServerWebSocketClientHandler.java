@@ -116,16 +116,12 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             handshaker = WebSocketClientHandshakerFactory.newHandshaker(uri, WebSocketVersion.V13, null, true, new DefaultHttpHeaders());
 
             Channel channel = ctx.channel();
-            ClientModel clientModel = new ClientModel();
-            handshaker.handshake(channel);
-            clientCache.setServerClientChannelConcurrentHashMap(channel,clientModel);
 
-            Map<String,Object> map = new HashMap<>();
-            map.put("data",true);
-            map.put("type","startStageAndFull");
-            map.put("clientType","2");
-            map.put("code",configUtils.getRegisterCode());
-            messageSendToCollectorServer.sendMessageToCollectorServer(map);
+            handshaker.handshake(channel);
+
+
+
+            //messageSendToCollectorServer.sendMessageToCollectorServer(map);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -144,6 +140,22 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             handshaker.finishHandshake(ch, (FullHttpResponse) msg);
             log.info("WebSocket Client connected!");
             handshakeFuture.setSuccess();
+
+            Map<String,String> map = new HashMap<>();
+            map.put("data","true");
+            map.put("type","startStageAndFull");
+            map.put("clientType","2");
+            map.put("code",configUtils.getRegisterCode());
+            Channel channel = ctx.channel();
+            ClientModel clientModel = new ClientModel();
+            clientCache.setServerClientChannelConcurrentHashMap(channel,clientModel);
+            messageSendToCollectorServer.sendMessageToCollectorServer(map);
+            /*Map<String,String> map = new HashMap<>();
+            map.put("data","true");
+            map.put("type","startStageAndFull");
+            map.put("clientType","2");
+            map.put("code",configUtils.getRegisterCode());
+            ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(map)));*/
             return;
         }
 

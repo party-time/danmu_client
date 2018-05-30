@@ -91,7 +91,7 @@ public class CommandExecuteService {
             map.put("type","startStageAndFull");
             map.put("clientType","2");
             map.put("code",configUtils.getRegisterCode());
-            messageSendToCollectorServer.sendMessageToCollectorServer(map);
+            //messageSendToCollectorServer.sendMessageToCollectorServer(map);
 
         }
     }
