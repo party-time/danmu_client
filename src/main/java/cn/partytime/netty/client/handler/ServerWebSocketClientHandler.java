@@ -39,6 +39,7 @@ package cn.partytime.netty.client.handler;
 
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.config.FlashCache;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.client.ClientModel;
@@ -93,6 +94,9 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Autowired
     private ConfigUtils configUtils;
 
+    @Autowired
+    private FlashCache flashCache;
+
 
     @Autowired
     private MessageSendToCollectorServer messageSendToCollectorServer;
@@ -141,6 +145,14 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             log.info("WebSocket Client connected!");
             handshakeFuture.setSuccess();
 
+
+            if(flashCache.getSendFlashOpenCount()>0){
+                return;
+            }
+
+            flashCache.setSendFlashOpenCount(1);
+
+            //与服务器连接成功后向服务器发送flash全屏的指令
             Map<String,String> map = new HashMap<>();
             map.put("data","true");
             map.put("type","startStageAndFull");

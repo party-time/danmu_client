@@ -86,11 +86,11 @@ public class CommandExecuteService {
             windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
             log.info("execute printScreen logic");
             PrintScreenUtils.moveWindow();
-            Map<String,Object> map = new HashMap<>();
+            /*Map<String,Object> map = new HashMap<>();
             map.put("data",true);
             map.put("type","startStageAndFull");
             map.put("clientType","2");
-            map.put("code",configUtils.getRegisterCode());
+            map.put("code",configUtils.getRegisterCode());*/
             //messageSendToCollectorServer.sendMessageToCollectorServer(map);
 
         }
