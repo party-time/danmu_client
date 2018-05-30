@@ -49,8 +49,7 @@ public class CommandExecuteService {
     @Autowired
     private ConfigUtils configUtils;
 
-    @Autowired
-    private FlashCache flashCache;
+
 
 
     @Autowired
@@ -79,9 +78,6 @@ public class CommandExecuteService {
 
     public void executeAppRestartCallBack() {
         executeAppCloseCallBack();
-
-        flashCache.setSendFlashOpenCount(0);
-
         executeAppStartCallBack();
     }
 

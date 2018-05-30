@@ -142,6 +142,8 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             log.info("WebSocket Client connected!");
             handshakeFuture.setSuccess();
 
+            ClientModel clientModel = new ClientModel();
+            clientCache.setServerClientChannelConcurrentHashMap(ch,clientModel);
 
             flashBussinessHandlerService.flashFullHandler();
             return;
