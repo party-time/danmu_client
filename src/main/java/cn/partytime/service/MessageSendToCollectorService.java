@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
-public class MessageSendToCollectorServer {
+public class MessageSendToCollectorService {
 
     @Autowired
     private ClientCache clientCache;

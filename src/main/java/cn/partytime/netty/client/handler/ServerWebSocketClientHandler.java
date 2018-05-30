@@ -40,17 +40,14 @@ package cn.partytime.netty.client.handler;
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.FlashCache;
-import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.client.ClientModel;
-import cn.partytime.model.client.PartyInfo;
 import cn.partytime.model.server.ServerInfo;
 import cn.partytime.service.CommandExecuteService;
 import cn.partytime.service.CommandHandlerService;
-import cn.partytime.service.MessageSendToCollectorServer;
-import cn.partytime.util.HttpUtils;
+import cn.partytime.service.FlashBussinessHandlerService;
+import cn.partytime.service.MessageSendToCollectorService;
 import com.alibaba.fastjson.JSON;
-import freemarker.template.utility.StringUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -62,15 +59,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
@@ -99,7 +92,11 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
 
     @Autowired
-    private MessageSendToCollectorServer messageSendToCollectorServer;
+    private FlashBussinessHandlerService flashBussinessHandlerService;
+
+
+    @Autowired
+    private MessageSendToCollectorService messageSendToCollectorService;
 
 
     public ChannelFuture handshakeFuture() {
@@ -146,28 +143,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             handshakeFuture.setSuccess();
 
 
-            if(flashCache.getSendFlashOpenCount()>0){
-                return;
-            }
-
-            flashCache.setSendFlashOpenCount(1);
-
-            //与服务器连接成功后向服务器发送flash全屏的指令
-            Map<String,String> map = new HashMap<>();
-            map.put("data","true");
-            map.put("type","startStageAndFull");
-            map.put("clientType","2");
-            map.put("code",configUtils.getRegisterCode());
-            Channel channel = ctx.channel();
-            ClientModel clientModel = new ClientModel();
-            clientCache.setServerClientChannelConcurrentHashMap(channel,clientModel);
-            messageSendToCollectorServer.sendMessageToCollectorServer(map);
-            /*Map<String,String> map = new HashMap<>();
-            map.put("data","true");
-            map.put("type","startStageAndFull");
-            map.put("clientType","2");
-            map.put("code",configUtils.getRegisterCode());
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(map)));*/
+            flashBussinessHandlerService.flashFullHandler();
             return;
         }
 

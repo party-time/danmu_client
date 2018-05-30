@@ -1,6 +1,7 @@
 package cn.partytime.service;
 
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.config.FlashCache;
 import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.model.Properties;
 import cn.partytime.util.CommandConst;
@@ -8,9 +9,7 @@ import cn.partytime.util.PrintScreenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
+import sun.dc.pr.PRError;
 
 /**
  * Created by Administrator on 2017/4/1 0001.
@@ -45,10 +44,17 @@ public class CommandExecuteService {
     private ProjectorService projectorService;
 
     @Autowired
-    private MessageSendToCollectorServer messageSendToCollectorServer;
+    private MessageSendToCollectorService messageSendToCollectorService;
 
     @Autowired
     private ConfigUtils configUtils;
+
+    @Autowired
+    private FlashCache flashCache;
+
+
+    @Autowired
+    private FlashBussinessHandlerService flashBussinessHandlerService;
 
     public void executeProjectorStartCallBack() {
         //projectorService.projectorHandler(0);
@@ -73,6 +79,9 @@ public class CommandExecuteService {
 
     public void executeAppRestartCallBack() {
         executeAppCloseCallBack();
+
+        flashCache.setSendFlashOpenCount(0);
+
         executeAppStartCallBack();
     }
 
@@ -86,12 +95,9 @@ public class CommandExecuteService {
             windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
             log.info("execute printScreen logic");
             PrintScreenUtils.moveWindow();
-            /*Map<String,Object> map = new HashMap<>();
-            map.put("data",true);
-            map.put("type","startStageAndFull");
-            map.put("clientType","2");
-            map.put("code",configUtils.getRegisterCode());*/
-            //messageSendToCollectorServer.sendMessageToCollectorServer(map);
+
+
+            flashBussinessHandlerService.flashFullHandler();
 
         }
     }
