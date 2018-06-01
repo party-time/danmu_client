@@ -140,6 +140,10 @@ public class ServerStartService {
             @Override
             public void run() {
                 try {
+                    if(!"3".equals(properties.getMachineNum())) {
+                        logLogicService.logUploadHandler("启动flash客户端");
+                        commandExecuteService.executeAppStartCallBack();
+                    }
                     deviceService.findDeviceInfo();
                     serverWebSocketClient.init();
                 } catch (Exception e) {
@@ -207,10 +211,6 @@ public class ServerStartService {
     private void initResource(){
         logLogicService.logUploadHandler("重新生成脚本");
         scriptFileService.createShell();
-        if(!"3".equals(properties.getMachineNum())) {
-            logLogicService.logUploadHandler("启动flash客户端");
-            commandExecuteService.executeAppStartCallBack();
-        }
     }
 
 }
