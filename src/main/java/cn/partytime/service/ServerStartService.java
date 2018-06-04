@@ -56,7 +56,8 @@ public class ServerStartService {
     @Resource(name = "threadPoolTaskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-
+    @Autowired
+    private Properties properties;
 
     @Autowired
     private LogLogicService logLogicService;
