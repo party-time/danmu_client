@@ -161,8 +161,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             log.info("WebSocket Client received message: " + textFrame.text());
             String commandTxt = textFrame.text();
             ClientCommandConfig clientCommandConfig = JSON.parseObject(commandTxt,ClientCommandConfig.class);
-
-
+            log.info("clientCommandConfig:{}",JSON.toJSONString(clientCommandConfig));
             if("1".equals(configUtils.getMachineNum())){
                 commandHandlerService.commandHandler(clientCommandConfig);
             }

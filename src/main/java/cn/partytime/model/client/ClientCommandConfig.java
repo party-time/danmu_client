@@ -8,6 +8,8 @@ import java.io.Serializable;
 public class ClientCommandConfig<T> implements Serializable {
     private String type;
 
+    private String code;
+
     private T data;
 
     public String getType() {
@@ -24,5 +26,13 @@ public class ClientCommandConfig<T> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
