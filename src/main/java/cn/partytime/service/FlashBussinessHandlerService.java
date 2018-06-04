@@ -34,7 +34,7 @@ public class FlashBussinessHandlerService {
 
 
         Map<String,Object> map = new HashMap<String,Object>();
-        map.put("type","startStageAndFull");
+        map.put("type","screenMove");
         map.put("clientType","2");
         map.put("isCallBack","true");
         map.put("code",configUtils.getRegisterCode());

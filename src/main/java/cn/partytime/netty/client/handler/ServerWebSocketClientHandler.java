@@ -176,7 +176,7 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             }
 
             if("1".equals(configUtils.getMachineNum())|| "2".equals(configUtils.getMachineNum())){
-                if("startStageAndFull".equals(clientCommandConfig.getType())){
+                if("screenMove".equals(clientCommandConfig.getType())){
                     log.info("放大flash");
                     flashBussinessHandlerService.flashFullHandler();
                 }
