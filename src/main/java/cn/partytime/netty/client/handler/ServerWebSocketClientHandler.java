@@ -175,6 +175,12 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
                 commandHandlerService.commandHandler(clientCommandConfig);
             }
 
+            if("1".equals(configUtils.getMachineNum())|| "2".equals(configUtils.getMachineNum())){
+                flashBussinessHandlerService.flashFullHandler();
+            }
+
+
+
         }
     }
 
