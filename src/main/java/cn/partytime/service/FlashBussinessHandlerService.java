@@ -33,12 +33,15 @@ public class FlashBussinessHandlerService {
         flashCache.setSendFlashOpenCount(1);
 
 
-        Map<String,String> map = new HashMap<>();
-        map.put("data","true");
+        Map<String,Object> map = new HashMap<String,Object>();
         map.put("type","startStageAndFull");
         map.put("clientType","2");
         map.put("isCallBack","true");
         map.put("code",configUtils.getRegisterCode());
+        Map<String,Object> dataMap = new HashMap<String,Object>();
+        dataMap.put("screenMove",true);
+        dataMap.put("isCallBack",true);
+        map.put("data",dataMap);
         messageSendToCollectorService.sendMessageToCollectorServer(map);
     }
 }
