@@ -40,13 +40,11 @@ package cn.partytime.netty.client.handler;
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
 import cn.partytime.config.FlashCache;
+import cn.partytime.model.Properties;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.client.ClientModel;
 import cn.partytime.model.server.ServerInfo;
-import cn.partytime.service.CommandExecuteService;
-import cn.partytime.service.CommandHandlerService;
-import cn.partytime.service.FlashBussinessHandlerService;
-import cn.partytime.service.MessageSendToCollectorService;
+import cn.partytime.service.*;
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
@@ -89,6 +87,12 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
     @Autowired
     private FlashCache flashCache;
+
+    @Autowired
+    private Properties properties;
+
+    @Autowired
+    private LogLogicService logLogicService;
 
 
     @Autowired
@@ -145,7 +149,12 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             ClientModel clientModel = new ClientModel();
             clientCache.setServerClientChannelConcurrentHashMap(ch,clientModel);
 
-            flashBussinessHandlerService.flashFullHandler();
+            if(!"3".equals(properties.getMachineNum())) {
+                logLogicService.logUploadHandler("启动flash客户端");
+                commandExecuteService.executeAppStartCallBack();
+            }
+
+            //flashBussinessHandlerService.flashFullHandler();
             return;
         }
 
