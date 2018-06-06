@@ -42,6 +42,6 @@ public class FlashBussinessHandlerService {
         dataMap.put("screenMove",true);
         dataMap.put("isCallBack",true);
         map.put("data",dataMap);
-        messageSendToCollectorService.sendMessageToCollectorServer(map);
+        //messageSendToCollectorService.sendMessageToCollectorServer(map);
     }
 }
