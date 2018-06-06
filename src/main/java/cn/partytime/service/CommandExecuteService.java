@@ -93,8 +93,6 @@ public class CommandExecuteService {
             }
             windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
             log.info("execute printScreen logic");
-            printScreenUtils.moveWindow();
-
             flashBussinessHandlerService.flashFullHandler();
         }
     }
