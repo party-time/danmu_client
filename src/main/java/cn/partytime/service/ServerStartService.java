@@ -140,10 +140,6 @@ public class ServerStartService {
             @Override
             public void run() {
                 try {
-                    if(!"3".equals(properties.getMachineNum())) {
-                        logLogicService.logUploadHandler("启动flash客户端");
-                        commandExecuteService.executeAppStartCallBack();
-                    }
                     deviceService.findDeviceInfo();
                     serverWebSocketClient.init();
                 } catch (Exception e) {
