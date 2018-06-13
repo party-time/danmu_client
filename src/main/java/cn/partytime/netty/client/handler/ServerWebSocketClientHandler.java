@@ -39,7 +39,6 @@ package cn.partytime.netty.client.handler;
 
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
-import cn.partytime.config.FlashCache;
 import cn.partytime.model.Properties;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.client.ClientModel;
@@ -84,20 +83,11 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
 
     @Autowired
     private ConfigUtils configUtils;
-
-    @Autowired
-    private FlashCache flashCache;
-
     @Autowired
     private Properties properties;
 
     @Autowired
     private LogLogicService logLogicService;
-
-
-    @Autowired
-    private FlashBussinessHandlerService flashBussinessHandlerService;
-
 
     @Autowired
     private MessageSendToCollectorService messageSendToCollectorService;
@@ -174,16 +164,6 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
             if("1".equals(configUtils.getMachineNum())){
                 commandHandlerService.commandHandler(clientCommandConfig);
             }
-
-            if("1".equals(configUtils.getMachineNum())|| "2".equals(configUtils.getMachineNum())){
-                if("screenMove".equals(clientCommandConfig.getType())){
-                    log.info("放大flash");
-                    flashBussinessHandlerService.flashFullHandler();
-                }
-            }
-
-
-
         }
     }
 

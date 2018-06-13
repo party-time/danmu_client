@@ -1,11 +1,9 @@
 package cn.partytime.util;
 
-import cn.partytime.config.FlashCache;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.*;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -22,9 +20,6 @@ import java.io.IOException;
 @Slf4j
 @Service
 public class PrintScreenUtils {
-
-    @Autowired
-    private FlashCache flashCache;
 
     public static void screenShotAsFile(String savePath,String saveFile) {
         try {
@@ -68,7 +63,6 @@ public class PrintScreenUtils {
     }
 
     public void moveWindow(){
-        flashCache.setSendFlashOpenCount(0);
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gs = ge.getScreenDevices();

@@ -1,7 +1,6 @@
 package cn.partytime.service;
 
 import cn.partytime.config.ConfigUtils;
-import cn.partytime.config.FlashCache;
 import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.model.Properties;
 import cn.partytime.util.CommandConst;
@@ -9,7 +8,6 @@ import cn.partytime.util.PrintScreenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.dc.pr.PRError;
 
 /**
  * Created by Administrator on 2017/4/1 0001.
@@ -53,11 +51,6 @@ public class CommandExecuteService {
     private PrintScreenUtils printScreenUtils;
 
 
-
-
-    @Autowired
-    private FlashBussinessHandlerService flashBussinessHandlerService;
-
     public void executeProjectorStartCallBack() {
         //projectorService.projectorHandler(0);
         logLogicService.logUploadHandler("投影仪开启");
@@ -91,9 +84,7 @@ public class CommandExecuteService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));
-            log.info("execute printScreen logic");
-            flashBussinessHandlerService.flashFullHandler();
+            windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTFLASH_BAT));;
         }
     }
 
