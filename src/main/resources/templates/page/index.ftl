@@ -4,12 +4,26 @@
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript">
         $(function(){
-			
-			$(".minute").change(function(){
+            $(".minute").children("option").each(function(){
+                var temp_value =$(this).val();
+                if(temp_value ==  $(".minuteHidden").val()){
+                    $(this).attr("selected","selected");
+                }
+            });
+            $(".second").children("option").each(function(){
+                var temp_value =$(this).val();
+                if(temp_value ==  $(".secondHidden").val()){
+                    $(this).attr("selected","selected");
+                }
+            });
+
+            $(".minute").change(function(){
+                $(".minuteHidden").val($(".minute").val());
 				setTime();
 			});
 			
 			$(".second").change(function(){
+                $(".secondHidden").val($(".second").val());
 				setTime();
 			});
 			
@@ -47,7 +61,7 @@
 				return time;
 			}
             $("#movieStart").click(function(){
-                var time = pgetAdTime();
+                var time = getAdTime();
                 if(time==0){
                     alert('请设置广告时间！');
                     return;
@@ -192,6 +206,9 @@
 			<input type="input" name="second" id="second" class="second" value="${second}" maxlength="2"/>秒
 			<input type="button" value="确定" id="setAdTimeButton" class="setAdTimeButton"/>
 			-->
+
+        	<input type="hidden" name="minuteHidden" id="minuteHidden" class="minuteHidden" value="${minute}" maxlength="2"/>
+        	<input type="hidden" name="secondHidden" id="secondHidden" class="secondHidden" value="${second}" maxlength="2"/>
 			<select class="minute">
 				<option>0</option>
 				<option>1</option>
