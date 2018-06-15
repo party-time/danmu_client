@@ -8,7 +8,9 @@ import cn.partytime.model.*;
 import cn.partytime.model.common.RestResultModel;
 import cn.partytime.model.result.Result;
 import cn.partytime.model.result.ResultEnum;
+import cn.partytime.service.CommandExecuteService;
 import cn.partytime.service.TmsCommandService;
+import cn.partytime.service.WindowShellService;
 import cn.partytime.util.*;
 import com.alibaba.fastjson.JSON;
 import io.netty.handler.codec.http.HttpRequest;
@@ -49,6 +51,13 @@ public class IndexController {
     //场地
     @Value("${addressId}")
     private String addressId;
+
+
+    @Autowired
+    private WindowShellService windowShellService;
+
+    @Autowired
+    private CommandExecuteService commandExecuteService;
 
 
     @RequestMapping("/")
@@ -220,6 +229,27 @@ public class IndexController {
         log.info("request command:{}",command);
         //在cookie中缓存电影指令
         addCookie(response,"command", command, 60*60*24*30);
+        return new Result(200,null);
+    }
+
+    @RequestMapping("/movieclose")
+    @ResponseBody
+    public Result movieclose(HttpServletRequest request, HttpServletResponse response){
+        tmsCommandService.movieHandler(CommandConst.MOVIE_CLOSE,DateUtils.getCurrentDate());
+        return new Result(200,null);
+    }
+
+
+    @RequestMapping("/shutdown")
+    @ResponseBody
+    public Result shutdown(HttpServletRequest request, HttpServletResponse response){
+
+        //投影关闭
+        commandExecuteService.executeProjectorCloseCallBack();
+
+        //执行关机
+        windowShellService.execExe("shutdown -s");
+
         return new Result(200,null);
     }
 

@@ -89,10 +89,6 @@ public class ServerWebSocketClientHandler extends SimpleChannelInboundHandler<Ob
     @Autowired
     private LogLogicService logLogicService;
 
-    @Autowired
-    private MessageSendToCollectorService messageSendToCollectorService;
-
-
     public ChannelFuture handshakeFuture() {
         return handshakeFuture;
     }

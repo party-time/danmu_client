@@ -41,15 +41,6 @@ public class CommandExecuteService {
     @Autowired
     private ProjectorService projectorService;
 
-    @Autowired
-    private MessageSendToCollectorService messageSendToCollectorService;
-
-    @Autowired
-    private ConfigUtils configUtils;
-
-    @Autowired
-    private PrintScreenUtils printScreenUtils;
-
 
     public void executeProjectorStartCallBack() {
         //projectorService.projectorHandler(0);
