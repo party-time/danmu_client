@@ -257,7 +257,7 @@ public class ProjectorService {
 
 
     /**
-     * 重新开启投影（和8点定时任务同样的操作，手工处罚的）
+     * 重新开启投影（和8点定时任务同样的操作，手工触发的）
      * @param command
      * @param type
      */
@@ -271,6 +271,7 @@ public class ProjectorService {
                 //windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
                 //注释掉：发送投影开启的命令，只有socket发送通知
                 try {
+                    Thread.sleep(10000);
                     newPjLinkStartOperate();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -292,7 +293,15 @@ public class ProjectorService {
             //0关闭，1:开启
             executePJLINKCommand(type==0?1:0);
             if(type==0){
-                //windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
+                //windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTPJLINKCLIENT_BAT));
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                windowShellService.execExe(scriptConfigUtils.findPJLINKStartFile());
+
+
                 //注释掉：发送投影开启的命令，只有socket发送通知
                 /*try {
                     newPjLinkStartOperate();
@@ -334,7 +343,8 @@ public class ProjectorService {
 
         Thread.sleep(2000);
         //开启本地投影软件
-        windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
+        //windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTPJLINKCLIENT_BAT));
+        windowShellService.execExe(scriptConfigUtils.findPJLINKStartFile());
 
         //Thread.sleep(2000);
 

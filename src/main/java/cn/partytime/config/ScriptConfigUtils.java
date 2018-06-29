@@ -66,6 +66,7 @@ public class ScriptConfigUtils {
     public final String JAVA_JAR_NAME="danmu_java_client.jar";
     public final String FLASH_START_NAME="dmMovie.exe";
     public final String TEAMVIEWER_START_NAME="TeamViewer.exe";
+    public final String PJLINK_CLIENT_NAME="start.exe";
     public String findJavaJarPath(){
         return configUtils.findJavaProgramPath()+CommonConst.SEPARATOR+JAVA_JAR_NAME;
     }
@@ -97,6 +98,8 @@ public class ScriptConfigUtils {
     public String findFlashVersionPath() {return configUtils.findFlashProgramPath() + CommonConst.SEPARATOR+VERSION_NAME;}
     public String findBakJavaVersionPath() {return configUtils.findBakJavaProgramPath() + CommonConst.SEPARATOR+VERSION_NAME;}
     public String findBakFlashVersionPath() {return configUtils.findBakFlashProgramPath()+ CommonConst.SEPARATOR+VERSION_NAME;  }
+
+    public String findPJLINKStartFile(){return configUtils.findPJLINKClientPath()+CommonConst.SEPARATOR+PJLINK_CLIENT_NAME;}
 
 
 

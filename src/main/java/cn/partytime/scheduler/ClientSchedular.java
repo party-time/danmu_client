@@ -212,6 +212,7 @@ public class ClientSchedular {
                 projectorService.executePJLINKCommand(1);
                 //(杭州厅)启动本地启动脚本
                 if("5a54368e91289c7e9c525d29".equals(addressId)){
+                    Thread.sleep(10000);
                     projectorService.newPjLinkStartOperate();
                 }
             } catch (InterruptedException e) {

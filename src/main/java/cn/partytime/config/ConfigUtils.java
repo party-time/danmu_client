@@ -111,6 +111,8 @@ public class ConfigUtils {
 
     public String findTeamViewerPath(){return properties.getBasePath()+"/TeamViewer";}
 
+    public String findPJLINKClientPath(){ return properties.getBasePath()+"/IEU_Lite(removable-media)";}
+
     public String programPath(){return "/enterX/newClient";}
 
     public String findJavaConfigPath(){return findJavaProgramPath()+"/"+"config";}
