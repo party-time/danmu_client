@@ -2,11 +2,12 @@ package cn.partytime.service;
 
 import cn.partytime.config.ClientCache;
 import cn.partytime.config.ConfigUtils;
+import cn.partytime.config.PjLinkSoftClientCache;
 import cn.partytime.config.ScriptConfigUtils;
 import cn.partytime.model.client.ClientCommand;
 import cn.partytime.model.client.ClientCommandConfig;
 import cn.partytime.model.device.DeviceInfo;
-import cn.partytime.util.CommandConst;
+import cn.partytime.util.DateUtils;
 import cn.partytime.util.HttpUtils;
 import com.alibaba.fastjson.JSON;
 import io.netty.handler.codec.http.QueryStringDecoder;
@@ -25,11 +26,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Administrator on 2017/3/27 0027.
@@ -69,6 +67,9 @@ public class ProjectorService {
 
     @Autowired
     private ScriptConfigUtils scriptConfigUtils;
+
+    @Autowired
+    private PjLinkSoftClientCache pjLinkSoftClientCache;
 
     /**
      * 投影仪开启和关闭
@@ -271,7 +272,6 @@ public class ProjectorService {
                 //windowShellService.execExe(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.PJLINKSTART_VBS));
                 //注释掉：发送投影开启的命令，只有socket发送通知
                 try {
-                    Thread.sleep(10000);
                     newPjLinkStartOperate();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -294,13 +294,13 @@ public class ProjectorService {
             executePJLINKCommand(type==0?1:0);
             if(type==0){
                 //windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTPJLINKCLIENT_BAT));
-                try {
+                /*try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                windowShellService.execExe(scriptConfigUtils.findPJLINKStartFile());
-
+                }*/
+                executeOpenPJLinkStartExe();
+                //windowShellService.execExe(scriptConfigUtils.findPJLINKStartFile());
 
                 //注释掉：发送投影开启的命令，只有socket发送通知
                 /*try {
@@ -340,14 +340,32 @@ public class ProjectorService {
     public void newPjLinkStartOperate() throws InterruptedException {
 
         commandExecuteService.executeAppCloseCallBack();
-
-        Thread.sleep(2000);
         //开启本地投影软件
         //windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.BAT_TYPE, scriptConfigUtils.STARTPJLINKCLIENT_BAT));
-        windowShellService.execExe(scriptConfigUtils.findPJLINKStartFile());
+        executeOpenPJLinkStartExe();
 
         //Thread.sleep(2000);
 
         //commandExecuteService.executeAppStartCallBack();
+    }
+
+    public void executeOpenPJLinkStartExe(){
+        long time = pjLinkSoftClientCache.getTime();
+        long current= DateUtils.getCurrentDate().getTime();
+        long subTime = (current-time)/1000;
+        if(subTime>15){
+            logLogicService.logUploadHandler(subTime+"s以后再次操作投影开启");
+            windowShellService.execExeVBS(scriptConfigUtils.findScriptPath(scriptConfigUtils.VBS_TYPE, scriptConfigUtils.PJLINKSTOP_VBS));
+            pjLinkSoftClientCache.setTime(current);
+        }else{
+            logLogicService.logUploadHandler("15s内再次操作，请求被忽略;");
+            return;
+        }
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        windowShellService.execExe(scriptConfigUtils.findPJLINKStartFile());
     }
 }
